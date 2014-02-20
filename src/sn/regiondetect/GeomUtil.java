@@ -5,9 +5,11 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
+import java.awt.geom.Path2D;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
@@ -27,9 +29,8 @@ import sn.debug.ShowDebugImage;
 
 public class GeomUtil {
 
-	private static double _MAXDIST = 1E-8;
-	
-	
+	private static double _MAXDIST = 1E-4;
+
 	/**
 	 * draw lines on regions
 	 * 
@@ -40,13 +41,22 @@ public class GeomUtil {
 	 * @throws Exception
 	 */
 	static public List<Line2D> lineRegion(List<Line2D> intersectLines,
-			Region p, Line2D l) throws Exception {
+			Region p, Line2D l, double lineAngle, int height, int width)
+			throws Exception {
 		// System.out.print("line : " + lineCount + "\n");
-		Set<Point2D> intersections = GeomUtil.getIntersections(p._path, l);
+
+		AffineTransform rotate = new AffineTransform();
+		rotate.rotate(lineAngle, width / 2, height / 2);
+		AffineTransform rotateInverse = new AffineTransform();
+		rotateInverse.rotate(-lineAngle, width / 2, height / 2);
+
+		Set<Point2D> intersections = GeomUtil.getIntersections(p._path, l,
+				lineAngle, width, height);
 
 		List<Point2D> intersectionArray = new ArrayList<Point2D>();
 		for (Iterator<Point2D> it = intersections.iterator(); it.hasNext();) {
-			intersectionArray.add(it.next());
+			Point2D rotatedPt = rotate.transform(it.next(), null);
+			intersectionArray.add(rotatedPt);
 		}
 
 		// sort vertically
@@ -60,6 +70,11 @@ public class GeomUtil {
 				}
 			}
 		}
+
+//		for (int i = 0; i < intersectionArray.size(); i++) {
+//			Point2D temPt = intersectionArray.get(i);
+//			intersectionArray.set(i, rotateInverse.transform(temPt, null));
+//		}
 
 		// System.out.println("Intersection: " +
 		// intersections.size());
@@ -87,6 +102,7 @@ public class GeomUtil {
 			if (draw) {
 				intersectLines = GeomUtil
 						.extendLine(intersectLines, start, end);
+//				intersectLines.add(new Line2D.Double(start,end));
 				draw = false;
 			}
 		}
@@ -94,13 +110,21 @@ public class GeomUtil {
 	}
 
 	static public List<Line2D> lineJumpHole(List<Line2D> intersectLines,
-			Region p, Line2D l) throws Exception {
+			Region p, Line2D l, double lineAngle, int height, int width)
+			throws Exception {
 		Set<Point2D> intersections;
-		intersections = GeomUtil.getIntersections(p._path, l);
+		AffineTransform rotate = new AffineTransform();
+		rotate.rotate(lineAngle, width / 2, height / 2);
+		AffineTransform rotateInverse = new AffineTransform();
+		rotateInverse.rotate(-lineAngle, width / 2, height / 2);
+
+		intersections = GeomUtil.getIntersections(p._path, l, lineAngle, width,
+				height);
 
 		List<Point2D> intersectionArray = new ArrayList<Point2D>();
 		for (Iterator<Point2D> it = intersections.iterator(); it.hasNext();) {
-			intersectionArray.add(it.next());
+			Point2D rotatedPt = rotate.transform(it.next(), null);
+			intersectionArray.add(rotatedPt);
 		}
 
 		// sort vertically
@@ -114,6 +138,11 @@ public class GeomUtil {
 				}
 			}
 		}
+
+//		for (int i = 0; i < intersectionArray.size(); i++) {
+//			Point2D temPt = intersectionArray.get(i);
+//			intersectionArray.set(i, rotateInverse.transform(temPt, null));
+//		}
 
 		// System.out.println("Intersection: " +
 		// intersections.size());
@@ -225,7 +254,6 @@ public class GeomUtil {
 	 * Merge overlapping lines
 	 * 
 	 * @param intersectLines
-	 *            a list of lines with the same function
 	 * @return
 	 */
 	static public List<Line2D> mergeLine(List<Line2D> intersectLines) {
@@ -290,21 +318,41 @@ public class GeomUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public static Set<Point2D> getIntersections(final GeneralPath path,
-			final Line2D line) throws Exception {
+	public static Set<Point2D> getIntersections(Path2D path, Line2D line,
+			double lineAngle, int width, int height) throws Exception {
 		// List to hold found intersections
 
 		Set<Point2D> intersections = new HashSet<Point2D>();
 
-		Polygon boldLine = new Polygon();
-		boldLine.addPoint((int) line.getX1() - 1, (int) line.getY1());
-		boldLine.addPoint((int) line.getX2() - 1, (int) line.getY2());
-		boldLine.addPoint((int) line.getX2() + 1, (int) line.getY2());
-		boldLine.addPoint((int) line.getX1() + 1, (int) line.getY1());
+		AffineTransform rotate = new AffineTransform();
+		rotate.rotate(lineAngle, width / 2, height / 2);
+		AffineTransform rotateInverse = new AffineTransform();
+		rotateInverse.rotate(-lineAngle, width / 2, height / 2);
+		Point2D rtPt1 = rotate.transform(line.getP1(), null);
+		Point2D rtPt2 = rotate.transform(line.getP2(), null);
+		Point2D boldPt1 = rotateInverse.transform(
+				new Point2D.Double(rtPt1.getX() - 1, rtPt1.getY()), null);
+		Point2D boldPt2 = rotateInverse.transform(
+				new Point2D.Double(rtPt2.getX() - 1, rtPt2.getY()), null);
+		Point2D boldPt3 = rotateInverse.transform(
+				new Point2D.Double(rtPt2.getX() + 1, rtPt2.getY()), null);
+		Point2D boldPt4 = rotateInverse.transform(
+				new Point2D.Double(rtPt1.getX() + 1, rtPt1.getY()), null);
 
-		Line2D auxLine = new Line2D.Double(new Point((int) line.getX1() - 1,
-				(int) line.getY1()), new Point((int) line.getX2() - 1,
-				(int) line.getY2()));
+		Path2D boldLine = new Path2D.Double();
+
+		boldLine.moveTo(boldPt1.getX(), boldPt1.getY());
+		boldLine.lineTo(boldPt2.getX(), boldPt2.getY());
+		boldLine.lineTo(boldPt3.getX(), boldPt3.getY());
+		boldLine.lineTo(boldPt4.getX(), boldPt4.getY());
+		boldLine.closePath();
+
+		// boldLine.addPoint((int) boldPt1.getX(), (int) boldPt1.getY());
+		// boldLine.addPoint((int) boldPt2.getX(), (int) boldPt2.getY());
+		// boldLine.addPoint((int) boldPt3.getX(), (int) boldPt3.getY());
+		// boldLine.addPoint((int) boldPt4.getX(), (int) boldPt4.getY());
+
+		Line2D auxLine = new Line2D.Double(boldPt1, boldPt2);
 
 		Area pathArea = new Area(path);
 		Area lineArea = new Area(boldLine);
@@ -319,26 +367,28 @@ public class GeomUtil {
 			return intersections;
 		}
 
-//		// / ShowDebugImage frame = null;
-//		int width = 800;
-//		int height = 600;
-//		BufferedImage img = new BufferedImage(width, height,
-//				BufferedImage.TYPE_3BYTE_BGR);
-//		Graphics2D g2d = (Graphics2D) img.createGraphics();
-//
-//		g2d.setBackground(Color.WHITE);
-//		g2d.clearRect(0, 0, width, height);
-//
-//		g2d.setColor(Color.BLACK);
-//
-//		g2d.draw(pathArea);
-//		// g2d.fill(pathArea);
-//		Random r = new Random();
-//
-//		
-//		Color color= new Color(1.0F, 0.75F, 0.0F, 0.45F);
-//		g2d.setColor(color);
-//		g2d.draw(auxLine);
+		// ShowDebugImage frame = null;
+		// Area area = new Area(path);
+		// BufferedImage img = new BufferedImage(width, height,
+		// BufferedImage.TYPE_3BYTE_BGR);
+		// Graphics2D g2d = (Graphics2D) img.createGraphics();
+		//
+		// g2d.setBackground(Color.WHITE);
+		// g2d.clearRect(0, 0, width, height);
+		//
+		// g2d.setColor(Color.BLACK);
+		//
+		// g2d.draw(pathArea);
+		// g2d.fill(pathArea);
+		//
+		// Color color = new Color(1.0F, 0.75F, 0.0F, 0.45F);
+		// g2d.setColor(color);
+		// g2d.draw(auxLine);
+		// color = new Color(0.0F, 0.5F, 0.6F, 0.45F);
+		// g2d.fill(area);
+		// frame = new ShowDebugImage("linePoly", img);
+		// frame.refresh(img);
+
 		PathIterator lineIt = pathArea.getPathIterator(null);
 
 		// Double array with length 6 needed by iterator
@@ -346,8 +396,8 @@ public class GeomUtil {
 
 		int type;
 
-		//lineIt.next();
-//		g2d.setColor(Color.RED);
+		// lineIt.next();
+		// g2d.setColor(Color.RED);
 
 		while (!lineIt.isDone()) {
 			double dist;
@@ -356,26 +406,36 @@ public class GeomUtil {
 			switch (type) {
 			case PathIterator.SEG_LINETO: {
 				Point2D intersectPt = new Point2D.Double(coords[0], coords[1]);
-//				System.out.print("type: LINETO "+ intersectPt.toString());
-//				g2d.drawRect((int) intersectPt.getX(), (int) intersectPt.getY(), 0,0);
+				// System.out.println("type: LINETO "+ intersectPt.toString());
+				// g2d.drawRect((int) intersectPt.getX(), (int)
+				// intersectPt.getY(), 0,0);
 				dist = auxLine.ptLineDistSq(intersectPt);
-//				System.out.println(" dist: " + dist);
-				if(dist <= _MAXDIST){
+				// System.out.println(" dist: " + dist);
+				// System.out.println("\n not ADD POINT "+
+				// intersectPt.toString() + " dist: " + dist + "\n");
+				if (dist <= _MAXDIST) {
+
 					boolean inList = false;
-					for(Point2D pt : intersections){
-						if((int)pt.getX() == (int) coords[0] && (int)pt.getY() == (int) coords[1]){
+					for (Point2D pt : intersections) {
+						if (Math.abs(pt.getX() - coords[0]) <= 1
+								&& Math.abs(pt.getY() - coords[1]) <= 1) {
 							inList = true;
-//							g2d.setColor(Color.BLUE);
-//							g2d.drawRect((int) intersectPt.getX(), (int) intersectPt.getY(), 0,0);
-//							g2d.setColor(Color.RED);	
+							// g2d.setColor(Color.BLUE);
+							// g2d.drawRect((int) intersectPt.getX(), (int)
+							// intersectPt.getY(), 0,0);
+							// g2d.setColor(Color.RED);
+
 						}
 					}
-					if(!inList){
-						intersections.add(new Point2D.Double( coords[0], coords[1]));
-//						g2d.setColor(Color.BLUE);
-//						g2d.drawRect((int) intersectPt.getX(), (int) intersectPt.getY(), 0,0);
-//						g2d.setColor(Color.RED);
-//						System.out.println("\nADD POINT "+  intersectPt.toString() + " dist: " + dist + "\n");						
+					if (!inList) {
+						intersections.add(new Point2D.Double(coords[0],
+								coords[1]));
+						// g2d.setColor(Color.BLUE);
+						// g2d.drawRect((int) intersectPt.getX(), (int)
+						// intersectPt.getY(), 0,0);
+						// g2d.setColor(Color.RED);
+						// System.out.println("\nADD POINT "+
+						// intersectPt.toString() + " dist: " + dist + "\n");
 					}
 				}
 				break;
@@ -383,26 +443,33 @@ public class GeomUtil {
 
 			case PathIterator.SEG_MOVETO: {
 				Point2D intersectPt = new Point2D.Double(coords[0], coords[1]);
-//				System.out.print("type: MOVETO "+  intersectPt.toString());
-//				g2d.drawRect((int) intersectPt.getX(), (int) intersectPt.getY(), 0,0);
+				// System.out.println("type: MOVETO "+ intersectPt.toString());
+				// g2d.drawRect((int) intersectPt.getX(), (int)
+				// intersectPt.getY(), 0,0);
 				dist = auxLine.ptLineDistSq(intersectPt);
-//				System.out.println(" dist: " + dist);
-				if(dist <= _MAXDIST){
+				// System.out.println(" dist: " + dist);
+				if (dist <= _MAXDIST) {
 					boolean inList = false;
-					for(Point2D pt : intersections){
-						if((int)pt.getX() == (int) coords[0] && (int)pt.getY() == (int) coords[1]){
+					for (Point2D pt : intersections) {
+						if (Math.abs(pt.getX() - coords[0]) <= 1
+								&& Math.abs(pt.getY() - coords[1]) <= 1) {
 							inList = true;
-//							g2d.setColor(Color.BLUE);
-//							g2d.drawRect((int) intersectPt.getX(), (int) intersectPt.getY(), 0,0);
-//							g2d.setColor(Color.RED);
+							// g2d.setColor(Color.BLUE);
+							// g2d.drawRect((int) intersectPt.getX(), (int)
+							// intersectPt.getY(), 0,0);
+							// g2d.setColor(Color.RED);
 						}
 					}
-					if(!inList){
-						intersections.add(new Point2D.Double( coords[0], coords[1]));
-//						g2d.setColor(Color.BLUE);
-//						g2d.drawRect((int) intersectPt.getX(), (int) intersectPt.getY(), 0,0);	
-//						g2d.setColor(Color.RED);
-//						System.out.println("\nADD POINT "+  intersectPt.toString() + " dist: " + dist + "\n");						
+					if (!inList) {
+						intersections.add(new Point2D.Double(coords[0],
+								coords[1]));
+						// g2d.setColor(Color.BLUE);
+						// g2d.drawRect((int) intersectPt.getX(), (int)
+						// intersectPt.getY(), 0,0);
+						// g2d.setColor(Color.RED);
+						// System.out.println("\nADD POINT "+
+						// intersectPt.toString() + " dist: " + dist + "\n");
+
 					}
 				}
 				break;
@@ -411,26 +478,32 @@ public class GeomUtil {
 			case PathIterator.SEG_CUBICTO: {
 
 				Point2D intersectPt = new Point2D.Double(coords[0], coords[1]);
-//				System.out.print("type: CUBICTO "+  intersectPt.toString());
-//				g2d.drawRect((int) intersectPt.getX(), (int) intersectPt.getY(), 0,0);
+				// System.out.println("type: CUBICTO "+ intersectPt.toString());
+				// g2d.drawRect((int) intersectPt.getX(), (int)
+				// intersectPt.getY(), 0,0);
 				dist = auxLine.ptLineDistSq(intersectPt);
-//				System.out.println(" dist: " + dist);
-				if(dist <= _MAXDIST){
+//				 System.out.println(" dist: " + dist);
+				if (dist <= _MAXDIST) {
 					boolean inList = false;
-					for(Point2D pt : intersections){
-						if((int)pt.getX() == (int) coords[0] && (int)pt.getY() == (int) coords[1]){
+					for (Point2D pt : intersections) {
+						if (Math.abs(pt.getX() - coords[0]) <= 1
+								&& Math.abs(pt.getY() - coords[1]) <= 1) {
 							inList = true;
-//							g2d.setColor(Color.BLUE);
-//							g2d.drawRect((int) intersectPt.getX(), (int) intersectPt.getY(), 0,0);
-//							g2d.setColor(Color.RED);	
+							// g2d.setColor(Color.BLUE);
+							// g2d.drawRect((int) intersectPt.getX(), (int)
+							// intersectPt.getY(), 0,0);
+							// g2d.setColor(Color.RED);
 						}
 					}
-					if(!inList){
-						intersections.add(new Point2D.Double( coords[0], coords[1]));
-//						g2d.setColor(Color.BLUE);
-//						g2d.drawRect((int) intersectPt.getX(), (int) intersectPt.getY(), 0,0);
-//						g2d.setColor(Color.RED);
-//						System.out.println("\nADD POINT "+  intersectPt.toString() + " dist: " + dist + "\n");
+					if (!inList) {
+						intersections.add(new Point2D.Double(coords[0],
+								coords[1]));
+						// g2d.setColor(Color.BLUE);
+						// g2d.drawRect((int) intersectPt.getX(), (int)
+						// intersectPt.getY(), 0,0);
+						// g2d.setColor(Color.RED);
+						// System.out.println("\nADD POINT "+
+						// intersectPt.toString() + " dist: " + dist + "\n");
 					}
 				}
 				break;
@@ -438,7 +511,7 @@ public class GeomUtil {
 
 			case PathIterator.SEG_CLOSE: {
 				Point2D intersectPt = new Point2D.Double(coords[0], coords[1]);
-//				System.out.println("type: CLOSE "+  intersectPt.toString());
+				// System.out.println("type: CLOSE "+ intersectPt.toString());
 				break;
 			}
 			default: {
@@ -448,16 +521,18 @@ public class GeomUtil {
 			}
 			lineIt.next();
 		}
-		
-//		String imgFilename = String.format("img%04d.png", r.nextInt(20));
-//		System.out.println("saving image to " + imgFilename + "\n===========================");
-//		try {
-//			ImageIO.write(img, "png", new File(imgFilename));
-//		} catch (IOException e) {
-//			System.err.println("failed to save image " + imgFilename);
-//			e.printStackTrace();
-//		}
-
+		//
+		// int imageCount = 0;
+		// String imgFilename = String.format("img%d.png", imageCount);
+		// System.out.println("saving image to " + imgFilename +
+		// "\n===========================");
+		// try {
+		// ImageIO.write(img, "png", new File(imgFilename));
+		// } catch (IOException e) {
+		// System.err.println("failed to save image " + imgFilename);
+		// e.printStackTrace();
+		// }
+		// frame = new ShowDebugImage("linePoly", img);
 		return intersections;
 
 	}
@@ -507,7 +582,7 @@ public class GeomUtil {
 
 	}
 
-	public static GeneralPath getRoundedGeneralPath(Polygon polygon) {
+	public static Path2D getRoundedGeneralPath(Polygon polygon) {
 		List<int[]> l = new ArrayList<int[]>();
 		for (int i = 0; i < polygon.npoints; i++) {
 			l.add(new int[] { polygon.xpoints[i], polygon.ypoints[i] });
@@ -515,7 +590,7 @@ public class GeomUtil {
 		return getRoundedGeneralPath(l);
 	}
 
-	public static GeneralPath getRoundedGeneralPath(List<int[]> l) {
+	public static Path2D getRoundedGeneralPath(List<int[]> l) {
 		List<Point> list = new ArrayList<Point>();
 		for (int[] point : l) {
 			list.add(new Point(point[0], point[1]));
@@ -523,7 +598,7 @@ public class GeomUtil {
 		return getRoundedGeneralPathFromPoints(list);
 	}
 
-	public static GeneralPath getRoundedGeneralPathFromPoints(List<Point> l) {
+	public static Path2D getRoundedGeneralPathFromPoints(List<Point> l) {
 		l.add(l.get(0));
 		l.add(l.get(1));
 		GeneralPath p = new GeneralPath();
@@ -597,7 +672,7 @@ public class GeomUtil {
 		while (!lineIt.isDone()) {
 			c++;
 			int type = lineIt.currentSegment(coords);
-			if(isNewLine){
+			if (isNewLine) {
 				cornerPts = new Point2D[8];
 				cornerPts[0] = new Point2D.Double(lastCoords[0], lastCoords[1]);
 				nPts++;
@@ -607,9 +682,10 @@ public class GeomUtil {
 				lastCoords[0] = coords[0];
 				lastCoords[1] = coords[1];
 				cornerPts[nPts] = new Point2D.Double(coords[0], coords[1]);
-				
+
 				isNewLine = false;
-				System.out.println("type: LINETO " +  cornerPts[nPts].toString());
+				System.out
+						.println("type: LINETO " + cornerPts[nPts].toString());
 				nPts++;
 				break;
 			}
@@ -619,7 +695,7 @@ public class GeomUtil {
 				lastCoords[1] = coords[1];
 				isNewLine = true;
 
-				System.out.println("type: MOVETO"+  cornerPts[nPts].toString());
+				System.out.println("type: MOVETO" + cornerPts[nPts].toString());
 				nPts = 0;
 				break;
 			}
@@ -628,9 +704,10 @@ public class GeomUtil {
 				lastCoords[0] = coords[0];
 				lastCoords[1] = coords[1];
 				cornerPts[nPts] = new Point2D.Double(coords[0], coords[1]);
-				
+
 				isNewLine = false;
-				System.out.println("type: CUBICTO"+  cornerPts[nPts].toString());
+				System.out
+						.println("type: CUBICTO" + cornerPts[nPts].toString());
 				nPts++;
 				break;
 			}
@@ -640,7 +717,7 @@ public class GeomUtil {
 				lastCoords[1] = coords[1];
 				isNewLine = true;
 				cornerPts[nPts] = new Point2D.Double(coords[0], coords[1]);
-				System.out.println("type: CLOSE "+  cornerPts[nPts].toString());
+				System.out.println("type: CLOSE " + cornerPts[nPts].toString());
 				break;
 			}
 			default: {
@@ -651,7 +728,7 @@ public class GeomUtil {
 			lineIt.next();
 		}
 		System.out.println("path count: " + c);
-		
+
 		// a1.intersect(a2);
 
 		int width = 100, height = 100;

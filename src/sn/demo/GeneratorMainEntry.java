@@ -16,6 +16,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 
@@ -24,15 +25,15 @@ import sn.regiondetect.*;
 
 public class GeneratorMainEntry {
 
-	public static void generateCases(int width, int height, double lineAngle,
-			int lineGap, int caseFileCount) throws Exception {
-		generateCases(width, height, lineAngle, lineGap, caseFileCount, null,
-				false);
+	public static void generateCases(int width, int height, double[] lineAngle,
+			int lineGap, int nLineSet, int caseFileCount) throws Exception {
+		generateCases(width, height, lineAngle, lineGap, nLineSet,
+				caseFileCount, null, false);
 
 	}
 
-	public static void generateCases(int width, int height, double lineAngle,
-			int lineGap, int caseFileCount, ShowDebugImage frame,
+	public static void generateCases(int width, int height, double lineAngle[],
+			int lineGap, int nLineSet, int caseFileCount, ShowDebugImage frame,
 			boolean showDebugImg) throws Exception {
 		BufferedImage img = new BufferedImage(width, height,
 				BufferedImage.TYPE_4BYTE_ABGR);
@@ -40,23 +41,11 @@ public class GeneratorMainEntry {
 		RegionGenerator rg = new RegionGenerator();
 		Region[] regions = rg.generateRegions(width, height);
 
-		AffineTransform rotateRec = new AffineTransform();
-		rotateRec.rotate(lineAngle, width/2, height/2);
-		
-		
-		
 		String filename = String.format("data/test%04d.log", caseFileCount);
 		System.out.println("saving log to " + filename);
 		BufferedWriter output = new BufferedWriter(new FileWriter(filename));
-		output.write("Line Angle " + lineAngle + "\n");
-		output.write("Line Gap " + lineGap + "\n");
-		// construct a line generator
-		ParallelLineGenerator plg = new ParallelLineGenerator(lineAngle,
-				lineGap, height, width);
 
-		// generate parallel lines
-		List<Line2D> lines = plg.generateParallelLines();
-
+		
 		g2d.setBackground(Color.WHITE);
 		g2d.clearRect(0, 0, width, height);
 
@@ -65,15 +54,17 @@ public class GeneratorMainEntry {
 			output.write(regions[i].toString());
 			if (!regions[i].isHole()) {
 				g2d.setColor(Color.CYAN);
-				//GeneralPath p = GeomUtil.getRoundedGeneralPath(regions[i]);
+				// GeneralPath p =
+				// GeomUtil.getRoundedGeneralPath(regions[i]);
 				g2d.fill(regions[i].getShape());
 			} else {
 				g2d.setColor(Color.WHITE);
-				//GeneralPath p = GeomUtil.getRoundedGeneralPath(regions[i]);
+				// GeneralPath p =
+				// GeomUtil.getRoundedGeneralPath(regions[i]);
 				g2d.fill(regions[i].getShape());
 			}
 		}
-		output.close();
+
 
 		// Save case image without lines
 		filename = String.format("data/test%04d-noline.png", caseFileCount);
@@ -84,69 +75,98 @@ public class GeneratorMainEntry {
 			System.err.println("failed to save image " + filename);
 			e.printStackTrace();
 		}
-
-		g2d.setColor(Color.BLACK);
-
-		int lineC = 0;
-		int totalLineC = 0;
-
-		/* TODO Output line coordinates here */
-		filename = String.format("data/test%04d-linecoord", caseFileCount);
-		System.out.println("saving line coordinates to " + filename);
-		BufferedWriter outLineCoord = new BufferedWriter(new FileWriter(filename));
 		
-		filename = String.format("data/test%04d-linecoordnorm", caseFileCount);		
-		BufferedWriter outLineCoordNorm = new BufferedWriter(new FileWriter(filename));
 
-		for (Line2D l : lines) {
-			List<Line2D> intersectLines = new ArrayList<Line2D>();
-			for (Region p : regions) {
-				if (!p.isHole()) {
-					intersectLines = GeomUtil.lineRegion(intersectLines, p, l);
+		for (int n = 0; n < nLineSet; n++) {
+			output.write("Line Angle " + lineAngle[n] + "\n");
+			output.write("Line Gap " + lineGap + "\n");
+			AffineTransform rotate = new AffineTransform();
+			rotate.rotate(-lineAngle[n], width / 2, height / 2);
+			
+			// construct a line generator
+			ParallelLineGenerator plg = new ParallelLineGenerator(lineAngle[n],
+					lineGap, height, width);
+			// generate parallel lines
+			List<Line2D> lines = plg.generateParallelLines();
+
+			
+
+			g2d.setColor(Color.BLACK);
+
+			int lineC = 0;
+			int totalLineC = 0;
+
+			/* TODO Output line coordinates here */
+			filename = String.format("data/test%04d-linecoord[%d]", caseFileCount,n);
+			System.out.println("saving line coordinates to " + filename);
+			BufferedWriter outLineCoord = new BufferedWriter(new FileWriter(
+					filename));
+
+			filename = String.format("data/test%04d-linecoordnorm[%d]",
+					caseFileCount,n);
+			System.out.println("saving line coordinates to " + filename);
+			BufferedWriter outLineCoordNorm = new BufferedWriter(
+					new FileWriter(filename));
+
+			for (Line2D l : lines) {
+				List<Line2D> intersectLines = new ArrayList<Line2D>();
+				for (Region p : regions) {
+					if (!p.isHole()) {
+						intersectLines = GeomUtil.lineRegion(intersectLines, p,
+								l, lineAngle[n], height, width);
+					} else {
+						intersectLines = GeomUtil.lineJumpHole(intersectLines,
+								p, l, lineAngle[n], height, width);
+					}
+
+				}
+
+				int iLineC = 0;
+				for (Line2D il : intersectLines) {
+
+					// set to false to hide line IDs
+					// GeomUtil.drawLine(img, il, lineC, iLineC, true);
+					outLineCoordNorm.write("Sensor" + lineC + " [" + il.getY1()
+							+ "] ");
+					outLineCoordNorm.write("[" + il.getY2() + "]\n");
+
+					Point2D originPt1 = rotate.transform(il.getP1(), null);
+					Point2D originPt2 = rotate.transform(il.getP2(), null);
+					Line2D line = new Line2D.Double(originPt1, originPt2);
+					GeomUtil.drawLine(img, line, lineC, iLineC, false);
+					// GeomUtil.drawLine(img, new
+					// Line2D.Double(normedPt1.getX(),
+					// normedPt1.getY(), normedPt2.getX(), normedPt2.getY()),
+					// lineC,
+					// iLineC, false);
+
+					outLineCoord.write("Sensor" + lineC + " ["
+							+ originPt1.getX() + "," + originPt1.getY() + "] ");
+					outLineCoord.write("[" + originPt2.getX() + ","
+							+ originPt2.getY() + "]\n");
+
+					iLineC++;
+					totalLineC++;
+				}
+
+				lineC++;
+
+			}
+
+			outLineCoord.close();
+			outLineCoordNorm.close();
+
+			if (showDebugImg) {
+				if (frame == null) {
+					frame = new ShowDebugImage("Regions", img);
+					System.out.println("create frame");
 				} else {
-					intersectLines = GeomUtil
-							.lineJumpHole(intersectLines, p, l);
+					frame.refresh(img);
+					System.out.println("refresh frame");
 				}
 			}
 
-			int iLineC = 0;
-			for (Line2D il : intersectLines) {
 
-				// set to false to hide line IDs
-				GeomUtil.drawLine(img, il, lineC, iLineC, false);
-				outLineCoord.write("Sensor" + lineC + " [" + il.getX1() + ","
-						+ il.getY1() + "] ");
-				outLineCoord.write("[" + il.getX2() + "," + il.getY2() + "]\n");
-				
-				Point2D normedPt1 = rotateRec.transform(il.getP1(), null);
-				Point2D normedPt2 = rotateRec.transform(il.getP2(), null);
-				//GeomUtil.drawLine(img, new Line2D.Double(normedPt1.getX(), normedPt1.getY(), normedPt2.getX(), normedPt2.getY()), lineC, iLineC, false);
-
-				outLineCoordNorm.write("Sensor" + lineC + " [" + normedPt1.getX() + ","
-						+ normedPt1.getY()+ "] ");
-				outLineCoordNorm.write("[" + normedPt1.getX()+ ","
-						+ normedPt2.getY() + "]\n");
-				
-				
-				iLineC++;
-				totalLineC++;
-			}
-
-			lineC++;
-
-		}
-
-		outLineCoord.close();
-		outLineCoordNorm.close();
-
-		if (showDebugImg) {
-			if (frame == null) {
-				frame = new ShowDebugImage("Regions", img);
-				System.out.println("create frame");
-			} else {
-				frame.refresh(img);
-				System.out.println("refresh frame");
-			}
 		}
 		// Save case image with lines
 		filename = String.format("data/test%04d-line.png", caseFileCount);
@@ -157,16 +177,21 @@ public class GeneratorMainEntry {
 			System.err.println("failed to save image " + filename);
 			e.printStackTrace();
 		}
+		output.close();
 	}
 
 	public static void main(String args[]) throws Exception {
 
+		Random r = new Random();
+
 		int nCases = 10;
 
 		int width = 800; // width of canvas
-		int height = 600; // height of canvas
-		double lineAngle = Math.PI / 50; // angle of lines
+		int height = 600; // height of canvas\
+
 		int lineGap = 20; // Gap between lines (uniform)
+		int lineSet = 3; // indicates number of sets of parallel line to be
+							// drawn
 
 		boolean showDebugImg = false;
 
@@ -199,6 +224,7 @@ public class GeneratorMainEntry {
 		int caseFileCount = 0;
 		File file = new File("data/CaseCount.ini");
 		if (file.exists()) {
+
 			BufferedReader reader = null;
 			try {
 				reader = new BufferedReader(new FileReader(file));
@@ -222,10 +248,19 @@ public class GeneratorMainEntry {
 		}
 
 		for (int i = 0; i < nCases; i++) {
+
+			double[] lineAngle = new double[lineSet];
+			for(int n = 0; n < lineSet; n++){
+			if (r.nextBoolean())
+				lineAngle[n] = r.nextDouble() * Math.PI / 2.1; // angle of lines
+			else
+				lineAngle[n] = r.nextDouble() * Math.PI * (1 - 1 / 1.9) + Math.PI
+						/ 1.9; // angle of lines
+			}
 			System.out.println("=====================\nGenerating Case "
 					+ (i + 1) + "/" + nCases);
-			generateCases(width, height, lineAngle, lineGap, caseFileCount,
-					frame, showDebugImg);
+			generateCases(width, height, lineAngle, lineGap, lineSet,
+					caseFileCount, frame, showDebugImg);
 			caseFileCount++;
 		}
 

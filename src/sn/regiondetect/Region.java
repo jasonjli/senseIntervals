@@ -2,6 +2,7 @@ package sn.regiondetect;
 
 import java.awt.Point;
 import java.awt.geom.GeneralPath;
+import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +16,7 @@ public class Region{
 	protected int[] _xArray;
 	protected int[] _yArray;
 	protected List<Point> _pts;
-	protected GeneralPath _path;
+	protected Path2D _path;
 	
 	public Region(int[] x, int[] y, int nPts, int radius, int layer ,Point centre, boolean exceed){
 		//super(x, y, nPts);
@@ -80,7 +81,7 @@ public class Region{
 		_next = next;
 	}
 	
-	public GeneralPath getShape(){
+	public Path2D getShape(){
 		return _path;
 	}
 	
