@@ -126,9 +126,9 @@ public class GeneratorMainEntry {
 
 					// set to false to hide line IDs
 					// GeomUtil.drawLine(img, il, lineC, iLineC, true);
-					outLineCoordNorm.write("Sensor" + lineC + " [" + il.getY1()
+					outLineCoordNorm.write("Sensor" + lineC + " [" + il.getX1() + "," + il.getY1()
 							+ "] ");
-					outLineCoordNorm.write("[" + il.getY2() + "]\n");
+					outLineCoordNorm.write("["  + il.getX2() + "," + il.getY2() + "]\n");
 
 					Point2D originPt1 = rotate.transform(il.getP1(), null);
 					Point2D originPt2 = rotate.transform(il.getP2(), null);
