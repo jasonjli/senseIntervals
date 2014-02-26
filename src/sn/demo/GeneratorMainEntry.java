@@ -67,7 +67,7 @@ public class GeneratorMainEntry {
 
 
 		// Save case image without lines
-		filename = String.format("data/test%04d-noline.png", caseFileCount);
+		filename = String.format("data/test%d-noline.png", caseFileCount);
 		System.out.println("saving image to " + filename);
 		try {
 			ImageIO.write(img, "png", new File(filename));
