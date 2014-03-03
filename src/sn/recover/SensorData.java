@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
-import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,38 +20,14 @@ public class SensorData {
 	
 	// variables in the class
 	// list of positive intervals detected in data
-	private List<Interval> positiveIntervals = new ArrayList<Interval>();	
+	private List<SensorInterval> positiveIntervals = new ArrayList<SensorInterval>();	
 	
 	// Angle of the parallel positive intervals in radians
 	private double sensorAngle=Double.NaN; // initiated at NaN
 	private double sensorGap = Double.NaN; // initiated at NaN
 	private int sensorCount = Integer.MIN_VALUE; // initiated at min value
 
-	// sub-class for intervals, denoting positive components detected in sensor data
-	public class Interval{		
-		private int sensorID;	// the id of the sensor where this interval belongs
-		private Line2D interval;
-		
-		// constructor
-		public Interval(int id, Point2D s, Point2D e){
-			sensorID = id; 
-			interval = new Line2D.Double(s,e);
-		}
-				
-		// methods for accessing interval information
-		public int getSensorID(){
-			return sensorID;
-		}
-		
-		public Point2D getStart(){
-			return interval.getP1();
-		}
-		
-		public Point2D getEnd(){
-			return interval.getP2();
-		}
-		
-	}	
+	
 	
 	// Constructor from a given file
 	public SensorData(String sensorFileName){
@@ -69,6 +44,9 @@ public class SensorData {
 			String sensorData = null;
 			int sensorId=-1;
 			
+			boolean sensorGapSet = false;
+			boolean angleSet = false;
+			
 			// variables to work out distance SensorData parameters
 			int prevSensorID = -1;
 			Point2D prevPoint = new Point2D.Double(Double.MAX_VALUE,Double.MAX_VALUE);
@@ -78,59 +56,56 @@ public class SensorData {
 			// Sensor(\d+) [startPt.x,startPt.y] [endPt.x, endPt.y]
 			while ((sensorData = reader.readLine()) != null) {
 				
-				// parse the string, detecting positive component
-				String[] data = sensorData.split(" ");
-				sensorId = Integer.parseInt(data[0].split("Sensor")[1]);
+				// create new sensor interval
+				SensorInterval newInterval = new SensorInterval(sensorData);
+								
+				// add the interval to data
+				addPositiveInterval(newInterval);
 				
 				// update count of sensor
+				sensorId = newInterval.getSensorID();
 				if (sensorId > maxSensor){
 					maxSensor = sensorId;
 				}
-												
-				String p1 = data[1].substring(1, data[1].length() - 1);
-				double x1 = Double.parseDouble(p1.split(",")[0]);
-				double y1 = Double.parseDouble(p1.split(",")[1]);
-				Point2D start = new Point2D.Double(x1, y1);
-
-				String p2 = data[2].substring(1, data[2].length() - 1);
-				double x2 = Double.parseDouble(p2.split(",")[0]);
-				double y2 = Double.parseDouble(p2.split(",")[1]);
-				Point2D end = new Point2D.Double(x2, y2);
-				
-				double angle = Math.atan2(y2-y1, x2-x1);
-				
 				
 				// set gradient if we see it for the first time. 
-				if (sensorAngle == Double.NaN){
+				double angle = newInterval.getAngle();
+				if (!angleSet){					
 					sensorAngle = angle;
-				}
-				
-				// enforce parallel positive intervals
-				assert (sensorAngle == angle): 
-					"In file " + sensorFileName +", positive intervals not parallel!";				
-				
-				// if this was not the first sensor we saw with positive interval
-				// work out the distance between adjacent intervals
-				if (prevSensorID != sensorId && prevSensorID != -1){					
-					
-					assert(true) : "got here!";
-					
-					double dY = y1 - prevPoint.getY();
-					double dX = x1 - prevPoint.getX();
-					
-					// Distance between 
-					double hyp = prevPoint.distance(start);
-					double tmpAngle = Math.atan2(dY, dX)-sensorAngle;
-					
-					sensorGap = Math.sin(tmpAngle) * hyp / (sensorId - prevSensorID);
+					angleSet = true;
 				}
 				else{
-					prevSensorID = sensorId;
-					prevPoint = start;
+					// enforce parallel positive intervals
+					assert (sensorAngle == angle): 
+						"In file " + sensorFileName +", positive intervals not parallel!";				
 				}
 				
-				// add the interval to data
-				addPositiveInterval(new Interval(sensorId,start,end));
+				// if it's a new sensor with a positive component, work out the gap between sensor
+
+				if (prevSensorID != sensorId && prevSensorID != -1){
+
+					// work out the current gap 
+					double currentGap = newInterval.getDistanceToLine(prevPoint) / (sensorId - prevSensorID);
+					// round to 3 decimal places. 
+					currentGap = (double)Math.round(currentGap * 1000) / 1000;
+					
+					// if the sensorGap has not been set, then set it
+					if (!sensorGapSet){
+						sensorGap = currentGap;
+						sensorGapSet = true;
+					}
+					// otherwise, assert that it's the same.
+					else{
+						assert(sensorGap==currentGap): "In file " + sensorFileName +", gaps between sensors are not uniform!";
+					}									
+				}
+				// update prevSensorID and prevPoint
+				else{
+					prevSensorID = sensorId;
+					prevPoint = newInterval.getStart();					
+				}
+				
+				
 			}
 			
 			// update sensor count
@@ -148,15 +123,42 @@ public class SensorData {
 	}
 	
 	// public methods for modifying variables in the class
-	public void addPositiveInterval(Interval positiveInterval){
+	public void addPositiveInterval(SensorInterval positiveInterval){
 		positiveIntervals.add(positiveInterval);
 	}
 	
 	// public method for reading variables in the class	
 	
 	// read list of intervals
-	public List<Interval> getPositiveIntervals(){
+	public List<SensorInterval> getPositiveIntervals(){
 		return positiveIntervals;
+	}
+	
+	// work out list of negative intervals
+	public List<SensorInterval>getNegativeIntervals(){
+		List<SensorInterval> negIntervals = new ArrayList<SensorInterval>();
+		SensorInterval prevInterval = null;
+		for (int i=0; i<positiveIntervals.size(); i++){
+			SensorInterval curInterval = positiveIntervals.get(i);
+			if (prevInterval != null){
+				SensorInterval curNeg = prevInterval.getNegativeInterval(curInterval);
+				if (curNeg != null){
+					negIntervals.add(curNeg);
+				}
+				else{
+					// add final neg interval after prevInteval
+					
+					// add first neg interval before curInterval
+				}
+			}
+			else{
+				// add first neg interval before curInterval
+				
+			}
+			
+			prevInterval = curInterval;
+		}		
+		return negIntervals;
 	}
 	
 	// read angle of intervals in atan2
@@ -188,7 +190,6 @@ public class SensorData {
 		return (List<Point2D>) scan.hull();
 	}
 	
-	// Drawing stuff
 	
 	// draw the positive intervals to a specified filename
 	public void drawPositiveIntervals(String filename){
@@ -206,7 +207,7 @@ public class SensorData {
 		// otherwise it draws outside the canvas.
 		double minX=Double.MAX_VALUE, minY=Double.MIN_VALUE;
 		for (int i=0; i<positiveIntervals.size(); i++){
-			Interval curInterval = positiveIntervals.get(i);
+			SensorInterval curInterval = positiveIntervals.get(i);
 			if (curInterval.getStart().getX() < minX){
 				minX = curInterval.getStart().getX();				
 			}
@@ -224,7 +225,7 @@ public class SensorData {
 		
 		// Draw components					
 		for (int i=0; i<positiveIntervals.size(); i++){
-			Interval curInterval = positiveIntervals.get(i);
+			SensorInterval curInterval = positiveIntervals.get(i);
 			Path2D path = new Path2D.Double();
 			path.moveTo(curInterval.getStart().getX()+xOffset, curInterval.getStart().getY()+yOffset);
 			path.lineTo(curInterval.getEnd().getX()+xOffset, curInterval.getEnd().getY()+yOffset);
@@ -302,10 +303,48 @@ public class SensorData {
 		
 		boolean positiveIntersect = false;		
 		
-		// to be done. 
+		List<SensorInterval> thisNegativeIntervals = getNegativeIntervals();
+		List<SensorInterval> otherPositiveIntervals = otherData.getPositiveIntervals();
+		List<SensorInterval> otherNegativeIntervals = otherData.getNegativeIntervals();
+		
+		for (int i=0; i<positiveIntervals.size(); i++){
+			SensorInterval curPositive = positiveIntervals.get(i);
+			
+			// check for intersection of other positive intervals
+			for (int j=0; j<otherPositiveIntervals.size() && !positiveIntersect; j++){
+				SensorInterval otherPositive = otherPositiveIntervals.get(j);
+				if (curPositive.intersects(otherPositive)){
+					positiveIntersect = true;					
+				}
+			}
+			
+			// check for intersection of other negative intervals
+			for (int j=0; j<otherNegativeIntervals.size(); j++){
+				SensorInterval otherNegative = otherNegativeIntervals.get(j);
+				if (curPositive.intersects(otherNegative)){
+					return false;
+				}
+			}
+		}
+		
+		// check for intersection of negative intervals with other positive
+		for (int i=0; i<thisNegativeIntervals.size(); i++){
+			SensorInterval curNegative = thisNegativeIntervals.get(i);
+			
+			// check for intersection of other positive intervals
+			for (int j=0; j<otherPositiveIntervals.size();j++){
+				if (curNegative.intersects(otherPositiveIntervals.get(j))){
+					return false;
+				}
+			}
+		}
+		
+		// check outer intervals
 		
 		return positiveIntersect;
 	}
+	
+	
 	
 	// test parsing file "data/test0000-linecoord[0..2]"
 	// draw their convex hull
