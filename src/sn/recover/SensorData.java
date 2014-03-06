@@ -386,9 +386,9 @@ public class SensorData {
 		
 		boolean positiveIntersect = false;		
 		
-		List<SensorInterval> thisNegativeIntervals = getNegativeIntervals();
+		List<SensorInterval> thisNegativeIntervals = getNegativeIntervalsFromPositive();
 		List<SensorInterval> otherPositiveIntervals = otherData.getPositiveIntervals();
-		List<SensorInterval> otherNegativeIntervals = otherData.getNegativeIntervals();
+		List<SensorInterval> otherNegativeIntervals = otherData.getNegativeIntervalsFromPositive();
 		
 		for (int i=0; i<positiveIntervals.size(); i++){
 			SensorInterval curPositive = positiveIntervals.get(i);
