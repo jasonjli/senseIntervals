@@ -21,6 +21,7 @@ public class SensorData {
 	// variables in the class
 	// list of positive intervals detected in data
 	private List<SensorInterval> positiveIntervals;	
+	private List<SensorInterval> negativeIntervals;
 	
 	// Angle of the parallel positive intervals in radians
 	private double sensorAngle;
@@ -29,13 +30,23 @@ public class SensorData {
 	// the count of number of sensors
 	private int sensorCount;
 
-	
+
+	// Constrctor given nothing
+	public SensorData(){
+		// initialize variables
+		positiveIntervals = new ArrayList<SensorInterval>();
+		negativeIntervals = new ArrayList<SensorInterval>();
+		sensorAngle=Double.NaN; // initiated at NaN
+		sensorGap = Double.NaN; // initiated at NaN
+		sensorCount = Integer.MIN_VALUE; // initiated at min value
+	}
 	
 	// Constructor from a given file
 	public SensorData(String sensorFileName){
 		
 		// initialize variables
 		positiveIntervals = new ArrayList<SensorInterval>();
+		negativeIntervals = new ArrayList<SensorInterval>();
 		sensorAngle=Double.NaN; // initiated at NaN
 		sensorGap = Double.NaN; // initiated at NaN
 		sensorCount = Integer.MIN_VALUE; // initiated at min value
@@ -117,8 +128,12 @@ public class SensorData {
 				
 			}
 			
+					
 			// update sensor count
 			sensorCount = maxSensor;
+			
+			// Derive negative intervals
+			negativeIntervals = getNegativeIntervalsFromPositive();
 			
 			// Print sensor data information
 			System.out.println("File " + sensorFileName + " read.");
@@ -143,8 +158,8 @@ public class SensorData {
 		return positiveIntervals;
 	}
 	
-	// work out list of negative intervals
-	public List<SensorInterval>getNegativeIntervals(){
+	// work out list of negative intervals from positiveIntervals
+	public List<SensorInterval>getNegativeIntervalsFromPositive(){
 		
 		
 		List<SensorInterval> negIntervals = new ArrayList<SensorInterval>();
