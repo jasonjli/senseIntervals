@@ -182,6 +182,7 @@ public class SensorData {
 	}
 	
 	// work out list of negative intervals from positiveIntervals
+	// UNFINISHED!!!
 		public List<SensorInterval>getNegativeIntervalsFromPositive(){
 			
 			
@@ -209,7 +210,7 @@ public class SensorData {
 						// create full negative interval on this sensorID. 
 						Point2D curIntervalStart = curInterval.getStart();
 						
-						//
+						// MORE CODE HERE!!!
 						
 						prevIntervalID++;
 					}
