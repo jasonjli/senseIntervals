@@ -20,17 +20,26 @@ public class SensorData {
 	
 	// variables in the class
 	// list of positive intervals detected in data
-	private List<SensorInterval> positiveIntervals = new ArrayList<SensorInterval>();	
+	private List<SensorInterval> positiveIntervals;	
 	
 	// Angle of the parallel positive intervals in radians
-	private double sensorAngle=Double.NaN; // initiated at NaN
-	private double sensorGap = Double.NaN; // initiated at NaN
-	private int sensorCount = Integer.MIN_VALUE; // initiated at min value
+	private double sensorAngle;
+	// Distance between adjacent sensor lines
+	private double sensorGap;
+	// the count of number of sensors
+	private int sensorCount;
 
 	
 	
 	// Constructor from a given file
 	public SensorData(String sensorFileName){
+		
+		// initialize variables
+		positiveIntervals = new ArrayList<SensorInterval>();
+		sensorAngle=Double.NaN; // initiated at NaN
+		sensorGap = Double.NaN; // initiated at NaN
+		sensorCount = Integer.MIN_VALUE; // initiated at min value
+		
 		File file = new File(sensorFileName);
 		
 		if (!file.exists()){
@@ -136,10 +145,39 @@ public class SensorData {
 	
 	// work out list of negative intervals
 	public List<SensorInterval>getNegativeIntervals(){
+		
+		
 		List<SensorInterval> negIntervals = new ArrayList<SensorInterval>();
+		
 		SensorInterval prevInterval = null;
+		
+		int prevIntervalID = 0;
+		
 		for (int i=0; i<positiveIntervals.size(); i++){
 			SensorInterval curInterval = positiveIntervals.get(i);
+			
+			int curIntervalID = curInterval.getSensorID();
+			
+			// If it's a new interval
+			if (curIntervalID != prevIntervalID){
+				// if it's the first positive interval we've seen
+				if (prevIntervalID==0){
+					// the first sensor is completely negative					
+				}				
+								
+				// write the negative sensors
+				prevIntervalID++;
+				while (prevIntervalID < curIntervalID){
+					// create full negative interval on this sensorID. 
+					Point2D curIntervalStart = curInterval.getStart();
+					
+					//
+					
+					prevIntervalID++;
+				}
+				
+			}
+			
 			if (prevInterval != null){
 				SensorInterval curNeg = prevInterval.getNegativeInterval(curInterval);
 				if (curNeg != null){
@@ -147,15 +185,17 @@ public class SensorData {
 				}
 				else{
 					// add final neg interval after prevInteval
-					
+					prevInterval.getNegativePostInterval();
 					// add first neg interval before curInterval
+					curInterval.getNegativePreInterval();
 				}
 			}
 			else{
 				// add first neg interval before curInterval
-				
+				curInterval.getNegativePreInterval();
 			}
 			
+			prevIntervalID = curIntervalID;
 			prevInterval = curInterval;
 		}		
 		return negIntervals;
@@ -190,6 +230,42 @@ public class SensorData {
 		return (List<Point2D>) scan.hull();
 	}
 	
+	// add a set of intervals to graphics
+	public void addIntervalsToGraphic(Graphics2D g2d, List<SensorInterval> intervals, boolean useOffset){
+		double xOffset=0, yOffset=0;
+		if (useOffset){
+			// calculate hull offset for drawing
+			// otherwise it draws outside the canvas.
+			double minX=Double.MAX_VALUE, minY=Double.MIN_VALUE;
+			for (int i=0; i<intervals.size(); i++){
+				SensorInterval curInterval = positiveIntervals.get(i);
+				if (curInterval.getStart().getX() < minX){
+					minX = curInterval.getStart().getX();				
+				}
+				if (curInterval.getStart().getY() < minY){
+					minY = curInterval.getStart().getY();				
+				}
+			}
+			
+			if (minX < 20){
+				xOffset = 20-minX;
+			}
+			if (minY < 20){
+				yOffset = 20-minY;
+			}
+		}
+		
+		// Draw components					
+		for (int i=0; i<intervals.size(); i++){
+			SensorInterval curInterval = intervals.get(i);
+			Path2D path = new Path2D.Double();
+			path.moveTo(curInterval.getStart().getX()+xOffset, curInterval.getStart().getY()+yOffset);
+			path.lineTo(curInterval.getEnd().getX()+xOffset, curInterval.getEnd().getY()+yOffset);
+			path.closePath();
+			g2d.draw(path);
+		}
+		
+	}
 	
 	// draw the positive intervals to a specified filename
 	public void drawPositiveIntervals(String filename){
@@ -200,38 +276,8 @@ public class SensorData {
 		Graphics2D g2d = (Graphics2D) img.createGraphics();
 		g2d.setColor(Color.BLACK);
 		
-		// Calculate offsets
-		double xOffset=0, yOffset=0;
-		
-		// calculate hull offset for drawing
-		// otherwise it draws outside the canvas.
-		double minX=Double.MAX_VALUE, minY=Double.MIN_VALUE;
-		for (int i=0; i<positiveIntervals.size(); i++){
-			SensorInterval curInterval = positiveIntervals.get(i);
-			if (curInterval.getStart().getX() < minX){
-				minX = curInterval.getStart().getX();				
-			}
-			if (curInterval.getStart().getY() < minY){
-				minY = curInterval.getStart().getY();				
-			}
-		}
-		
-		if (minX < 20){
-			xOffset = 20-minX;
-		}
-		if (minY < 20){
-			yOffset = 20-minY;
-		}
-		
-		// Draw components					
-		for (int i=0; i<positiveIntervals.size(); i++){
-			SensorInterval curInterval = positiveIntervals.get(i);
-			Path2D path = new Path2D.Double();
-			path.moveTo(curInterval.getStart().getX()+xOffset, curInterval.getStart().getY()+yOffset);
-			path.lineTo(curInterval.getEnd().getX()+xOffset, curInterval.getEnd().getY()+yOffset);
-			path.closePath();
-			g2d.draw(path);
-		}
+		boolean useOffsets = true;
+		addIntervalsToGraphic(g2d,positiveIntervals,useOffsets);
 		
 		// Write to file
 		System.out.println("saving image to " + filename);
@@ -242,6 +288,28 @@ public class SensorData {
 			e.printStackTrace();
 		}
 	}
+	
+	// draw the positive intervals to a specified filename
+	public void drawIntervals(List<SensorInterval> intervals, String filename){
+		
+		// Initialize image
+		BufferedImage img = new BufferedImage(1024, 800,
+				BufferedImage.TYPE_4BYTE_ABGR);
+		Graphics2D g2d = (Graphics2D) img.createGraphics();
+		g2d.setColor(Color.BLACK);
+		
+		boolean useOffsets = true;
+		addIntervalsToGraphic(g2d,intervals,useOffsets);
+		
+		// Write to file
+		System.out.println("saving image to " + filename);
+		try {
+			ImageIO.write(img, "png", new File(filename));
+		} catch (IOException e) {
+			System.err.println("failed to save image " + filename);
+			e.printStackTrace();
+		}
+	}	
 	
 	// draw the convex hull of the positive intervals to a specified filename
 	public void drawConvexHull(String filename){

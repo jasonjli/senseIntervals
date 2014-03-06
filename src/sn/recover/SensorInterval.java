@@ -80,6 +80,27 @@ import java.awt.geom.Point2D;
 			return new SensorInterval(sensorID, getEnd(), otherInterval.getStart());
 		}
 		
+		// get negative interval before first positive interval
+		public SensorInterval getNegativePreInterval(){
+			// work out coordinates
+			int extendLength = 200;
+			double newX = getStart().getX() - extendLength * Math.cos(getAngle());
+			double newY = getStart().getY() - extendLength * Math.sin(getAngle());		
+			Point2D negStart = new Point2D.Double(newX,newY);
+									
+			return new SensorInterval(sensorID, negStart, getStart());
+		}
+		
+		// get negative interval after last positive interval
+		public SensorInterval getNegativePostInterval(){
+			// work out coordinates
+			int extendLength = 200;
+			double newX = getEnd().getX() + extendLength * Math.cos(getAngle());
+			double newY = getEnd().getY() + extendLength * Math.sin(getAngle());		
+			Point2D negEnd = new Point2D.Double(newX,newY);
+			
+			return new SensorInterval(sensorID, getEnd(), negEnd);			
+		}
 		
 		
 		// tests

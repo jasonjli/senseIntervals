@@ -139,13 +139,7 @@ public class GeomUtil {
 			}
 		}
 
-//		for (int i = 0; i < intersectionArray.size(); i++) {
-//			Point2D temPt = intersectionArray.get(i);
-//			intersectionArray.set(i, rotateInverse.transform(temPt, null));
-//		}
 
-		// System.out.println("Intersection: " +
-		// intersections.size());
 		Point2D start = new Point2D.Double(), end = new Point2D.Double();
 		boolean drawHole = false, hasStart = false, hasEnd = false;
 		for (Iterator<Point2D> it = intersectionArray.iterator(); it.hasNext();) {
@@ -315,7 +309,7 @@ public class GeomUtil {
 	 * 
 	 * @param path
 	 * @param line
-	 * @return
+	 * @return a set of point as intersections
 	 * @throws Exception
 	 */
 	public static Set<Point2D> getIntersections(Path2D path, Line2D line,
