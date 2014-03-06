@@ -158,63 +158,11 @@ public class SensorData {
 		return positiveIntervals;
 	}
 	
-	// work out list of negative intervals from positiveIntervals
-	public List<SensorInterval>getNegativeIntervalsFromPositive(){
-		
-		
-		List<SensorInterval> negIntervals = new ArrayList<SensorInterval>();
-		
-		SensorInterval prevInterval = null;
-		
-		int prevIntervalID = 0;
-		
-		for (int i=0; i<positiveIntervals.size(); i++){
-			SensorInterval curInterval = positiveIntervals.get(i);
-			
-			int curIntervalID = curInterval.getSensorID();
-			
-			// If it's a new interval
-			if (curIntervalID != prevIntervalID){
-				// if it's the first positive interval we've seen
-				if (prevIntervalID==0){
-					// the first sensor is completely negative					
-				}				
-								
-				// write the negative sensors
-				prevIntervalID++;
-				while (prevIntervalID < curIntervalID){
-					// create full negative interval on this sensorID. 
-					Point2D curIntervalStart = curInterval.getStart();
-					
-					//
-					
-					prevIntervalID++;
-				}
-				
-			}
-			
-			if (prevInterval != null){
-				SensorInterval curNeg = prevInterval.getNegativeInterval(curInterval);
-				if (curNeg != null){
-					negIntervals.add(curNeg);
-				}
-				else{
-					// add final neg interval after prevInteval
-					prevInterval.getNegativePostInterval();
-					// add first neg interval before curInterval
-					curInterval.getNegativePreInterval();
-				}
-			}
-			else{
-				// add first neg interval before curInterval
-				curInterval.getNegativePreInterval();
-			}
-			
-			prevIntervalID = curIntervalID;
-			prevInterval = curInterval;
-		}		
-		return negIntervals;
+	public List<SensorInterval> getNegativeIntervals(){
+		return negativeIntervals;
 	}
+	
+	
 	
 	// read angle of intervals in atan2
 	public double getAngle(){
@@ -232,6 +180,64 @@ public class SensorData {
 		
 		return positiveCoordinates;
 	}
+	
+	// work out list of negative intervals from positiveIntervals
+		public List<SensorInterval>getNegativeIntervalsFromPositive(){
+			
+			
+			List<SensorInterval> negIntervals = new ArrayList<SensorInterval>();
+			
+			SensorInterval prevInterval = null;
+			
+			int prevIntervalID = 0;
+			
+			for (int i=0; i<positiveIntervals.size(); i++){
+				SensorInterval curInterval = positiveIntervals.get(i);
+				
+				int curIntervalID = curInterval.getSensorID();
+				
+				// If it's a new interval
+				if (curIntervalID != prevIntervalID){
+					// if it's the first positive interval we've seen
+					if (prevIntervalID==0){
+						// the first sensor is completely negative					
+					}				
+									
+					// write the negative sensors
+					prevIntervalID++;
+					while (prevIntervalID < curIntervalID){
+						// create full negative interval on this sensorID. 
+						Point2D curIntervalStart = curInterval.getStart();
+						
+						//
+						
+						prevIntervalID++;
+					}
+					
+				}
+				
+				if (prevInterval != null){
+					SensorInterval curNeg = prevInterval.getNegativeInterval(curInterval);
+					if (curNeg != null){
+						negIntervals.add(curNeg);
+					}
+					else{
+						// add final neg interval after prevInteval
+						prevInterval.getNegativePostInterval();
+						// add first neg interval before curInterval
+						curInterval.getNegativePreInterval();
+					}
+				}
+				else{
+					// add first neg interval before curInterval
+					curInterval.getNegativePreInterval();
+				}
+				
+				prevIntervalID = curIntervalID;
+				prevInterval = curInterval;
+			}		
+			return negIntervals;
+		}
 	
 	// read the convex hull of the positive intervals
 	public List<Point2D> getConvexHull(){
