@@ -9,12 +9,15 @@ To generate random polygons with multilayers of holes and sub-regions
 
 Run command: 
       
-      java -jar regionGenerator.jar [value]
-
-to generate [value] test cases
-
+      	USAGE: java -jar RegionGenerator.jar parameters...
+				parameters:
+					width=<Integer>
+					height=<Integer>
+					nCases=<Integer>
+					nSensorSets=<Integer>
+					gap=<Integer>
 Example:
 
-      java -jar regionGenerator.jar 20
+      java -jar regionGenerator.jar nCases=20
       
-20 cases will be generated and stored in ./data folder
+20 cases will be generated and stored in ./data folder with default settings.
