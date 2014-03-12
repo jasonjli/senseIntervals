@@ -307,8 +307,7 @@ public class SensorData {
 				if (prevIntervalID != 1) {// if current interval is not from
 											// first interval
 					// add negative intervals from previous sensor
-					addNegativeIntervals(intervalsInSameSensor, prevIntervalID,
-							negIntervals);
+					addNegativeIntervals(intervalsInSameSensor, negIntervals);
 					prevIntervalID++;
 				}
 
@@ -329,8 +328,7 @@ public class SensorData {
 			}
 
 			if (i == positiveIntervals.size() - 1) {
-				addNegativeIntervals(intervalsInSameSensor, prevIntervalID,
-						negIntervals);
+				addNegativeIntervals(intervalsInSameSensor, negIntervals);
 			}
 			prevIntervalID = curIntervalID;
 		}
@@ -356,14 +354,15 @@ public class SensorData {
 	 * get negative intervals from positive ones of a sensor
 	 * 
 	 * @param intervalsInSameSensor
-	 * @param prevIntervalID
+	 *            a set of intervals that belong to the same sensor
 	 * @param negIntervals
 	 */
 	public void addNegativeIntervals(
-			List<SensorInterval> intervalsInSameSensor, int prevIntervalID,
+			List<SensorInterval> intervalsInSameSensor,
 			List<SensorInterval> negIntervals) {
 		List<Point2D> ptsOnFullSensor = new ArrayList<Point2D>();
 		Line2D fullInterval;
+		int sensorID;
 
 		// rotate the points to ensure they can be sorted vertically
 		AffineTransform rotate = new AffineTransform();
@@ -377,12 +376,15 @@ public class SensorData {
 		fullInterval = intervalsInSameSensor.get(0).getFullInterval(width,
 				height);
 
+		sensorID = intervalsInSameSensor.get(0).getSensorID();
+
 		// add the start and end points of the full interval
 		ptsOnFullSensor.add(fullInterval.getP1());
 		ptsOnFullSensor.add(fullInterval.getP2());
 
 		// add all other points from positive intervals
 		for (SensorInterval si : intervalsInSameSensor) {
+
 			ptsOnFullSensor.add(si.getStart());
 			ptsOnFullSensor.add(si.getEnd());
 		}
@@ -420,7 +422,7 @@ public class SensorData {
 
 			// add a negative interval
 			if (hasP1 && hasP2) {
-				negIntervals.add(new SensorInterval(prevIntervalID, s, e));
+				negIntervals.add(new SensorInterval(sensorID, s, e));
 				hasP1 = false;
 				hasP2 = false;
 			}
@@ -434,6 +436,7 @@ public class SensorData {
 	 * @param curIntervalID
 	 * @param prevIntervalID
 	 * @param gapInX
+	 *            gap between two adjacent intervals corresponding to x axis
 	 * @param negIntervals
 	 */
 	public void addFullnegativeInterval(SensorInterval curInterval,
@@ -525,6 +528,7 @@ public class SensorData {
 	 * @param g2d
 	 * @param intervals
 	 * @param useOffset
+	 *            if use offset
 	 */
 	public void addIntervalsToGraphic(Graphics2D g2d,
 			List<SensorInterval> intervals, boolean useOffset) {
@@ -754,7 +758,7 @@ public class SensorData {
 		outPositive.close();
 		outNegative.close();
 	}
-	
+
 	// tests
 
 	/**
