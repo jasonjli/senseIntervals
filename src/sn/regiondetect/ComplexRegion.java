@@ -14,8 +14,15 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 import sn.debug.ShowDebugImage;
 
+/**
+ * A complex region constructed with several Regions
+ * 
+ * @author
+ * 
+ */
 public class ComplexRegion {
 
+	// layer of overlapped simple regions
 	final private static int _maxLayer = 7;
 	final private static int _minLayer = 4;
 
@@ -29,6 +36,12 @@ public class ComplexRegion {
 	private int _height;
 	private int _currentLayer;
 
+	/**
+	 * Constructor takes canvas width and height
+	 * 
+	 * @param width
+	 * @param height
+	 */
 	public ComplexRegion(int width, int height) {
 		_width = width;
 		_height = height;
@@ -36,10 +49,18 @@ public class ComplexRegion {
 		_caseID = -1;
 	}
 
+	/**
+	 * Constructor takes a file
+	 * 
+	 * @param filename
+	 * @throws IOException
+	 */
 	public ComplexRegion(String filename) throws IOException {
 		_complexRegion = this.rebuildRegionFromFile(filename);
 		_caseID = -1;
 	}
+
+	// get members
 
 	public Region[] getComplexRegion() {
 		return _complexRegion;
@@ -57,6 +78,13 @@ public class ComplexRegion {
 		return _height;
 	}
 
+	/**
+	 * draw a complex region
+	 * 
+	 * @param c
+	 *            Color color
+	 * @return img in form of BufferedImage
+	 */
 	public BufferedImage drawRegion(Color c) {
 		BufferedImage img = new BufferedImage(_width, _height,
 				BufferedImage.TYPE_4BYTE_ABGR);
@@ -82,10 +110,21 @@ public class ComplexRegion {
 
 	}
 
+	/**
+	 * draw a complex region, use Cyan as default
+	 * 
+	 * @return img
+	 */
 	public BufferedImage drawRegion() {
 		return drawRegion(Color.CYAN);
 	}
 
+	/**
+	 * save the image and data of a complex region
+	 * 
+	 * @return caseID
+	 * @throws IOException
+	 */
 	public int saveRegion() throws IOException {
 		int caseCount = 0;
 		File file = new File("data/CaseCount.ini");
@@ -118,6 +157,16 @@ public class ComplexRegion {
 
 	}
 
+	/**
+	 * save the image and data of a complex region
+	 * 
+	 * @param caseID
+	 * @param fileName
+	 * @param fixedName
+	 *            Boolean value tells if using the input filename
+	 * @return caseID
+	 * @throws IOException
+	 */
 	public int saveRegion(int caseID, String fileName, boolean fixedName)
 			throws IOException {
 		String filename;
@@ -144,10 +193,9 @@ public class ComplexRegion {
 		}
 		logOutput.close();
 
-		
 		// Save case image without lines
 		filename = filename + "-noline.png";
-		
+
 		System.out.println("saving image to " + filename);
 		try {
 			ImageIO.write(this.drawRegion(), "png", new File(filename));
@@ -164,6 +212,12 @@ public class ComplexRegion {
 		return _caseID;
 	}
 
+	/**
+	 * rebuild a complex region from a file
+	 * @param filename
+	 * @return a complex region in form of Region[]
+	 * @throws IOException
+	 */
 	public Region[] rebuildRegionFromFile(String filename) throws IOException {
 		Region[] regions;
 		int nSubRegion = 0;
