@@ -14,12 +14,12 @@ import javax.imageio.ImageIO;
 import sn.debug.ShowDebugImage;
 
 public class ParallelLineGenerator {
-	double _angle; // in radian
+	private double _angle; // in radian
 
 	// pixel
-	int _gap;
-	int _height;
-	int _width;
+	private int _gap;
+	private int _height;
+	private int _width;
 
 	/**
 	 * 
@@ -41,8 +41,8 @@ public class ParallelLineGenerator {
 	 */
 	public List<Line2D> generateParallelLines() {
 		List<Line2D> lines = new ArrayList<Line2D>();
-		double xOffset = Math.tan(_angle) * _height;
-		double gapInX = Math.abs(_gap / Math.cos(_angle));
+		double xOffset = (1/Math.tan(_angle)) * _height;
+		double gapInX = Math.abs(_gap / Math.sin(_angle));
 		int nlines = (int) ((_width + Math.abs(xOffset)) / gapInX) + 1;
 		double xTop;
 		double xButtom;

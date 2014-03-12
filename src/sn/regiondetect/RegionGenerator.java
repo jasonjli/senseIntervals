@@ -21,14 +21,14 @@ public class RegionGenerator {
 	protected int _regionRad;
 	protected boolean _exceedBoundary;
 	protected Point _regionCentre;
-	protected Polygon[] _mainRegions;
-	protected int[] _mainRegionRads;
-	protected Point[] _mainRegionCentres;
-	protected boolean[] _mainRegionExceed;
+//	protected Polygon[] _mainRegions;
+//	protected int[] _mainRegionRads;
+//	protected Point[] _mainRegionCentres;
+//	protected boolean[] _mainRegionExceed;
 
-	protected Polygon[] _holes;
-	protected Point[] _holesCentres;
-	protected int[] _holeRads;
+//	protected Polygon[] _holes;
+//	protected Point[] _holesCentres;
+//	protected int[] _holeRads;
 
 	protected int _width;
 	protected int _height;
@@ -53,6 +53,7 @@ public class RegionGenerator {
 	 */
 	public Region[] generateRegions(int width, int height) {
 		Random r = new Random();
+		int nBaseRegion = 20;
 		int nRegions = 0;
 		int nLayers = r.nextInt(_maxLayer - _minLayer) + _minLayer;
 
@@ -62,7 +63,7 @@ public class RegionGenerator {
 		// Generate number of regions in each layer
 		for (int i = 0; i < nLayers; i++) {
 			if (i == 0) {
-				nRegionsPerLayer[i] = r.nextInt(20-5) + 5;
+				nRegionsPerLayer[i] = r.nextInt(nBaseRegion-5) + 5;
 				nRegions += nRegionsPerLayer[i];
 			} else {
 				nRegionsPerLayer[i] = r.nextInt(nRegionsPerLayer[i - 1]) + 1;
@@ -180,7 +181,7 @@ public class RegionGenerator {
 		_regionCentre = centre;
 		double crAng = 0,
 
-		// Angle between each point
+		// Angle between each two points
 		angDiff = Math.toRadians(360.0 / numPoints), radJitter = radius / 3.0, angJitter = angDiff * .9;
 		_exceedBoundary = false;
 		int prevX = centre.x, prevY = centre.y;
@@ -211,7 +212,7 @@ public class RegionGenerator {
 			crAng += angDiff;
 		}
 
-		return new Region(xPolyPoints, yPolyPoints, numPoints, _regionRad,
+		return new Region(xPolyPoints, yPolyPoints, _regionRad,
 				_currentLayer, _regionCentre, _exceedBoundary);
 	}
 
@@ -232,7 +233,7 @@ public class RegionGenerator {
 		for (int i = 0; i < regions.length; i++) {
 			g2d.setColor(Color.BLACK);
 			// g2d.fill(regions[i]);
-			g2d.draw(regions[i]._path);
+			g2d.draw(regions[i].getShape());
 		}
 
 		frame = new ShowDebugImage("Regions", img);

@@ -6,20 +6,21 @@ import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.List;
 
+//A simple region or hole
 public class Region{
-	protected Region _next;
-	protected Region _prev;
-	protected int _layer;
-	protected int _radius;
-	protected Point _centre;
-	protected boolean _exceedBoundary;
-	protected int[] _xArray;
-	protected int[] _yArray;
-	protected List<Point> _pts;
-	protected Path2D _path;
+	private Region _next;
+	private Region _prev;
+	private int _layer;
+	private int _radius;
+	private Point _centre;
+	private boolean _exceedBoundary;
+	private int[] _xArray;
+	private int[] _yArray;
+	private List<Point> _pts;
+	private Path2D _path;
 	
-	public Region(int[] x, int[] y, int nPts, int radius, int layer ,Point centre, boolean exceed){
-		//super(x, y, nPts);
+	public Region(int[] x, int[] y, int radius, int layer ,Point centre, boolean exceed){
+
 		_next = null;
 		_prev = null;
 		_pts = new ArrayList<Point>(); 
@@ -34,6 +35,24 @@ public class Region{
 		}
 		_path = GeomUtil.getRoundedGeneralPathFromPoints(_pts);
 	}
+	
+	public Region(int[] x, int[] y, int layer){
+
+		_next = null;
+		_prev = null;
+		_pts = new ArrayList<Point>(); 
+		_radius = -1;
+		_layer = layer;
+		_centre = null;
+		_exceedBoundary = false;
+		_xArray = x;
+		_yArray = y;
+		for(int i = 0; i < x.length; i++){
+			_pts.add(new Point(x[i],y[i]));
+		}
+		_path = GeomUtil.getRoundedGeneralPathFromPoints(_pts);
+	}
+	
 	
 	public boolean isHole(){
 		if(_layer%2 == 0)
@@ -89,10 +108,11 @@ public class Region{
 	public String toString(){
 		String regionInfo = "";
 		
-		regionInfo += ("layer="+_layer+"\n");
-		regionInfo += ("Bounding Points\n");
+		regionInfo += ("nPoints " + _xArray.length +System.getProperty("line.separator"));
+		regionInfo += ("layer "+_layer+System.getProperty("line.separator"));
+		
 		for(int i = 0; i < _xArray.length; i++){
-			regionInfo += ("["+_xArray[i]+","+_yArray[i]+"]\n");
+			regionInfo += (_xArray[i]+","+_yArray[i]+System.getProperty("line.separator"));
 		}
 			
 		return regionInfo;

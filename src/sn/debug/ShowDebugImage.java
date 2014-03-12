@@ -5,6 +5,7 @@ import java.util.*;
 import java.awt.*;
 import java.awt.image.*;
 import java.awt.event.*;
+
 import javax.imageio.*;
 import javax.swing.*;
 
@@ -55,14 +56,14 @@ public class ShowDebugImage {
 		public void keyPressed(KeyEvent key) {
 
 			// process key
-			if (key.getKeyCode() == key.VK_ENTER) {
+			if (key.getKeyCode() == KeyEvent.VK_ENTER) {
 				_parent.setVisible(false);
 				_parent.dispose();
 
-			} else if (key.getKeyCode() == key.VK_ESCAPE) {
+			} else if (key.getKeyCode() == KeyEvent.VK_ESCAPE) {
 				System.exit(0);
 
-			} else if (key.getKeyCode() == key.VK_D) {
+			} else if (key.getKeyCode() == KeyEvent.VK_D) {
 				String imgFilename = String.format("img%04d.png", _saveCount);
 				System.out.println("saving image to " + imgFilename);
 				BufferedImage bi = new BufferedImage(_img.getWidth(null),
@@ -100,7 +101,7 @@ public class ShowDebugImage {
 				}
 				_saveCount += 1;
 
-			} else if (key.getKeyCode() == key.VK_H) {
+			} else if (key.getKeyCode() == KeyEvent.VK_H) {
 				// toggle highlight mode
 				if (_highlightMode) {
 					_highlightMode = false;
@@ -110,7 +111,7 @@ public class ShowDebugImage {
 					_highlightIndex = -1;
 				}
 
-			} else if (key.getKeyCode() == key.VK_S) {
+			} else if (key.getKeyCode() == KeyEvent.VK_S) {
 				String imgFilename = String.format("img%04d.png", _saveCount);
 				System.out.println("saving image to " + imgFilename);
 				BufferedImage bi = new BufferedImage(_img.getWidth(null),
