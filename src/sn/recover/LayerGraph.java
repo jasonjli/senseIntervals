@@ -232,21 +232,6 @@ public class LayerGraph {
 
 	}
 
-	public void drawComponent(ComponentInstance component, BufferedImage img,
-			Color c, boolean layerInfo) {
-
-		Graphics2D g2d = (Graphics2D) img.createGraphics();
-
-		g2d.setColor(c);
-		for (ComponentInstance com : _componentList)
-			g2d.draw(com.getPath());
-		//
-		// for(ComponentInstance subComponent : component.getSubComponents()){
-		// drawComponents(subComponent, img, c, layerInfo);
-		// }
-
-	}
-
 	/**
 	 * get the root component
 	 * 
