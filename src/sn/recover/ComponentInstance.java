@@ -29,6 +29,7 @@ public class ComponentInstance {
 	
 	public ComponentInstance(int level){
 		_pts = null;
+		_containerComponent = null;
 		_subComponents = new ArrayList<ComponentInstance>();
 		_level = level; //level has not been set
 		_path = null;
@@ -36,6 +37,7 @@ public class ComponentInstance {
 	
 	public ComponentInstance(List<Point> pts){
 		_pts = pts;
+		_containerComponent = null;
 		_subComponents = new ArrayList<ComponentInstance>();
 		_level = -1; //level has not been set
 		_path = GeomUtil.getRoundedGeneralPathFromPoints(_pts);
@@ -43,6 +45,7 @@ public class ComponentInstance {
 	
 	public ComponentInstance(Path2D path){
 		_pts = null;
+		_containerComponent = null;
 		_subComponents = new ArrayList<ComponentInstance>();
 		_level = -1; //level has not been set
 		_path = path;
@@ -50,6 +53,7 @@ public class ComponentInstance {
 	
 	public ComponentInstance(List<Point> pts, int level){
 		_pts = null;
+		_containerComponent = null;
 		_subComponents = new ArrayList<ComponentInstance>();
 		_level = level;
 		_path = GeomUtil.getRoundedGeneralPathFromPoints(_pts);
@@ -57,6 +61,7 @@ public class ComponentInstance {
 	
 	public ComponentInstance(Path2D path, int level){
 		_pts = null;
+		_containerComponent = null;
 		_subComponents = new ArrayList<ComponentInstance>();
 		_level = level; //level has not been set
 		_path = path;
