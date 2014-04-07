@@ -593,7 +593,7 @@ public class ComplexRegion {
 		g2d.clearRect(0, 0, width, height);
 		
 		LayerGraph layerGraph = new LayerGraph(complexRegion);
-		layerGraph.drawComponents(layerGraph.getUnboundedComponent(), imgLayer, Color.RED, true);
+		layerGraph.drawComponents(layerGraph.getUnboundedComponent(), imgLayer, Color.RED, false);
 		
 		frameReconstruct = new ShowDebugImage("Layer graph", imgLayer);
 	}

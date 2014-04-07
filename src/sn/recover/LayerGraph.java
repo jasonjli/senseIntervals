@@ -5,12 +5,10 @@ import java.awt.Graphics2D;
 import java.awt.geom.Area;
 import java.awt.geom.Path2D;
 import java.awt.geom.PathIterator;
-import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-import sn.debug.ShowDebugImage;
 import sn.regiondetect.ComplexRegion;
 import sn.regiondetect.Region;
 
@@ -18,15 +16,13 @@ public class LayerGraph {
 	private ComplexRegion _complexRegion;
 	private ComponentInstance _unboundedComponent;
 	private List<ComponentInstance> _componentList;
-	private int _width;
-	private int _height;
+
 
 	public LayerGraph(ComplexRegion complexRegion) throws Exception {
 		// Initialize the root component, i.e. the canvas
 		_unboundedComponent = new ComponentInstance(0);
 		_complexRegion = complexRegion;
-		_width = complexRegion.getWidth();
-		_height = complexRegion.getHeight();
+
 		_componentList = getRealComponents();
 		setLayerInfo();
 	}
@@ -142,10 +138,13 @@ public class LayerGraph {
 						// if component 2 entirely contains component 1's
 						// previous container
 						if (contain(prevContainer, area2)) {
-
 							// set component 2 as the container of component 1
 							c1.setContainerComponent(c2);
 							// add 1 to component 1's level
+							c1.setLevel(c1.getLevel() + 1);
+						}
+						
+						else{
 							c1.setLevel(c1.getLevel() + 1);
 						}
 					}
@@ -188,10 +187,10 @@ public class LayerGraph {
 			// draw layer information as required
 			if (layerInfo) {
 				Area area = new Area(component.getPath());
-				double centreX = area.getBounds().getCenterX();
-				double centreY = area.getBounds().getCenterY();
-				
-				//inverse color
+				double x = area.getBounds().getX();
+				double y = area.getBounds().getY();
+
+				// inverse color
 				int r = c.getRed();
 				int g = c.getGreen();
 				int b = c.getBlue();
@@ -199,15 +198,32 @@ public class LayerGraph {
 				int newG = 255 - g;
 				int newB = 255 - b;
 				Color newC = new Color(newR, newG, newB);
-				
+
 				g2d.setColor(newC);
 
 				g2d.drawString("layer = " + component.getLevel(),
-						(int) centreX, (int) centreY);
+						(int) x, (int) y);
 
 				g2d.setColor(c);
 			}
-			g2d.fill(component.getPath());
+			g2d.draw(component.getPath());
+		}
+
+		else if(component.getLevel() > 0){
+			g2d.setColor(Color.GREEN);
+			// draw layer information as required
+			if (layerInfo) {
+				Area area = new Area(component.getPath());
+				double centreX = area.getBounds().getCenterX();
+				double centreY = area.getBounds().getCenterY();
+
+				g2d.setColor(Color.BLACK);
+				g2d.drawString("layer = " + component.getLevel(),
+						(int) centreX, (int) centreY);
+				g2d.setColor(Color.GREEN);
+			}
+			g2d.draw(component.getPath());
+			g2d.setColor(c);
 		}
 
 		for (ComponentInstance subComponent : component.getSubComponents()) {
