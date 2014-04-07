@@ -3,6 +3,10 @@ package sn.regiondetect;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.geom.Area;
+import java.awt.geom.Path2D;
+import java.awt.geom.PathIterator;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -10,6 +14,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import javax.imageio.ImageIO;
 import sn.debug.ShowDebugImage;
@@ -214,6 +220,7 @@ public class ComplexRegion {
 
 	/**
 	 * rebuild a complex region from a file
+	 * 
 	 * @param filename
 	 * @return a complex region in form of Region[]
 	 * @throws IOException
@@ -558,12 +565,106 @@ public class ComplexRegion {
 				_regionCentre, _exceedBoundary);
 	}
 
+
 	static public void main(String args[]) throws Exception {
 		ShowDebugImage frame = null, frameReconstruct = null;
 		int width = 800;
 		int height = 600;
-
 		ComplexRegion complexRegion = new ComplexRegion(width, height);
+
+		//
+		// //TEST TO BE DELETED
+		// Path2D boldLine = new Path2D.Double();
+		// boldLine.setWindingRule(Path2D.WIND_EVEN_ODD);
+		// boldLine.moveTo(20, 20);
+		// boldLine.lineTo(20, 150);
+		// boldLine.lineTo(150, 150);
+		// boldLine.lineTo(150, 20);
+		// boldLine.closePath();
+		// boldLine.moveTo(10, 10);
+		// boldLine.lineTo(10, 200);
+		// boldLine.lineTo(200, 200);
+		// boldLine.lineTo(200, 10);
+		// boldLine.closePath();
+		//
+		//
+		//
+		// Path2D hollow = new Path2D.Double();
+		//
+		// hollow.moveTo(20, 20);
+		// hollow.lineTo(20, 150);
+		// hollow.lineTo(150, 150);
+		// hollow.lineTo(150, 20);
+		// hollow.closePath();
+		//
+		// Path2D hollowA = new Path2D.Double();
+		// hollowA.moveTo(30, 30);
+		// hollowA.lineTo(30, 280);
+		// hollowA.lineTo(280, 280);
+		// hollowA.lineTo(280, 30);
+		// hollowA.closePath();
+		//
+		// Area area1 = new Area(boldLine);
+		// Area hollow1 = new Area(hollow);
+		// Area hollow2 = new Area(hollowA);
+		// //area1.subtract(hollow1);
+		// //area1.subtract(hollow2);
+		//
+		// BufferedImage img = new BufferedImage(complexRegion._width,
+		// complexRegion._height,
+		// BufferedImage.TYPE_4BYTE_ABGR);
+		// Graphics2D g2d = (Graphics2D) img.createGraphics();
+		//
+		// g2d.setBackground(Color.WHITE);
+		// g2d.clearRect(0, 0, complexRegion._width, complexRegion._height);
+		//
+		// Path2D path2 = new Path2D.Double();
+		// path2.append(area1, false);
+		// Area area2 = new Area(path2);
+		// PathIterator pathIter = area1.getPathIterator(null);
+		// g2d.setColor(Color.RED);
+		// g2d.fill(area2);
+		// frame = new ShowDebugImage("Regions", img);
+		// frame.refresh(img);
+		//
+		//
+		// // Double array with length 6 needed by iterator
+		// double[] coords = new double[6];
+		// while (!pathIter.isDone()) {
+		// int type = pathIter.currentSegment(coords);
+		// switch (type) {
+		// case PathIterator.SEG_LINETO: {
+		// Point2D intersectPt = new Point2D.Double(coords[0], coords[1]);
+		// System.out.println("type: LINETO "+ intersectPt.toString());
+		// break;
+		// }
+		//
+		// case PathIterator.SEG_MOVETO: {
+		// Point2D intersectPt = new Point2D.Double(coords[0], coords[1]);
+		// System.out.println("type: MOVETO "+ intersectPt.toString());
+		// break;
+		// }
+		//
+		// case PathIterator.SEG_CUBICTO: {
+		//
+		// Point2D intersectPt = new Point2D.Double(coords[0], coords[1]);
+		// System.out.println("type: CUBICTO "+ intersectPt.toString());
+		// break;
+		// }
+		//
+		// case PathIterator.SEG_CLOSE: {
+		// System.out.println("type: CLOSE ");
+		// break;
+		// }
+		// default: {
+		// throw new Exception("Unsupported PathIterator segment type: "
+		// + type);
+		// }
+		// }
+		// pathIter.next();
+		// }
+		//
+		// /****************************************************************/
 
 		BufferedImage img = complexRegion.drawRegion();
 		complexRegion.saveRegion();
