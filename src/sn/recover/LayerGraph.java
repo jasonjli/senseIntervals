@@ -15,8 +15,8 @@ import sn.regiondetect.Region;
 public class LayerGraph {
 	private static int INSERTION_COST = 1;
 	private static int DELETION_COST = 1;
-	private static int RENOMING_COST = 1;
-	
+	private static int RENAMING_COST = 1;
+
 	private ComplexRegion _complexRegion;
 	private ComponentInstance _unboundedComponent;
 	private List<ComponentInstance> _componentList;
@@ -236,8 +236,28 @@ public class LayerGraph {
 	}
 
 	/**
-	 * Use breadth first search to get the left-to-right postorder numbering of
-	 * a tree
+	 * Use left-to-right post-order to search a tree
+	 * 
+	 * @param root
+	 * @return
+	 */
+	public List<ComponentInstance> traversalLeftToRightPostOrder(
+			ComponentInstance root) {
+		// List for storing ordered nodes
+		List<ComponentInstance> nodeList = new ArrayList<ComponentInstance>();
+
+		// recursion
+		for (ComponentInstance node : root.getSubComponents()) {
+			traversalLeftToRightPostOrder(node);
+			nodeList.add(root);
+			root.setTraversalNumber(nodeList.size());
+		}
+
+		return nodeList;
+	}
+
+	/**
+	 * Use breadth first to search a tree
 	 * 
 	 * @param root
 	 * @return a list of node in left-to-right order
@@ -274,49 +294,98 @@ public class LayerGraph {
 
 	/**
 	 * Calculate unordered tree edit distance <br/>
-	 * Implementation of algorithm in 'On the editing distance between unordered labeled trees' K. Zhang et.al
+	 * Implementation of algorithm in 'On the editing distance between unordered
+	 * labeled trees' K. Zhang et.al
 	 * 
 	 * @param nodeList
 	 *            node list of a tree retrieved by breadth-first search
 	 * @return
 	 */
-	public int unodreredTreeEditDistance(List<ComponentInstance> nodeList1, List<ComponentInstance> nodeList2) {
-		int distance = 0;
+	public int unodreredTreeEditDistance(List<ComponentInstance> nodeList1,
+			List<ComponentInstance> nodeList2) {
 		int len1 = nodeList1.size();
 		int len2 = nodeList2.size();
-		int[][] distMatrix = new int[len1+1][len2+1];
+		int[][] distMatrix = new int[len1 + 1][len2 + 1];
 		distMatrix[0][0] = 0;
-		
-		//Initialize the first row of the matrix
-		for(int i = 1; i < len1; i++){
-			distMatrix[i][0] = distMatrix[i-1][0] + DELETION_COST; // a single deletion cost is 1
+
+		// Initialize the first row of the matrix
+		for (int i = 1; i < len1; i++) {
+			distMatrix[i][0] = distMatrix[i - 1][0] + DELETION_COST;
 		}
-		
-		//Initialize the first column of the matrix
-		for(int i = 1; i < len2; i++){
+
+		// Initialize the first column of the matrix
+		for (int i = 1; i < len2; i++) {
 			distMatrix[0][i] = insertCostInit(nodeList2.get(0));
 		}
-		
-		return distance;
+
+		for (int i = 1; i < len1 + 1; i++) {
+			for (int j = 1; j < len2 + 1; j++) {
+				int nChildNodes = nodeList2.get(j).getSubComponents().size();
+				List<ComponentInstance> childNodes = nodeList2.get(j)
+						.getSubComponents();
+				ComponentInstance node1 = nodeList1.get(i - 1);
+				ComponentInstance node2 = nodeList2.get(j - 1);
+				int renamingCost = ((node1.getLabel().equals(node2.getLabel())) ? 0
+						: RENAMING_COST);
+
+				if (nChildNodes == 0) {
+					distMatrix[i][j] = Math.min(distMatrix[i - 1][j]
+							+ DELETION_COST, Math.min(distMatrix[i][0]
+							+ INSERTION_COST, distMatrix[i - 1][0]
+							+ renamingCost));
+
+				} else {
+					int min1 = Integer.MAX_VALUE, min2 = Integer.MAX_VALUE;
+
+					for (ComponentInstance child : childNodes) {
+						int childNumber = child.getTraversalNumber();
+						min1 = Math.min(distMatrix[i][childNumber]
+								- distMatrix[0][childNumber], min1);
+						min2 = Math.min(distMatrix[i - 1][childNumber]
+								- distMatrix[0][childNumber], min2);
+					}
+
+					Math.min(
+							distMatrix[i - 1][j] + DELETION_COST,
+							Math.min(distMatrix[0][j] + min1, renamingCost
+									+ distMatrix[0][j] - INSERTION_COST + min2));
+				}// end if
+
+			}// end for j
+		}// end for i
+
+		return distMatrix[len1 + 1][len2 + 1];
 	}
 
-	
+	private int getMin(int[] integers) {
+		int min = Integer.MAX_VALUE;
+
+		for (int i : integers) {
+			min = Math.min(integers[0], i);
+
+		}
+
+		return min;
+
+	}
+
 	/**
 	 * Recursively initialize the cost of insertion
+	 * 
 	 * @param node
 	 * @return
 	 */
-	public int insertCostInit(ComponentInstance node){
+	private int insertCostInit(ComponentInstance node) {
 		int insertCost = 0;
-		
-		insertCost += INSERTION_COST; //A single insertion cost is 1
-		for(ComponentInstance child : node.getSubComponents()){
+
+		insertCost += INSERTION_COST; // A single insertion cost is 1
+		for (ComponentInstance child : node.getSubComponents()) {
 			insertCost += insertCostInit(child);
 		}
-		
+
 		return insertCost;
 	}
-	
+
 	/**
 	 * get the root component
 	 * 

@@ -28,7 +28,10 @@ public class ComponentInstance {
 	private Path2D _path;
 	
 	//Label of the component, used for calculating tree edit distance
-	private int _label;
+	private String _label;
+	
+	//Order number assigned when searching the tree
+	private int _traversalNumber;
 	
 	public ComponentInstance(int level){
 		_pts = null;
@@ -86,14 +89,21 @@ public class ComponentInstance {
 	public int getLevel(){								 //**
 		return _level;									 //**		
 	}													 //**	
-	public int getLabel(){								 //**
+	public String getLabel(){							 //**
 		return _label;									 //**		
-	}													 //**	
+	}													 //**
+	public int getTraversalNumber(){					 //**
+		return _traversalNumber;						 //**
+	}													 //** 
 	//*******************************************************
 	
 
-	public void setLabel(int label){
+	public void setLabel(String label){
 		_label = label;
+	}
+	
+	public void setTraversalNumber(int number){
+		 _traversalNumber = number;
 	}
 	
 	/**
