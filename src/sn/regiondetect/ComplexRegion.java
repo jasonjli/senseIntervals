@@ -10,10 +10,13 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import javax.imageio.ImageIO;
 import sn.debug.ShowDebugImage;
 import sn.recover.LayerGraph;
+import sn.recover.ComponentInstance;
 
 /**
  * A complex region constructed with several Regions

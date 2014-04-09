@@ -13,10 +13,13 @@ import sn.regiondetect.ComplexRegion;
 import sn.regiondetect.Region;
 
 public class LayerGraph {
+	private static int INSERTION_COST = 1;
+	private static int DELETION_COST = 1;
+	private static int RENOMING_COST = 1;
+	
 	private ComplexRegion _complexRegion;
 	private ComponentInstance _unboundedComponent;
 	private List<ComponentInstance> _componentList;
-
 
 	public LayerGraph(ComplexRegion complexRegion) throws Exception {
 		// Initialize the root component, i.e. the canvas
@@ -143,8 +146,8 @@ public class LayerGraph {
 							// add 1 to component 1's level
 							c1.setLevel(c1.getLevel() + 1);
 						}
-						
-						else{
+
+						else {
 							c1.setLevel(c1.getLevel() + 1);
 						}
 					}
@@ -201,15 +204,15 @@ public class LayerGraph {
 
 				g2d.setColor(newC);
 
-				g2d.drawString("layer = " + component.getLevel(),
-						(int) x, (int) y);
+				g2d.drawString("layer = " + component.getLevel(), (int) x,
+						(int) y);
 
 				g2d.setColor(c);
 			}
 			g2d.draw(component.getPath());
 		}
 
-		else if(component.getLevel() > 0){
+		else if (component.getLevel() > 0) {
 			g2d.setColor(Color.GREEN);
 			// draw layer information as required
 			if (layerInfo) {
@@ -232,6 +235,88 @@ public class LayerGraph {
 
 	}
 
+	/**
+	 * Use breadth first search to get the left-to-right postorder numbering of
+	 * a tree
+	 * 
+	 * @param root
+	 * @return a list of node in left-to-right order
+	 */
+	public List<ComponentInstance> traversalBreadthFirst(ComponentInstance root) {
+		// List for storing ordered nodes
+		List<ComponentInstance> nodeList = new ArrayList<ComponentInstance>();
+
+		// List for controlling a left-to-right searching order
+		List<ComponentInstance> processingList = new ArrayList<ComponentInstance>();
+
+		processingList.add(root);// add root to processing list
+
+		// process until no node in processing list
+		while (!processingList.isEmpty()) {
+
+			// get the first node in processing list
+			ComponentInstance currentNode = processingList.get(0);
+
+			// add the current node to node list
+			nodeList.add(currentNode);
+
+			// remove the processed node
+			processingList.remove(0);
+
+			// add all current node's child nodes into processing list
+			for (ComponentInstance node : currentNode.getSubComponents()) {
+				processingList.add(node);
+			}
+		}
+
+		return nodeList;
+	}
+
+	/**
+	 * Calculate unordered tree edit distance <br/>
+	 * Implementation of algorithm in 'On the editing distance between unordered labeled trees' K. Zhang et.al
+	 * 
+	 * @param nodeList
+	 *            node list of a tree retrieved by breadth-first search
+	 * @return
+	 */
+	public int unodreredTreeEditDistance(List<ComponentInstance> nodeList1, List<ComponentInstance> nodeList2) {
+		int distance = 0;
+		int len1 = nodeList1.size();
+		int len2 = nodeList2.size();
+		int[][] distMatrix = new int[len1+1][len2+1];
+		distMatrix[0][0] = 0;
+		
+		//Initialize the first row of the matrix
+		for(int i = 1; i < len1; i++){
+			distMatrix[i][0] = distMatrix[i-1][0] + DELETION_COST; // a single deletion cost is 1
+		}
+		
+		//Initialize the first column of the matrix
+		for(int i = 1; i < len2; i++){
+			distMatrix[0][i] = insertCostInit(nodeList2.get(0));
+		}
+		
+		return distance;
+	}
+
+	
+	/**
+	 * Recursively initialize the cost of insertion
+	 * @param node
+	 * @return
+	 */
+	public int insertCostInit(ComponentInstance node){
+		int insertCost = 0;
+		
+		insertCost += INSERTION_COST; //A single insertion cost is 1
+		for(ComponentInstance child : node.getSubComponents()){
+			insertCost += insertCostInit(child);
+		}
+		
+		return insertCost;
+	}
+	
 	/**
 	 * get the root component
 	 * 

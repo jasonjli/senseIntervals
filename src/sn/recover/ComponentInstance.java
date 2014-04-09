@@ -27,6 +27,9 @@ public class ComponentInstance {
 	//Rounded path of the component
 	private Path2D _path;
 	
+	//Label of the component, used for calculating tree edit distance
+	private int _label;
+	
 	public ComponentInstance(int level){
 		_pts = null;
 		_containerComponent = null;
@@ -83,9 +86,16 @@ public class ComponentInstance {
 	public int getLevel(){								 //**
 		return _level;									 //**		
 	}													 //**	
+	public int getLabel(){								 //**
+		return _label;									 //**		
+	}													 //**	
 	//*******************************************************
 	
 
+	public void setLabel(int label){
+		_label = label;
+	}
+	
 	/**
 	 * Add a component into sub-component list 
 	 * @param component
