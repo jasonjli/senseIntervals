@@ -37,7 +37,7 @@ public class ComponentInstance {
 		_pts = null;
 		_containerComponent = null;
 		_subComponents = new ArrayList<ComponentInstance>();
-		_level = level; //level has not been set
+		_level = level;
 		_path = null;
 	}
 	
@@ -69,7 +69,7 @@ public class ComponentInstance {
 		_pts = null;
 		_containerComponent = null;
 		_subComponents = new ArrayList<ComponentInstance>();
-		_level = level; //level has not been set
+		_level = level;
 		_path = path;
 	}
 	
