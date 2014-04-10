@@ -33,6 +33,14 @@ public class ComponentInstance {
 	//Order number assigned when searching the tree
 	private int _traversalNumber;
 	
+	public ComponentInstance(){
+		_pts = null;
+		_containerComponent = null;
+		_subComponents = new ArrayList<ComponentInstance>();
+		_level = -1;
+		_path = null;
+	}
+	
 	public ComponentInstance(int level){
 		_pts = null;
 		_containerComponent = null;
