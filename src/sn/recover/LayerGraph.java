@@ -11,6 +11,11 @@ import java.util.List;
 
 import sn.regiondetect.ComplexRegion;
 import sn.regiondetect.Region;
+import sn.treedistance.ComparisonZhangShasha;
+import sn.treedistance.CreateTreeHelper;
+import sn.treedistance.OpsZhangShasha;
+import sn.treedistance.Transformation;
+import sn.treedistance.TreeDefinition;
 
 public class LayerGraph {
 	private static int INSERTION_COST = 1;
@@ -57,6 +62,7 @@ public class LayerGraph {
 			}
 		}
 
+		int nodeCount = 1;
 		PathIterator pathIter = regionCanvas.getPathIterator(null);
 		Path2D tempPath = new Path2D.Double();
 		tempPath.setWindingRule(PathIterator.WIND_EVEN_ODD);
@@ -89,7 +95,9 @@ public class LayerGraph {
 			// path
 			case PathIterator.SEG_CLOSE: {
 				tempPath.closePath();
-				components.add(new ComponentInstance((Path2D) tempPath));
+				components.add(new ComponentInstance(nodeCount,
+						(Path2D) tempPath));
+				nodeCount++;
 				tempPath = new Path2D.Double();
 				tempPath.setWindingRule(PathIterator.WIND_EVEN_ODD);
 				// System.out.println("type: CLOSE ");
@@ -241,30 +249,29 @@ public class LayerGraph {
 	 * @param root
 	 * @return
 	 */
-	public static void traversalLeftToRightPostOrder(
-			ComponentInstance root, List<ComponentInstance> nodeList) {
-		
+	public static void traversalLeftToRightPostOrder(ComponentInstance root,
+			List<ComponentInstance> nodeList) {
+
 		// recursion
 		for (ComponentInstance node : root.getSubComponents()) {
 			traversalLeftToRightPostOrder(node, nodeList);
 		}
-		
+
 		nodeList.add(root);
 		root.setTraversalNumber(nodeList.size());
-		
+
 		return;
 	}
 
 	/**
-	 * Use breadth first to search a tree
+	 * Use breadth first to parse a tree to string in format such as a-b;a-c
 	 * 
 	 * @param root
-	 * @return a list of node in left-to-right order
+	 * @return a string represents the tree
 	 */
-	public static List<ComponentInstance> traversalBreadthFirst(ComponentInstance root) {
-		// List for storing ordered nodes
-		List<ComponentInstance> nodeList = new ArrayList<ComponentInstance>();
+	public static String parseTreeToStr(ComponentInstance root) {
 
+		String treeStr = new String();
 		// List for controlling a left-to-right searching order
 		List<ComponentInstance> processingList = new ArrayList<ComponentInstance>();
 
@@ -276,9 +283,24 @@ public class LayerGraph {
 			// get the first node in processing list
 			ComponentInstance currentNode = processingList.get(0);
 
-			// add the current node to node list
-			nodeList.add(currentNode);
+			if (currentNode.getSubComponents().size() > 0) {
+				for (ComponentInstance node : currentNode.getSubComponents()) {
+					if (currentNode.getLevel() % 2 == 0)
+						treeStr += String.valueOf(currentNode.getID()) + ":"
+								+ "hollow-";
+					else
+						treeStr += String.valueOf(currentNode.getID()) + ":"
+								+ "solid-";
 
+					if (node.getLevel() % 2 == 0)
+						treeStr += String.valueOf(node.getID()) + ":"
+								+ "hollow;";
+					else
+						treeStr += String.valueOf(node.getID()) + ":"
+								+ "solid;";
+
+				}
+			}
 			// remove the processed node
 			processingList.remove(0);
 
@@ -288,7 +310,39 @@ public class LayerGraph {
 			}
 		}
 
-		return nodeList;
+		// remove last semicolon
+		treeStr.substring(0, treeStr.length() - 2);
+
+		return treeStr;
+	}
+
+	/**
+	 * Full permutation
+	 * 
+	 * @return
+	 */
+	public static void permutation(int[] indexArray, int curIndex,
+			List<int[]> results) {
+		int len = indexArray.length;
+
+		if (curIndex == len - 1) {
+			results.add(indexArray.clone());
+		} else {
+			for (int i = curIndex; i < len; i++) {
+
+				// swap ith and curIndexth element
+				int temp = indexArray[i];
+				indexArray[i] = indexArray[curIndex];
+				indexArray[curIndex] = temp;
+
+				permutation(indexArray, curIndex + 1, results);
+
+				// swap back
+				temp = indexArray[i];
+				indexArray[i] = indexArray[curIndex];
+				indexArray[curIndex] = temp;
+			}
+		}
 	}
 
 	/**
@@ -300,34 +354,35 @@ public class LayerGraph {
 	 *            node list of a tree retrieved by breadth-first search
 	 * @return
 	 */
-	public static int unodreredTreeEditDistance(List<ComponentInstance> nodeList1,
-			List<ComponentInstance> nodeList2) {
+	public static int unodreredTreeEditDistance(
+			List<ComponentInstance> nodeList1, List<ComponentInstance> nodeList2) {
 		int len1 = nodeList1.size();
 		int len2 = nodeList2.size();
 		int[][] distMatrix = new int[len1 + 1][len2 + 1];
 		distMatrix[0][0] = 0;
 
 		// Initialize the first row of the matrix
-		for (int i = 1; i < len1+1; i++) {
+		for (int i = 1; i < len1 + 1; i++) {
 			distMatrix[i][0] = distMatrix[i - 1][0] + DELETION_COST;
 		}
 
 		// Initialize the first column of the matrix
-		for (int i = 1; i < len2+1; i++) {
+		for (int i = 1; i < len2 + 1; i++) {
 			int sum = 0;
-			List<ComponentInstance> childNodes = nodeList2.get(i-1)
+			List<ComponentInstance> childNodes = nodeList2.get(i - 1)
 					.getSubComponents();
 			for (ComponentInstance child : childNodes) {
 				sum += distMatrix[0][child.getTraversalNumber()];
 			}
-			
-			distMatrix[0][i] =  INSERTION_COST + sum;
+
+			distMatrix[0][i] = INSERTION_COST + sum;
 		}
 
 		for (int i = 1; i < len1 + 1; i++) {
 			for (int j = 1; j < len2 + 1; j++) {
-				int nChildNodes = nodeList2.get(j-1).getSubComponents().size();
-				List<ComponentInstance> childNodes = nodeList2.get(j-1)
+				int nChildNodes = nodeList2.get(j - 1).getSubComponents()
+						.size();
+				List<ComponentInstance> childNodes = nodeList2.get(j - 1)
 						.getSubComponents();
 				ComponentInstance node1 = nodeList1.get(i - 1);
 				ComponentInstance node2 = nodeList2.get(j - 1);
@@ -351,10 +406,11 @@ public class LayerGraph {
 								- distMatrix[0][childNumber], min2);
 					}
 
-					distMatrix[i][j] = Math.min(
-							distMatrix[i - 1][j] + DELETION_COST,
-							Math.min(distMatrix[0][j] + min1, renamingCost
-									+ distMatrix[0][j] - INSERTION_COST + min2));
+					distMatrix[i][j] = Math
+							.min(distMatrix[i - 1][j] + DELETION_COST, Math
+									.min(distMatrix[0][j] + min1, renamingCost
+											+ distMatrix[0][j] - INSERTION_COST
+											+ min2));
 				}// end if
 
 			}// end for j
@@ -401,37 +457,34 @@ public class LayerGraph {
 			return true;
 	}
 
-	public static void main(String[] args) {
-		
-		
-		//tree1
-		ComponentInstance root1 = new ComponentInstance();
+	public static void test() {
+		// tree1
+		ComponentInstance root1 = new ComponentInstance(0);
 		root1.setLabel("a");
 
 		ComponentInstance[] components1 = new ComponentInstance[7];
 		for (int i = 0; i < components1.length; i++) {
-			components1[i] = new ComponentInstance();
+			components1[i] = new ComponentInstance(i + 1);
 			components1[i].setLabel("a");
 		}
 
 		for (int i = 0; i < 3; i++) {
 			root1.addSubComponent(components1[i]);
 		}
-		
-//		components1[0].addSubComponent(components1[3]);
-//		components1[3].addSubComponent(components1[5]);
-//		components1[3].addSubComponent(components1[6]);
-//
-//		components1[1].addSubComponent(components1[4]);
-//		
-		
-		//tree2
-		ComponentInstance root2 = new ComponentInstance();
+
+		components1[0].addSubComponent(components1[3]);
+		components1[3].addSubComponent(components1[5]);
+		components1[3].addSubComponent(components1[6]);
+
+		components1[1].addSubComponent(components1[4]);
+
+		// tree2
+		ComponentInstance root2 = new ComponentInstance(0);
 		root1.setLabel("a");
 
 		ComponentInstance[] components2 = new ComponentInstance[7];
 		for (int i = 0; i < components2.length; i++) {
-			components2[i] = new ComponentInstance();
+			components2[i] = new ComponentInstance(i + 1);
 			components2[i].setLabel("a");
 		}
 
@@ -439,26 +492,39 @@ public class LayerGraph {
 			root2.addSubComponent(components2[i]);
 			components2[i].setContainerComponent(root2);
 		}
-		
-//		components2[2].addSubComponent(components2[4]);
-//		components2[4].setContainerComponent(components2[2]);
-//		
-//		components2[4].addSubComponent(components2[5]);
-//		components2[4].addSubComponent(components2[6]);
-//		components2[5].setContainerComponent(components2[4]);
-//		components2[6].setContainerComponent(components2[4]);
-//		
-//		components2[1].addSubComponent(components2[3]);
-//		components2[3].setContainerComponent(components2[1]);
-//		
-		List<ComponentInstance> nodes1 =  new ArrayList<ComponentInstance>();
-		LayerGraph.traversalLeftToRightPostOrder(root1,nodes1);
+
+		components2[2].addSubComponent(components2[4]);
+		components2[4].setContainerComponent(components2[2]);
+
+		components2[4].addSubComponent(components2[5]);
+		components2[4].addSubComponent(components2[6]);
+		components2[5].setContainerComponent(components2[4]);
+		components2[6].setContainerComponent(components2[4]);
+
+		components2[1].addSubComponent(components2[3]);
+		components2[3].setContainerComponent(components2[1]);
+
+		List<ComponentInstance> nodes1 = new ArrayList<ComponentInstance>();
+		LayerGraph.traversalLeftToRightPostOrder(root1, nodes1);
 		List<ComponentInstance> nodes2 = new ArrayList<ComponentInstance>();
-		LayerGraph.traversalLeftToRightPostOrder(root2,nodes2);
-		
-		int dis = LayerGraph.unodreredTreeEditDistance(nodes1, nodes1);
-		
-		System.out.println("distance is " + dis);
-		
+		LayerGraph.traversalLeftToRightPostOrder(root2, nodes2);
+
+		String treeStr1 = parseTreeToStr(root1);
+		String treeStr2 = parseTreeToStr(root2);
+
+		TreeDefinition aTree = CreateTreeHelper.makeTree(treeStr1);
+		System.out.println("The tree is: \n" + aTree);
+		TreeDefinition bTree = CreateTreeHelper.makeTree(treeStr2);
+		System.out.println("The tree is: \n" + bTree);
+
+		ComparisonZhangShasha treeCorrector = new ComparisonZhangShasha();
+		OpsZhangShasha costs = new OpsZhangShasha();
+		Transformation transform = treeCorrector.findDistance(aTree, bTree,
+				costs);
+		System.out.println("Distance: " + transform.getCost());
+	}
+
+	public static void main(String[] args) {
+		test();
 	}
 }

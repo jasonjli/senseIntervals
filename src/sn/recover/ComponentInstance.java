@@ -16,6 +16,9 @@ public class ComponentInstance {
 	//Component that directly contains this component
 	private ComponentInstance _containerComponent;
 	
+	//unique id for the node in the tree
+	private int _id;
+	
 	//level = 0 means this component is the outer unbounded component
 	//odd level indicates the component is a solid component
 	//even level indicates the component is a hollow within or outside solid components
@@ -33,7 +36,8 @@ public class ComponentInstance {
 	//Order number assigned when searching the tree
 	private int _traversalNumber;
 	
-	public ComponentInstance(){
+	public ComponentInstance(int id){
+		_id = id;
 		_pts = null;
 		_containerComponent = null;
 		_subComponents = new ArrayList<ComponentInstance>();
@@ -41,7 +45,8 @@ public class ComponentInstance {
 		_path = null;
 	}
 	
-	public ComponentInstance(int level){
+	public ComponentInstance(int id, int level){
+		_id = id;
 		_pts = null;
 		_containerComponent = null;
 		_subComponents = new ArrayList<ComponentInstance>();
@@ -49,7 +54,8 @@ public class ComponentInstance {
 		_path = null;
 	}
 	
-	public ComponentInstance(List<Point> pts){
+	public ComponentInstance(int id, List<Point> pts){
+		_id = id;
 		_pts = pts;
 		_containerComponent = null;
 		_subComponents = new ArrayList<ComponentInstance>();
@@ -57,7 +63,8 @@ public class ComponentInstance {
 		_path = GeomUtil.getRoundedGeneralPathFromPoints(_pts);
 	}
 	
-	public ComponentInstance(Path2D path){
+	public ComponentInstance(int id, Path2D path){
+		_id = id;
 		_pts = null;
 		_containerComponent = null;
 		_subComponents = new ArrayList<ComponentInstance>();
@@ -65,7 +72,8 @@ public class ComponentInstance {
 		_path = path;
 	}
 	
-	public ComponentInstance(List<Point> pts, int level){
+	public ComponentInstance(int id, List<Point> pts, int level){
+		_id = id;
 		_pts = null;
 		_containerComponent = null;
 		_subComponents = new ArrayList<ComponentInstance>();
@@ -73,7 +81,8 @@ public class ComponentInstance {
 		_path = GeomUtil.getRoundedGeneralPathFromPoints(_pts);
 	}
 	
-	public ComponentInstance(Path2D path, int level){
+	public ComponentInstance(int id, Path2D path, int level){
+		_id = id;
 		_pts = null;
 		_containerComponent = null;
 		_subComponents = new ArrayList<ComponentInstance>();
@@ -103,8 +112,14 @@ public class ComponentInstance {
 	public int getTraversalNumber(){					 //**
 		return _traversalNumber;						 //**
 	}													 //** 
+	public int getID(){									 //**
+		return _id;										 //**
+	}													 //** 
 	//*******************************************************
 	
+	public void setID(int id){
+		_id = id;
+	}
 
 	public void setLabel(String label){
 		_label = label;
