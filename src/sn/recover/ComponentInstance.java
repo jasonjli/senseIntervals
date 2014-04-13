@@ -129,6 +129,18 @@ public class ComponentInstance {
 		 _traversalNumber = number;
 	}
 	
+	public void setSubComponents(List<ComponentInstance> subComponents){
+		 _subComponents = subComponents;
+	}
+	
+	public void setPts(List<Point> pts){
+		_pts = pts;
+	}
+	
+	public void setPath(Path2D path){
+		_path = (Path2D)path.clone();
+	}
+	
 	/**
 	 * Add a component into sub-component list 
 	 * @param component
@@ -153,5 +165,7 @@ public class ComponentInstance {
 	public void setLevel(int level){
 		_level = level;
 	}
+	
+
 	
 }

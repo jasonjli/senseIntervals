@@ -18,13 +18,11 @@ import sn.treedistance.Transformation;
 import sn.treedistance.TreeDefinition;
 
 public class LayerGraph {
-	private static int INSERTION_COST = 1;
-	private static int DELETION_COST = 1;
-	private static int RENAMING_COST = 1;
 
 	private ComplexRegion _complexRegion;
 	private ComponentInstance _unboundedComponent;
 	private List<ComponentInstance> _componentList;
+	private int _nComponents;
 
 	public LayerGraph(ComplexRegion complexRegion) throws Exception {
 		// Initialize the root component, i.e. the canvas
@@ -32,6 +30,7 @@ public class LayerGraph {
 		_complexRegion = complexRegion;
 
 		_componentList = getRealComponents();
+		_nComponents = _componentList.size();
 		setLayerInfo();
 	}
 
@@ -286,18 +285,18 @@ public class LayerGraph {
 			if (currentNode.getSubComponents().size() > 0) {
 				for (ComponentInstance node : currentNode.getSubComponents()) {
 					if (currentNode.getLevel() % 2 == 0)
-						treeStr += String.valueOf(currentNode.getID()) + ":"
-								+ "hollow-";
+						treeStr += "hollow" + ":"
+								+ String.valueOf(currentNode.getID() + "-");
 					else
-						treeStr += String.valueOf(currentNode.getID()) + ":"
-								+ "solid-";
+						treeStr += "solid" + ":"
+								+ String.valueOf(currentNode.getID()+ "-") ;
 
 					if (node.getLevel() % 2 == 0)
-						treeStr += String.valueOf(node.getID()) + ":"
-								+ "hollow;";
+						treeStr += "hollow" + ":"
+								+ String.valueOf(node.getID()) + ";";
 					else
-						treeStr += String.valueOf(node.getID()) + ":"
-								+ "solid;";
+						treeStr += "solid" + ":"
+								+ String.valueOf(node.getID()) + ";";
 
 				}
 			}
@@ -311,9 +310,71 @@ public class LayerGraph {
 		}
 
 		// remove last semicolon
-		treeStr.substring(0, treeStr.length() - 2);
+		treeStr = treeStr.substring(0, treeStr.length() - 1);
 
 		return treeStr;
+	}
+
+	/**
+	 * Get all permutations for each non-leaf node
+	 * 
+	 * @param currentNode
+	 * @param endID
+	 * @param permutations
+	 */
+	public static void getAllPermutations(List<ComponentInstance> nodeList,
+			List<ArrayList<int[]>> permutations) {
+
+		for (ComponentInstance node : nodeList) {
+			if (node.getSubComponents().size() > 0) {
+
+				int nSubNodes = node.getSubComponents().size();
+				int[] indexArray = new int[nSubNodes];
+				for (int i = 0; i < indexArray.length; i++) {
+					indexArray[i] = i;
+				}
+
+				ArrayList<int[]> subNodePermutations = new ArrayList<int[]>();
+
+				// get all possible permutations of the siblings
+				permutation(indexArray, 0, subNodePermutations);
+				// depth first search order
+				permutations.add(subNodePermutations);
+			}
+		}
+	}
+
+	public static void getAllOrderedTrees(List<ComponentInstance> nodeList,
+			List<ArrayList<int[]>> permutations, List<String> treeStrs,
+			int depth, int startNode) {
+
+		ComponentInstance node = nodeList.get(startNode);
+		List<int[]> perm = permutations.get(depth);
+		startNode++;
+		while (node.getSubComponents().isEmpty()) {
+			node = nodeList.get(startNode);
+			startNode++;
+		}
+		depth++;
+		for (int[] indices : perm) {
+			List<ComponentInstance> subNodeList = new ArrayList<ComponentInstance>();
+			for(ComponentInstance subNode : node.getSubComponents()){
+				subNodeList.add(subNode);
+			}
+			
+			for (int i = 0; i < indices.length; i++) {
+				int index = indices[i];
+				node.getSubComponents().set(i,
+						subNodeList.get(index));
+			}
+			if (depth == permutations.size()) {
+				treeStrs.add(parseTreeToStr(nodeList.get(nodeList.size()-1)));
+			} else
+				getAllOrderedTrees(nodeList, permutations, treeStrs, depth,
+						startNode);
+		}
+		
+		
 	}
 
 	/**
@@ -343,80 +404,6 @@ public class LayerGraph {
 				indexArray[curIndex] = temp;
 			}
 		}
-	}
-
-	/**
-	 * Calculate unordered tree edit distance <br/>
-	 * Implementation of algorithm in 'On the editing distance between unordered
-	 * labeled trees' K. Zhang et.al
-	 * 
-	 * @param nodeList
-	 *            node list of a tree retrieved by breadth-first search
-	 * @return
-	 */
-	public static int unodreredTreeEditDistance(
-			List<ComponentInstance> nodeList1, List<ComponentInstance> nodeList2) {
-		int len1 = nodeList1.size();
-		int len2 = nodeList2.size();
-		int[][] distMatrix = new int[len1 + 1][len2 + 1];
-		distMatrix[0][0] = 0;
-
-		// Initialize the first row of the matrix
-		for (int i = 1; i < len1 + 1; i++) {
-			distMatrix[i][0] = distMatrix[i - 1][0] + DELETION_COST;
-		}
-
-		// Initialize the first column of the matrix
-		for (int i = 1; i < len2 + 1; i++) {
-			int sum = 0;
-			List<ComponentInstance> childNodes = nodeList2.get(i - 1)
-					.getSubComponents();
-			for (ComponentInstance child : childNodes) {
-				sum += distMatrix[0][child.getTraversalNumber()];
-			}
-
-			distMatrix[0][i] = INSERTION_COST + sum;
-		}
-
-		for (int i = 1; i < len1 + 1; i++) {
-			for (int j = 1; j < len2 + 1; j++) {
-				int nChildNodes = nodeList2.get(j - 1).getSubComponents()
-						.size();
-				List<ComponentInstance> childNodes = nodeList2.get(j - 1)
-						.getSubComponents();
-				ComponentInstance node1 = nodeList1.get(i - 1);
-				ComponentInstance node2 = nodeList2.get(j - 1);
-				int renamingCost = ((node1.getLabel().equals(node2.getLabel())) ? 0
-						: RENAMING_COST);
-
-				if (nChildNodes == 0) {
-					distMatrix[i][j] = Math.min(distMatrix[i - 1][j]
-							+ DELETION_COST, Math.min(distMatrix[i][0]
-							+ INSERTION_COST, distMatrix[i - 1][0]
-							+ renamingCost));
-
-				} else {
-					int min1 = Integer.MAX_VALUE, min2 = Integer.MAX_VALUE;
-
-					for (ComponentInstance child : childNodes) {
-						int childNumber = child.getTraversalNumber();
-						min1 = Math.min(distMatrix[i][childNumber]
-								- distMatrix[0][childNumber], min1);
-						min2 = Math.min(distMatrix[i - 1][childNumber]
-								- distMatrix[0][childNumber], min2);
-					}
-
-					distMatrix[i][j] = Math
-							.min(distMatrix[i - 1][j] + DELETION_COST, Math
-									.min(distMatrix[0][j] + min1, renamingCost
-											+ distMatrix[0][j] - INSERTION_COST
-											+ min2));
-				}// end if
-
-			}// end for j
-		}// end for i
-
-		return distMatrix[len1][len2];
 	}
 
 	/**
@@ -480,7 +467,7 @@ public class LayerGraph {
 
 		// tree2
 		ComponentInstance root2 = new ComponentInstance(0);
-		root1.setLabel("a");
+		root2.setLabel("a");
 
 		ComponentInstance[] components2 = new ComponentInstance[7];
 		for (int i = 0; i < components2.length; i++) {
@@ -492,7 +479,7 @@ public class LayerGraph {
 			root2.addSubComponent(components2[i]);
 			components2[i].setContainerComponent(root2);
 		}
-
+		
 		components2[2].addSubComponent(components2[4]);
 		components2[4].setContainerComponent(components2[2]);
 
@@ -509,19 +496,37 @@ public class LayerGraph {
 		List<ComponentInstance> nodes2 = new ArrayList<ComponentInstance>();
 		LayerGraph.traversalLeftToRightPostOrder(root2, nodes2);
 
-		String treeStr1 = parseTreeToStr(root1);
-		String treeStr2 = parseTreeToStr(root2);
 
-		TreeDefinition aTree = CreateTreeHelper.makeTree(treeStr1);
-		System.out.println("The tree is: \n" + aTree);
-		TreeDefinition bTree = CreateTreeHelper.makeTree(treeStr2);
-		System.out.println("The tree is: \n" + bTree);
 
-		ComparisonZhangShasha treeCorrector = new ComparisonZhangShasha();
-		OpsZhangShasha costs = new OpsZhangShasha();
-		Transformation transform = treeCorrector.findDistance(aTree, bTree,
-				costs);
-		System.out.println("Distance: " + transform.getCost());
+		List<String> treeStrs = new ArrayList<String>();
+		List<ArrayList<int[]>> permutations = new ArrayList<ArrayList<int[]>>();
+
+		getAllPermutations(nodes2, permutations);
+		getAllOrderedTrees(nodes2, permutations, treeStrs, 0, 0);
+
+		System.out.println(treeStrs.size());
+		for (String str : treeStrs) {
+			System.out.println(str);
+		}
+		
+		 String treeStr1 = parseTreeToStr(root1);
+		 //String treeStr2 = parseTreeToStr(root2);
+		
+		 TreeDefinition aTree = CreateTreeHelper.makeTree(treeStr1);
+		 System.out.println("The tree is: \n" + aTree);
+		 
+		 for(int i = 0; i < treeStrs.size(); i++){
+			 String treeStr2 = treeStrs.get(i);
+			 TreeDefinition bTree = CreateTreeHelper.makeTree(treeStr2);
+			 System.out.println("The tree is: \n" + bTree);
+			
+			 ComparisonZhangShasha treeCorrector = new ComparisonZhangShasha();
+			 OpsZhangShasha costs = new OpsZhangShasha();
+			 Transformation transform = treeCorrector.findDistance(aTree, bTree,
+			 costs);
+			 System.out.println("Distance: " + transform.getCost());
+		 }
+		
 	}
 
 	public static void main(String[] args) {
