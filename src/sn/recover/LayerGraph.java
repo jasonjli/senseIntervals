@@ -432,7 +432,7 @@ public class LayerGraph {
 	}
 
 	/**
-	 * test if an component is a solid region
+	 * test if a component is a solid region
 	 * 
 	 * @param level
 	 * @return
