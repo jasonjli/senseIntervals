@@ -1,5 +1,6 @@
 package sn.recover;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
@@ -8,7 +9,7 @@ import java.util.List;
 import sn.regiondetect.GeomUtil;
 
 //A component in the region that does not connect/touch with any other components
-public class ComponentInstance {
+public class ComponentInstance implements LayerGraphNode{
 	
 	//Sub-components that contain in this component
 	private List<ComponentInstance> _subComponents;
@@ -137,6 +138,18 @@ public class ComponentInstance {
 	 */
 	public void setLevel(int level){
 		_level = level;
+	}
+	
+	public ComponentInstance[] LayerGraphGetChildren(){
+		return (ComponentInstance[])_subComponents.toArray();
+	}
+	
+	public String LayerGraphGetValue(){
+		return _label;
+	}
+	
+	public java.awt.Color LayerGraphGetColor(){
+		return (this.getLevel() % 2 == 0) ? Color.black : Color.red;
 	}
 	
 }

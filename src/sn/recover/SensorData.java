@@ -61,11 +61,11 @@ public class SensorData {
 	/**
 	 * Construct from a complex region and other info
 	 * 
-	 * @param complexRegion
-	 * @param gap
-	 * @param angle
-	 * @param canvasWidth
-	 * @param canvasHeight
+	 * @param complexRegion : the given complex region delivered from the generator
+	 * @param gap : The length between parallel intervals 
+	 * @param angle : the angle for which the lines are sampling the region
+	 * @param canvasWidth : width of the canvas
+	 * @param canvasHeight : height of the canvas
 	 * @throws Exception
 	 */
 	public SensorData(ComplexRegion complexRegion, double gap, double angle,
@@ -239,6 +239,10 @@ public class SensorData {
 	public void addPositiveInterval(SensorInterval positiveInterval) {
 		positiveIntervals.add(positiveInterval);
 	}
+	
+	public void addNegativeInterval(SensorInterval negativeInterval){
+		negativeIntervals.add(negativeInterval);
+	}
 
 	// public method for reading variables in the class
 
@@ -262,6 +266,10 @@ public class SensorData {
 	 */
 	public double getAngle() {
 		return sensorAngle;
+	}
+	
+	public int getSensorCount(){
+		return sensorCount;
 	}
 
 	/**
@@ -645,7 +653,132 @@ public class SensorData {
 			e.printStackTrace();
 		}
 	}
-
+	
+	
+	/**
+	 * 
+	 * Get possible shape/matching 
+	 * @return an array of affine transform showing possible matches.
+	 * 
+	 */
+	
+	public List<AffineTransform> getMatchingTransformList(SensorData otherData){
+		
+		List <AffineTransform> transformList = new ArrayList<AffineTransform>();
+		
+		
+		
+		return transformList;
+	}
+	
+	// Find the matching transform 
+	public AffineTransform getMatchingTransform(SensorData otherData){
+				
+		AffineTransform at = new AffineTransform();
+		
+		Point2D thisCentroid = getConvexHullCentroid();
+		Point2D otherCentroid = otherData.getConvexHullCentroid();
+		
+		double dx = otherCentroid.getX()-thisCentroid.getX();
+		double dy = otherCentroid.getY()-thisCentroid.getY();
+		
+		at.translate(dx, dy);
+		
+		int minError = Integer.MAX_VALUE;
+		AffineTransform minAT = new AffineTransform();
+		
+		// Find the rotation, 1 degree at a time		
+		for (int i=0; i<360; i++){
+			double angle = i/(2*Math.PI*360); 
+			at.rotate(angle, otherCentroid.getX(), otherCentroid.getY());
+			
+			SensorData transformedData = applyAffineTransform(at);
+			
+			Point2D newCentroid = transformedData.getConvexHullCentroid();
+			
+			/*if ((int)newCentroid.getX()!=(int)otherCentroid.getX() || (int)newCentroid.getY()!=(int)otherCentroid.getY()){
+				System.err.println("ERROR - Centroid don't match. i = " + i + ", dx = " + dx + ", dy = " + dy);
+				System.err.println("newCentroid: " + newCentroid.getX() + " " + newCentroid.getY());
+				System.err.println("otherCentroid: " + otherCentroid.getX() + " " + otherCentroid.getY());
+				System.out.println("Minimum error = " + minError);
+				System.exit(0);
+			}*/
+			
+			int thisTransformError = transformedData.isCompatible(otherData);
+			
+			if (thisTransformError == 0){
+				return at;
+			}
+			if (thisTransformError < minError){
+				minError = thisTransformError;
+				minAT = at;
+			}
+			
+		}
+		
+		System.out.println("Minimum error = " + minError);
+		
+		return minAT;
+	}
+	
+	public SensorData applyAffineTransform(AffineTransform at){
+		
+		// variables denoting the parameters of affine transformation
+		double minX=Double.MAX_VALUE, minY=Double.MAX_VALUE,maxX=Double.MIN_VALUE, maxY=Double.MIN_VALUE;
+						
+		// first we get the sense of the dimension of the positive components
+		for (int i = 0; i<positiveIntervals.size(); i++){
+			SensorInterval interval = positiveIntervals.get(i);
+			Point2D pt1 = at.transform(interval.getStart(),null);
+			Point2D pt2 = at.transform(interval.getEnd(),null);
+			minX =  Math.min(pt1.getX(),minX);
+			minX =  Math.min(pt2.getX(),minX);
+			minY =  Math.min(pt1.getY(),minY);
+			minY =  Math.min(pt2.getY(),minY);
+			maxX =  Math.max(pt1.getX(),maxX);
+			maxX =  Math.max(pt2.getX(),maxX);
+			maxY =  Math.max(pt1.getY(),maxY);
+			maxY =  Math.max(pt2.getY(),maxY);
+		}
+		
+		
+		SensorData transformedData = new SensorData(width, height);
+		
+		for (int i = 0; i<positiveIntervals.size(); i++){
+			SensorInterval interval = positiveIntervals.get(i);
+			Point2D pt1 = interval.getStart();
+			Point2D pt2 = interval.getEnd();
+			SensorInterval newInterval = new SensorInterval(interval.getSensorID(), at.transform(pt1, null), at.transform(pt2, null)  );
+			transformedData.addPositiveInterval(newInterval);
+		}
+		
+		for (int i = 0; i<negativeIntervals.size(); i++){
+			SensorInterval interval = negativeIntervals.get(i);
+			Point2D pt1 = interval.getStart();
+			Point2D pt2 = interval.getEnd();
+			SensorInterval newInterval = new SensorInterval(interval.getSensorID(), at.transform(pt1, null), at.transform(pt2, null)  );
+			transformedData.addNegativeInterval(newInterval);
+		}	
+		
+		return transformedData;
+	}
+	
+	public Point2D getConvexHullCentroid(){
+		
+		
+		List<Point2D> convexHull = getConvexHull();
+		double centroidX=0, centroidY=0;
+		
+		for (int i=0; i<convexHull.size(); i++){
+			Point2D myPt = convexHull.get(i);
+			centroidX += myPt.getX();
+			centroidY += myPt.getY();
+		}
+		
+		Point2D centroid = new Point2D.Double(centroidX/convexHull.size(), centroidY/convexHull.size());
+		
+		return centroid;
+	}
 	// tests
 
 	/**
@@ -656,7 +789,7 @@ public class SensorData {
 	 * @param otherData
 	 * @return
 	 */
-	public boolean isCompatible(SensorData otherData) {
+	public int isCompatible(SensorData otherData) {
 
 		boolean positiveIntersect = false;
 
@@ -666,10 +799,15 @@ public class SensorData {
 		List<SensorInterval> otherNegativeIntervals = otherData
 				.getNegativeIntervalsFromPositive();
 
+		int violations = 0;
+
+		// check every positive interval of this sensor
 		for (int i = 0; i < positiveIntervals.size(); i++) {
 			SensorInterval curPositive = positiveIntervals.get(i);
-
+			
+			
 			// check for intersection of other positive intervals
+			// there is a intersection with other positive interval
 			for (int j = 0; j < otherPositiveIntervals.size()
 					&& !positiveIntersect; j++) {
 				SensorInterval otherPositive = otherPositiveIntervals.get(j);
@@ -677,32 +815,121 @@ public class SensorData {
 					positiveIntersect = true;
 				}
 			}
-
-			// check for intersection of other negative intervals
+			
+			// no intersection with other negative intervals
 			for (int j = 0; j < otherNegativeIntervals.size(); j++) {
 				SensorInterval otherNegative = otherNegativeIntervals.get(j);
 				if (curPositive.intersects(otherNegative)) {
-					return false;
+					violations++;
 				}
 			}
 		}
 
-		// check for intersection of negative intervals with other positive
+		// Check every negative interval of this sensor
 		for (int i = 0; i < thisNegativeIntervals.size(); i++) {
 			SensorInterval curNegative = thisNegativeIntervals.get(i);
 
 			// check for intersection of other positive intervals
 			for (int j = 0; j < otherPositiveIntervals.size(); j++) {
 				if (curNegative.intersects(otherPositiveIntervals.get(j))) {
-					return false;
+					violations++;
 				}
 			}
 		}
 
 		// check outer intervals
 
-		return positiveIntersect;
+		if (positiveIntersect) return violations;
+		else return Integer.MAX_VALUE;
 	}
+	
+	// normalizeRotate 
+	// return the normalized SensorData (angle = 0)
+	// not complete normalize (no translate)
+	public SensorData normalizeRotate(){
+		SensorData normalizedData = new SensorData(width, height);
+		normalizedData.sensorAngle = 0;
+		normalizedData.sensorGap = sensorGap;
+		normalizedData.sensorCount = sensorCount;
+		
+		AffineTransform rotate = new AffineTransform();
+		rotate.rotate(-sensorAngle + Math.PI / 2, width / 2, height / 2);
+		
+		for (int i = 0; i<positiveIntervals.size(); i++){
+			SensorInterval interval = positiveIntervals.get(i);
+			Point2D pt1 = interval.getStart();
+			Point2D pt2 = interval.getEnd();
+			SensorInterval newInterval = new SensorInterval(interval.getSensorID(), rotate.transform(pt1, null), rotate.transform(pt2, null)  );
+			normalizedData.addPositiveInterval(newInterval);
+		}
+		
+		for (int i = 0; i<negativeIntervals.size(); i++){
+			SensorInterval interval = negativeIntervals.get(i);
+			Point2D pt1 = interval.getStart();
+			Point2D pt2 = interval.getEnd();
+			SensorInterval newInterval = new SensorInterval(interval.getSensorID(), rotate.transform(pt1, null), rotate.transform(pt2, null)  );
+			normalizedData.addNegativeInterval(newInterval);
+		}				
+		return normalizedData;
+	}
+	
+	// normalize
+	// return the normalized SensorData (angle=0) with translate component
+	public SensorData normalize(){
+		
+		// variables denoting the parameters of affine transformation
+		double translateX =0, translateY=0;
+		double minX=Double.MAX_VALUE, minY=Double.MAX_VALUE,maxX=Double.MIN_VALUE, maxY=Double.MIN_VALUE;
+		double rotateAngle = -sensorAngle+Math.PI/2, rotateCentreX = width/2, rotateCentreY = height/2;		
+		AffineTransform aTransform = new AffineTransform();
+				
+		// first we rotate, get the sense of the dimension of the positive components
+		aTransform.rotate(rotateAngle, rotateCentreX, rotateCentreY);
+		for (int i = 0; i<positiveIntervals.size(); i++){
+			SensorInterval interval = positiveIntervals.get(i);
+			Point2D pt1 = aTransform.transform(interval.getStart(),null);
+			Point2D pt2 = aTransform.transform(interval.getEnd(),null);
+			minX =  Math.min(pt1.getX(),minX);
+			minX =  Math.min(pt2.getX(),minX);
+			minY =  Math.min(pt1.getY(),minY);
+			minY =  Math.min(pt2.getY(),minY);
+			maxX =  Math.max(pt1.getX(),maxX);
+			maxX =  Math.max(pt2.getX(),maxX);
+			maxY =  Math.max(pt1.getY(),maxY);
+			maxY =  Math.max(pt2.getY(),maxY);
+		}
+		
+		if (minX<0) translateX = -1*minX;
+		if (minY<0) translateY = -1*minY;
+		maxX += translateX+1;
+		maxY += translateY+1;
+		
+		aTransform.translate(translateX, translateY);
+		
+		SensorData normalizedData = new SensorData((int)maxX, (int)maxY);
+		normalizedData.sensorAngle = 0;
+		normalizedData.sensorGap = sensorGap;
+		normalizedData.sensorCount = sensorCount;
+		
+		for (int i = 0; i<positiveIntervals.size(); i++){
+			SensorInterval interval = positiveIntervals.get(i);
+			Point2D pt1 = interval.getStart();
+			Point2D pt2 = interval.getEnd();
+			SensorInterval newInterval = new SensorInterval(interval.getSensorID(), aTransform.transform(pt1, null), aTransform.transform(pt2, null)  );
+			normalizedData.addPositiveInterval(newInterval);
+		}
+		
+		for (int i = 0; i<negativeIntervals.size(); i++){
+			SensorInterval interval = negativeIntervals.get(i);
+			Point2D pt1 = interval.getStart();
+			Point2D pt2 = interval.getEnd();
+			SensorInterval newInterval = new SensorInterval(interval.getSensorID(), aTransform.transform(pt1, null), aTransform.transform(pt2, null)  );
+			normalizedData.addNegativeInterval(newInterval);
+		}	
+		
+		return normalizedData;
+	}
+	
 
 	/**
 	 * write positive and negative intervals into 2 files
@@ -760,6 +987,15 @@ public class SensorData {
 	}
 
 	// tests
+	
+	/**
+	 * 
+	 * Test if another SensorData can be integrated without violating constraints
+	 * @return true if no constraint is violated
+	 */
+	
+
+	
 
 	/**
 	 * test parsing file "data/test0000-linecoord[0..2]" draw their convex hull

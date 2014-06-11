@@ -1,5 +1,6 @@
 package sn.recover;
 
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 
@@ -246,4 +247,37 @@ public class SensorInterval {
 	public boolean intersects(SensorInterval newInterval) {
 		return interval.intersectsLine(newInterval.getInterval());
 	}
+	
+	// get the IA relation between two parallel intervals
+	public IA_Relation getAllenRelation(SensorInterval otherInterval){
+		
+		// assert they are parallel
+		assert (this.getAngle()==otherInterval.getAngle());
+		
+		// rotate the points to ensure they can be sorted vertically
+		AffineTransform rotate = new AffineTransform();
+		rotate.rotate(Math.PI / 2 - this.getAngle());
+		
+		double firstStart=rotate.transform(getStart(), null).getY();
+		double firstEnd=rotate.transform(getEnd(), null).getY();
+		
+		double secondStart=rotate.transform(otherInterval.getStart(), null).getY();
+		double secondEnd=rotate.transform(otherInterval.getEnd(), null).getY();
+		
+		return new IA_Relation(firstStart, firstEnd, secondStart, secondEnd);
+	}
+	
+	// give an interval in the previous sensor, determine if it is the continuation of the same component
+	public boolean isContinuation(SensorInterval otherInterval){	    					
+		int r = this.getAllenRelation(otherInterval).getRel(); 		
+		return (r!=IA_Relation.p && r!=IA_Relation.pi && r!=IA_Relation.m && r!=IA_Relation.mi);				
+	}
+	
+	// given an interval in the pervious sensor, determine if this interval is a left boundary 
+	// of a possible new component
+	public boolean isLeftBoundary(SensorInterval otherInterval){
+		int r = this.getAllenRelation(otherInterval).getRel(); 
+	    return (r==IA_Relation.d || r==IA_Relation.s || r==IA_Relation.f);
+	}
+	
 }

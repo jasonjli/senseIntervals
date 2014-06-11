@@ -1,6 +1,8 @@
 package sn.recover;
 
 import java.awt.Color;
+
+
 import java.awt.Graphics2D;
 import java.awt.geom.Area;
 import java.awt.geom.Path2D;
@@ -8,9 +10,12 @@ import java.awt.geom.PathIterator;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
 
 import sn.regiondetect.ComplexRegion;
 import sn.regiondetect.Region;
+
+
 
 public class LayerGraph {
 	private static int INSERTION_COST = 1;
@@ -28,6 +33,193 @@ public class LayerGraph {
 
 		_componentList = getRealComponents();
 		setLayerInfo();
+	}
+	
+	// Constructs a LayerGraph from SensorData
+	
+	public LayerGraph(SensorData data){
+		 		 
+		 // intialize sensor data in 
+		 List<List<SensorInterval> > posSensorIntervals = new ArrayList<List<SensorInterval> >();
+		 List<List<SensorInterval> > negSensorIntervals = new ArrayList<List<SensorInterval> >();
+		 for (int i=0; i<data.getSensorCount(); i++){
+			 List<SensorInterval> thisSensor = new ArrayList<SensorInterval>();
+			 posSensorIntervals.add(thisSensor);
+			 negSensorIntervals.add(thisSensor);
+		 }
+		 
+		 // add positive intervals 
+		 List<SensorInterval> posIntervals = data.getPositiveIntervals();
+		 for (int i=0; i<posIntervals.size(); i++){
+			 SensorInterval thisInterval = posIntervals.get(i);
+			 int thisSensorID = thisInterval.getSensorID();
+			 posSensorIntervals.get(thisSensorID).add(thisInterval);
+		 }
+		 
+		 // add negative intervals
+		 List<SensorInterval> negIntervals = data.getNegativeIntervals();
+		 for (int i=0; i<negIntervals.size(); i++){
+			 SensorInterval thisInterval = negIntervals.get(i);
+			 int thisSensorID = thisInterval.getSensorID();
+			 negSensorIntervals.get(thisSensorID).add(thisInterval);
+		 }
+		 
+		 // initialize unbounded component
+		 _unboundedComponent = new ComponentInstance(0);
+		 HashMap<SensorInterval,ComponentInstance> intervalComponentMap = new HashMap<SensorInterval,ComponentInstance>();
+		 
+		 // loop through the sensor to allocate components
+		 for (int i=0; i<data.getSensorCount(); i++){
+			 
+			 // add positive interval to layergraph
+			 List<SensorInterval> thisPosSensor = posSensorIntervals.get(i); 
+			 for (int j=0; j<thisPosSensor.size(); j++){
+				 SensorInterval thisInterval = thisPosSensor.get(i);
+				 
+				 List<SensorInterval> prevSensorPos = null, prevSensorNeg = null;
+				 if (j!=0) {
+					 prevSensorPos = posSensorIntervals.get(i-1);
+					 prevSensorNeg = negSensorIntervals.get(i-1);
+				 }
+				 // add this interval to LayerGraph
+				 intervalComponentMap = addPosIntervalToGraph(thisInterval, prevSensorPos, prevSensorNeg, intervalComponentMap);
+			 }
+			 
+			 // add negative interval to layergraph
+			 List<SensorInterval> thisNegSensor = negSensorIntervals.get(i); 
+			 for (int j=0; j<thisNegSensor.size(); j++){
+				 SensorInterval thisInterval = thisNegSensor.get(i);
+				 
+				 List<SensorInterval> prevSensorPos = null, prevSensorNeg = null;
+				 if (j!=0) {
+					 prevSensorPos = posSensorIntervals.get(i-1);
+					 prevSensorNeg = negSensorIntervals.get(i-1);
+				 }
+				 // add this interval to LayerGraph
+				 // derive the new mapping between intervals and sensors
+				 intervalComponentMap = addNegIntervalToGraph(thisInterval, prevSensorPos, prevSensorNeg, intervalComponentMap);
+			 }
+		 }
+	}
+	
+	// helper function
+	// set the given positive SensorInterval to a component
+	HashMap<SensorInterval,ComponentInstance> addPosIntervalToGraph(SensorInterval interval, List<SensorInterval> prevSensorPos,
+			List<SensorInterval> prevSensorNeg, HashMap<SensorInterval,ComponentInstance> intervalComponentMap){
+		
+		// catch the case where the interval belongs to the first sensor
+		if (prevSensorPos == null){
+		    // it has to be a new component at level 1.
+			ComponentInstance newPosComponent = new ComponentInstance(1);
+			_unboundedComponent.addSubComponent(newPosComponent);
+			_componentList.add(1, newPosComponent);
+			intervalComponentMap.put(interval, newPosComponent);
+			return intervalComponentMap;
+		}
+		
+		// look at the positive intervals of the previous sensor
+		ComponentInstance thisComponent = null;
+		for (int i=0; i<prevSensorNeg.size(); i++){
+			SensorInterval prevNegative = prevSensorNeg.get(i);
+			
+			// if this is new to the previous boundary
+			if (interval.isLeftBoundary(prevNegative)){
+				
+				// we shouldn't have allocated a component. 
+				assert(thisComponent==null);
+				
+				ComponentInstance prevComponent = intervalComponentMap.get(prevNegative);				
+				// allocate a new component
+				thisComponent = new ComponentInstance();
+				prevComponent.setContainerComponent(thisComponent);
+				thisComponent.setLevel(prevComponent.getLevel()+1);	
+				intervalComponentMap.put(interval, thisComponent);
+			}
+		}
+		
+		// if it is not the beginning of a new component, then
+		// check if it is a continuation of an old component
+		if (thisComponent==null)
+			for (int i=0; i<prevSensorPos.size(); i++){
+				SensorInterval prevPositive = prevSensorPos.get(i);
+				if (interval.isContinuation(prevPositive)){
+					ComponentInstance prevComponent = intervalComponentMap.get(prevPositive);
+					
+					// if we haven't allocated this component
+					if (thisComponent==null){
+						// allocate this component to the previous component
+						thisComponent = prevComponent;
+						intervalComponentMap.put(interval, thisComponent);
+					}
+					else{
+						// compare the components
+						if (thisComponent.getLevel() < prevComponent.getLevel()){
+							
+						}
+						else{
+							
+						}
+					}
+					
+				}
+			}
+		
+		assert(thisComponent != null && intervalComponentMap.get(interval)!=null);
+		
+		
+		
+		return intervalComponentMap;
+	}
+	
+	// set the given negative SensorInterval to a component
+	HashMap<SensorInterval,ComponentInstance> addNegIntervalToGraph(SensorInterval interval, List<SensorInterval> prevSensorPos,
+			List<SensorInterval> prevSensorNeg, HashMap<SensorInterval,ComponentInstance> intervalComponentMap){
+			
+		// catch the case where the interval belongs to the first sensor
+		if (prevSensorPos == null){
+			// the negative interval belongs to the unbounded component
+			intervalComponentMap.put(interval, _unboundedComponent);
+			return intervalComponentMap;
+		}
+		// look at the negative intervals of the previous sensor	
+		ComponentInstance thisComponent = null;
+		for (int i=0; i<prevSensorPos.size(); i++){
+			SensorInterval prevPositive = prevSensorPos.get(i);
+			
+			// if this is new to the previous boundary
+			if (interval.isLeftBoundary(prevPositive)){
+				
+				// we shouldn't have allocated a component. 
+				assert(thisComponent==null);
+				
+				ComponentInstance prevComponent = intervalComponentMap.get(prevPositive);				
+				// allocate a new component
+				thisComponent = new ComponentInstance();
+				prevComponent.setContainerComponent(thisComponent);
+				thisComponent.setLevel(prevComponent.getLevel()+1);	
+				intervalComponentMap.put(interval, thisComponent);
+			}
+		}
+		
+		// if it is not the beginning of a new component, then
+		// check if it is a continuation of an old component
+		if (thisComponent==null)
+			for (int i=0; i<prevSensorNeg.size(); i++){
+				SensorInterval prevNegative = prevSensorNeg.get(i);
+				if (interval.isContinuation(prevNegative)){
+					ComponentInstance prevComponent = intervalComponentMap.get(prevNegative);
+					
+					// if we haven't allocated this component
+					if (thisComponent==null){
+						thisComponent = prevComponent;
+						intervalComponentMap.put(interval, thisComponent);
+					}
+				}
+			}
+		
+		assert(thisComponent != null && intervalComponentMap.get(interval)!=null);
+		
+		return intervalComponentMap;
 	}
 
 	/**
@@ -169,6 +361,10 @@ public class LayerGraph {
 			}
 		}
 
+	}
+	
+	public void drawLG(){
+		
 	}
 
 	/**
