@@ -34,6 +34,66 @@ public class IterativeClosestPoint
 		p = newPoints.toArray(new Point2D[0]);
 		//this.originalState = originalState;
 	}
+	
+	public AffineTransform getAffineTransform(List<Point2D> newPoints){
+		
+		System.out.println("getting Affine Transform");
+		
+		x = getClosestPoints(newPoints);
+
+		Point2D up = getExpectedValue(p);
+		Point2D ux = getExpectedValue(x);
+		
+		// System.out.println(up.print()+" "+ux.print());
+
+		double[][] covarianceMatrix = this.getCovarianceMatrix(p, x, up, ux);
+		double[][] q = this.getQ(covarianceMatrix);
+		double[] eigenVector = this.getMaxEigenVector(q);
+		double[][] rotationMatrix = this.getRotationMatrix(eigenVector);
+		double[] translationalVector = this.getTranslationVector(ux, rotationMatrix, up);
+
+		AffineTransform at = new AffineTransform();
+				
+		
+		
+		double rotationAngle = Math.acos(rotationMatrix[0][0]);
+		
+		at.rotate(rotationAngle);
+		at.translate(translationalVector[0], translationalVector[1]);
+		
+		
+		// printing
+		if ((int)rotationMatrix[2][2]==1) {
+			
+			System.out.println("Z axis correct");
+		}
+		else {
+			System.err.println("Not around Z axis");
+		}
+		
+		System.out.println(Arrays.toString(eigenVector));
+		System.out.println("Rot Matrix: ");
+		for(double[] d :rotationMatrix)
+		{
+			System.out.println(Arrays.toString(d));
+		}
+		System.out.println("Rotation by " + rotationAngle + " radians");
+		System.out.println("Translation Vector: " + Arrays.toString(translationalVector));
+		
+		List<Point2D> pList = new ArrayList<Point2D>(Arrays.asList(p));
+		
+		System.out.println("original points: " + pList.toString());
+		System.out.println("new points: " + newPoints.toString());
+		
+		List<Point2D> transformedPoints = new ArrayList<Point2D>();
+		for (int i=0; i<p.length; i++){			 
+			 Point2D newPt = at.transform(p[i], null);
+			 transformedPoints.add(newPt);
+		}
+		System.out.println("transformed points: " + transformedPoints.toString());
+		
+		return at;
+	}
 
 	public void runAlgorithm(List<Point2D> newPoints)
 	{
@@ -54,13 +114,22 @@ public class IterativeClosestPoint
 		aTransform.translate(translationalVector[0], translationalVector[1]);
 		
 		
-		//System.out.println(Arrays.toString(eigenVector));
-		//System.out.println("Rot Matrix: ");
-		//for(double[] d :rotationMatrix)
-		//{
-		//	System.out.println(Arrays.toString(d));
-		//}
-		//System.out.println(Arrays.toString(translationalVector));
+		System.out.println(Arrays.toString(eigenVector));
+		System.out.println("Rot Matrix: ");
+		for(double[] d :rotationMatrix)
+		{
+			System.out.println(Arrays.toString(d));
+		}
+		System.out.println("Translation Vector: " + Arrays.toString(translationalVector));
+		
+		if (rotationMatrix[2][2]==1) {
+			System.out.println("Z axis correct");
+		}
+		else {
+			System.err.println("Not around Z axis");
+		}
+		
+		
 /*
 		return new PhysicalState(originalState.getX() + translationalVector[0], originalState.getY() + translationalVector[1], originalState.getOrient());
 */
@@ -254,6 +323,24 @@ public class IterativeClosestPoint
 
 		return t;
 	}
+	
+	public void runTest(List<Point2D> newPoints){
+		
+		AffineTransform at = getAffineTransform(newPoints);
+		
+		/*List<Point2D> pList = new ArrayList<Point2D>(Arrays.asList(p));
+		
+		System.out.println("original points: " + pList.toString());
+		System.out.println("new points: " + newPoints.toString());
+		
+		List<Point2D> transformedPoints = new ArrayList<Point2D>();
+		for (int i=0; i<p.length; i++){			 
+			 Point2D newPt = at.transform(p[i], null);
+			 transformedPoints.add(newPt);
+		}
+		System.out.println("transformed points: " + transformedPoints.toString());*/
+	}
+	
 
 	/**
 	 * @param args
@@ -275,7 +362,8 @@ public class IterativeClosestPoint
 
 		//System.out.println(.print());
 
-                a.runAlgorithm(newp);
+        //        a.runAlgorithm(newp);
+		a.runTest(newp);
 	}
         
         

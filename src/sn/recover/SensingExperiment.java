@@ -47,35 +47,60 @@ public class SensingExperiment {
 
 		// Generate the complex region that will be used as the ground truth
 		groundTruth = new ComplexRegion(canvasWidth, canvasHeight);
-				
+		
+		System.out.println("Ground Truth Generated");
 		
 		try {
 			// Try to identify the topological structure of the gorund truth.
 			topoGroundTruth = new LayerGraph(groundTruth);
 			
+			System.out.println("Layer Graph generated");
+			
 			// Generate candidate measurements from the ground truth
-			double firstGap = 20, firstAngle = Math.PI / 4;
+			double firstGap = 20, firstAngle = 2* Math.PI * Math.random();
 			firstMeasurement = new SensorData(groundTruth, firstGap, firstAngle, canvasWidth, canvasHeight);
 			
-			double secondGap = 20, secondAngle = Math.PI / 8;
+			double secondGap = 20, secondAngle = 2* Math.PI * Math.random();
 			secondMeasurement = new SensorData(groundTruth, secondGap, secondAngle, canvasWidth, canvasHeight);
 			
+			System.out.println("SensorData created");			
+			
 			visualizeGroundTruth();
+			
+			System.out.println("Ground truth visualized");
 			
 			// normalize the measurements
 			SensorData firstNormalized = firstMeasurement.normalize();
 			SensorData secondNormalized = secondMeasurement.normalize();
 			
+			firstNormalized.drawTwoConvexHulls(secondNormalized, "before");
+			
 			// find the suitable affine transform
-			AffineTransform at = firstNormalized.getMatchingTransform(secondNormalized);
+			//TransformationRobustHelmert ht = firstNormalized.getHelmertInitial(secondNormalized);
+			// at = firstNormalized.matchCentroid(secondNormalized);
+			// AffineTransform at = firstNormalized.getATfromICP(secondNormalized);
+			//AffineTransform at = firstNormalized.getMatchingTransformThroughCentroid(secondNormalized);
+			AffineTransform at = firstNormalized.getATfromLongest(secondNormalized);
 			if (at!=null){
 				SensorData firstMatched = firstNormalized.applyAffineTransform(at);
+				//SensorData firstMatched = firstNormalized.applyHelmertTransform(ht);
+				System.out.println("Transformation found");
+				firstMatched.drawMeasurements(secondNormalized, "FINAL IMAGE");
+				firstMatched.drawTwoConvexHulls(secondNormalized, "matched");
 				
-				drawMeasurements(firstMatched, secondNormalized);
+				firstNormalized.drawTwoConvexHulls(secondNormalized, "after");
+				System.out.println("Transformation drawn");
 			}
 			else{
 				System.out.println("Match not found.");
 			}
+			
+			Point2D firstCentroid = firstMeasurement.getConvexHullCentroid();
+			Point2D secondCentroid = secondMeasurement.getConvexHullCentroid();
+			
+			System.err.println("firstCentroid: " + firstCentroid.getX() + " " + firstCentroid.getY());
+			System.err.println("secondCentroid: " + secondCentroid.getX() + " " + secondCentroid.getY());
+			System.out.println("dx = " + (secondCentroid.getX()-firstCentroid.getX()) + " dy = " + (secondCentroid.getY()-firstCentroid.getY()));
 			
 		}
 		catch (Exception e){
@@ -85,22 +110,7 @@ public class SensingExperiment {
 						
 	}
 	
-	public void drawMeasurements(SensorData first, SensorData second){
-		BufferedImage img = new BufferedImage(canvasWidth, canvasHeight,
-				BufferedImage.TYPE_4BYTE_ABGR);
-		Graphics2D g2d = (Graphics2D) img.createGraphics();
-
-		g2d.setBackground(Color.WHITE);
-		g2d.clearRect(0, 0, canvasWidth, canvasHeight);
-		
-		first.addIntervalsToGraphic(g2d, first.getPositiveIntervals(), false,
-				Color.BLUE);
-		second.addIntervalsToGraphic(g2d, second.getPositiveIntervals(), false,
-				Color.RED);
-		
-		ShowDebugImage frame = new ShowDebugImage("New intervals", img);
-		frame.refresh(img);
-	}
+	
 	
 	public void visualizeGroundTruth(){
 		
