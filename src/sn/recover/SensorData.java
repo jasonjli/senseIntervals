@@ -18,6 +18,8 @@ import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.imageio.ImageIO;
 
@@ -81,7 +83,9 @@ public class SensorData {
 		sensorCount = Integer.MIN_VALUE; // initiated at min value
 		width = canvasWidth;
 		height = canvasHeight;
-
+		
+		System.out.println("Generating sensor data.");
+		
 		// generate a set of parallel lines to fill the canvas
 		List<Line2D> parallelLines = GeomUtil.generateParallelLines(sensorGap,
 				sensorAngle, canvasWidth, canvasHeight);
@@ -90,30 +94,58 @@ public class SensorData {
 		// generate a complex region
 		Region[] regions = complexRegion.getComplexRegion();
 
+		System.out.println("Regions retrieved");
+		
 		// sensor ID initialized to 1
 		int sensorId = 1;
 
 		for (Line2D l : parallelLines) {
 			List<Line2D> intersectLines = new ArrayList<Line2D>();
+			
+			List<Line2D> negativeLines = new ArrayList<Line2D>();
 
+			System.out.println("Sensor " + sensorId + " iterating " + regions.length + " regions.");
+			
 			// iterate over all sub-regions in the complex region
 			for (Region p : regions) {
 				if (!p.isHole()) {// if sub-region is not a hole, there is a
 									// positive interval
+					System.out.println("Region is not a hole " + p.toString());
 					intersectLines = GeomUtil.lineRegion(intersectLines, p, l,
 							sensorAngle, canvasHeight, canvasWidth);
+					System.out.println("Line drawn. ");
+					//negativeLines = GeomUtil.lineJumpHole(intersectLines, p,
+					//		l, sensorAngle, canvasHeight, canvasWidth);
 				} else {// otherwise negative interval
+					System.out.println("Region is a hole " + p.toString());
 					intersectLines = GeomUtil.lineJumpHole(intersectLines, p,
 							l, sensorAngle, canvasHeight, canvasWidth);
+					System.out.println("Gap recorded. ");
+					//negativeLines = GeomUtil.lineRegion(intersectLines, p, l,
+					//		sensorAngle, canvasHeight, canvasWidth);
 				}
 			}
+			
+			System.out.println("Sensor " + sensorId + " region iterated.");
+			
 			for (Line2D il : intersectLines) {
 				SensorInterval positiveInterval = new SensorInterval(sensorId,
 						il);
 				positiveIntervals.add(positiveInterval);
 			}
+			
+			for (Line2D il : negativeLines) {
+				SensorInterval negativeInterval = new SensorInterval(sensorId,
+						il);
+				positiveIntervals.add(negativeInterval);
+			}
+			
+			System.out.println("Sensor " + sensorId + " done.");
+			
 			sensorId++;
 		}
+		
+		System.out.println("Sensor data generated.");
 
 		negativeIntervals = getNegativeIntervalsFromPositive();
 
@@ -501,7 +533,11 @@ public class SensorData {
 
 	public void addIntervalsToGraphic(Graphics2D g2d,
 			List<SensorInterval> intervals, boolean useOffset, Color c) {
+		
+		
 		double xOffset = 0, yOffset = 0;
+		
+		
 		if (useOffset) {
 			// calculate hull offset for drawing
 			// otherwise it draws outside the canvas.
@@ -525,7 +561,7 @@ public class SensorData {
 		}
 
 		g2d.setColor(c);
-
+		
 		// Draw components
 		for (int i = 0; i < intervals.size(); i++) {
 			SensorInterval curInterval = intervals.get(i);
@@ -713,17 +749,43 @@ public class SensorData {
 		otherHullPath.lineTo(otherHull.get(0).getX() + dx, otherHull.get(0).getY()
 				+ dy);
 		
+		
+		Line2D thisLongest = getLongestDimension(thisHull);
+		thisLongest.setLine(new Point2D.Double(thisLongest.getX1()+dx, thisLongest.getY1()+dy), 
+							new Point2D.Double(thisLongest.getX2()+dx, thisLongest.getY2()+dy));
+		Line2D otherLongest = getLongestDimension(otherHull);
+		otherLongest.setLine(new Point2D.Double(otherLongest.getX1()+dx, otherLongest.getY1()+dy), 
+				new Point2D.Double(otherLongest.getX2()+dx, otherLongest.getY2()+dy));
 		// draw the image
 		BufferedImage img = new BufferedImage(newWidth, newHeight,
 						BufferedImage.TYPE_4BYTE_ABGR);
 		Graphics2D g2d = (Graphics2D) img.createGraphics();
 		g2d.setColor(Color.RED);
 		g2d.draw(thisHullPath);
+		g2d.draw(thisLongest);
 		g2d.setColor(Color.BLUE);
 		g2d.draw(otherHullPath);
+		g2d.draw(otherLongest);
+		
+		String filename = "experiments/" + getCurrentTimeStamp() + "-"+ str + ".png";
+		
+		System.out.println("saving image to " + filename);
+		try {
+			ImageIO.write(img, "png", new File(filename));
+		} catch (IOException e) {
+			System.err.println("failed to save image " + filename);
+			e.printStackTrace();
+		}
 		
 		ShowDebugImage frame = new ShowDebugImage(str, img);
 		frame.refresh(img);
+	}
+	
+	public static String getCurrentTimeStamp() {
+	    SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd-HHmm");//dd/MM/yyyy
+	    Date now = new Date();
+	    String strDate = sdfDate.format(now);
+	    return strDate;
 	}
 	
 	/**
@@ -732,6 +794,8 @@ public class SensorData {
 	 * @return an array of affine transform showing possible matches.
 	 * 
 	 */
+	
+	
 	
 	public List<AffineTransform> getMatchingTransformList(SensorData otherData){
 		
@@ -831,24 +895,113 @@ public class SensorData {
 		return at;
 	}
 	
-	public AffineTransform getATfromLongest(SensorData otherData){
+	
+	
+	public AffineTransform[] getATfromLongest(SensorData otherData){
 		
-		// First, we work out rotating angle
-		double rotateAngle = getAngleRotateLongestDimension(otherData);
-		AffineTransform at = new AffineTransform();		
-		at.rotate(rotateAngle);
+		// Two Affine transforms, one for rotate, other for translate.
+		AffineTransform[] transforms = new AffineTransform[2];
 		
-		// now, we work out translate
-		SensorData rotateData = applyAffineTransform(at);
-		Point2D rotateCentroid = rotateData.getPosIntCentroid();
-		Point2D otherCentroid = otherData.getPosIntCentroid();
+		// First, we work out the two longest dimensions
+		Line2D thisLongest = getLongestDimension(getConvexHull());
+		Line2D otherLongest = getLongestDimension(otherData.getConvexHull());
 		
-		double dx = otherCentroid.getX()-rotateCentroid.getX();
-		double dy = otherCentroid.getY()-rotateCentroid.getY();
+		double thisAngle = Math.atan2((thisLongest.getY2()-thisLongest.getY1()), (thisLongest.getX2() - thisLongest.getX1()));
+		double otherAngle = Math.atan2((otherLongest.getY2()-otherLongest.getY1()), (otherLongest.getX2() - otherLongest.getX1()));
 		
-		// at.translate(dx, dy);
+		// we translate this SensorData where the one of the points on the longest dimension is at the origin.
 		
-		return at;
+		AffineTransform at = new AffineTransform();
+		
+
+		
+		
+		
+		// rotate about the origin so the longest dimension has the same direction
+		AffineTransform firstRotate = new AffineTransform();
+		firstRotate.rotate(otherAngle - thisAngle, thisLongest.getX1(), thisLongest.getY1());
+		
+		AffineTransform secondRotate = new AffineTransform();
+		secondRotate.rotate(otherAngle - thisAngle + Math.PI, thisLongest.getX1(), thisLongest.getY1());
+		
+		at.rotate(otherAngle - thisAngle, thisLongest.getX1(), thisLongest.getY1());
+		
+		SensorData firstRotateData = applyAffineTransform(firstRotate);
+		
+		SensorData secondRotateData = applyAffineTransform(secondRotate);
+		
+		Line2D firstRotateLongest = getLongestDimension(firstRotateData.getConvexHull());
+		Line2D secondRotateLongest = getLongestDimension(secondRotateData.getConvexHull());
+		
+		// System.out.println("rotate longest:" + rotateLongest.getP1().toString() + " " + rotateLongest.getP2().toString());
+
+				
+		// firstRotateData.drawTwoConvexHulls(otherData, "AfterRotate");
+		
+		// translate the data so the point of the longest element matches.
+		double first_dx = otherLongest.getX1()-firstRotateLongest.getX1();
+		double first_dy = otherLongest.getY1()-firstRotateLongest.getY1();
+		
+		double second_dx = otherLongest.getX1()-secondRotateLongest.getX1();
+		double second_dy = otherLongest.getY1()-secondRotateLongest.getY1();
+		
+		// System.out.println("translating dx:" + first_dx + " dy:" + first_dy );
+		
+		
+		
+		//at.translate(dx,dy);
+		
+		AffineTransform firstTranslate = new AffineTransform();
+		firstTranslate.translate(first_dx,first_dy);
+		at.translate(first_dx, first_dy);
+		
+		AffineTransform secondTranslate = new AffineTransform();
+		secondTranslate.translate(second_dx, second_dy);
+				
+		SensorData firstTransformedData = firstRotateData.applyAffineTransform(firstTranslate); //applyAffineTransform(at);
+		SensorData secondTransformedData = secondRotateData.applyAffineTransform(secondTranslate);
+		
+		// Drawing things
+		//firstTransformedData.drawTwoConvexHulls(otherData, "FirstRotateTranslate");
+
+		//secondTransformedData.drawTwoConvexHulls(otherData, "SecondRotateTranslate");
+		
+		//firstTransformedData.drawMeasurements(otherData, "firstRT");
+		//secondTransformedData.drawMeasurements(otherData, "secondRT");
+		
+		int secondError = secondTransformedData.isCompatible(otherData);
+		int firstError = firstTransformedData.isCompatible(otherData);
+		
+		double secondScore = secondTransformedData.sumClosestPointError(otherData);
+		double firstScore = firstTransformedData.sumClosestPointError(otherData);
+		
+		System.out.println("First error:" + firstError + ", Second error:" + secondError);
+		System.out.println("First score:" + firstScore + ", Second score:" + secondScore);
+		
+		if (firstScore < secondScore){
+			transforms[0] = firstRotate; 
+			transforms[1] = firstTranslate;
+			
+			System.out.println("First selected");
+		}
+		else{
+			transforms[0] = secondRotate;
+			transforms[1] = secondTranslate;
+			System.out.println("Second selected");
+		}
+		
+		Line2D transformedLongest = getLongestDimension(firstTransformedData.getConvexHull());
+		double newAngle =  Math.atan2((transformedLongest.getY2()-transformedLongest.getY1()), 
+				  (transformedLongest.getX2()-transformedLongest.getX1()));
+
+		System.out.println("transformed angle:" + newAngle + "\n other angle:" + otherAngle);
+
+		
+		System.out.println("this longest:" + thisLongest.getP1().toString() + " " + thisLongest.getP2().toString());
+		System.out.println("other longest:" + otherLongest.getP1().toString() + " " + otherLongest.getP2().toString());
+		System.out.println("transformed longest:" + transformedLongest.getP1().toString() + " " + transformedLongest.getP2().toString());
+		
+		return transforms;
 	}
 	
 	// Find the affine transform from this SensorData to match other sensorData.  	
@@ -934,6 +1087,21 @@ public class SensorData {
 		return transformedData;
 	}
 	
+	public SensorData applyAffineTransform(AffineTransform[] at) throws Exception{
+		
+		if (at.length==0){
+			return this;
+		}
+		
+		SensorData transformedData = applyAffineTransform(at[0]);
+		
+		for (int i=1; i<at.length; i++){			
+			transformedData = transformedData.applyAffineTransform(at[i]);
+		}
+		
+		return transformedData;
+	}
+	
 	public SensorData applyAffineTransform(AffineTransform at){
 						
 		SensorData transformedData = new SensorData(width, height);
@@ -1008,6 +1176,35 @@ public class SensorData {
 		System.err.println("Angle Not Found!");
 		System.exit(0);
 		return angle;
+	}
+	
+	public Line2D  getLongestDimension(List<Point2D> convexHull){
+		// find the logest dimension of the convex hull		
+
+		Point2D maxpt1 = convexHull.get(0), maxpt2=convexHull.get(1);
+		double maxDistance = Double.MIN_VALUE;
+
+		for (int i=0; i<convexHull.size(); i++){
+			for (int j=1; j<convexHull.size(); j++){
+				Point2D pt1 = convexHull.get(i);
+				Point2D pt2 = convexHull.get(j);
+				double distance = pt1.distance(pt2);
+				if (distance > maxDistance){
+					maxDistance = distance;
+					maxpt1 = pt1;
+					maxpt2 = pt2;
+				}
+			}
+		}
+
+		// reorder the points
+		if (maxpt1.getX()>maxpt2.getX()){
+			Point2D tmpPt = maxpt2;
+			maxpt2 = maxpt1;
+			maxpt1 = tmpPt;
+		}
+
+		return new Line2D.Double(maxpt1, maxpt2);
 	}
 	
 	public double getAngleLongestDimension(){
@@ -1102,7 +1299,8 @@ public void drawMeasurements(SensorData second, String errorString){
 		System.err.println("pos. intervals 1: " + positiveIntervals.size() + "pos. intervals 2: " + second.getPositiveIntervals().size());
 		System.err.println("minX:" + minX + " minY:" + minY + " maxX:" + maxX + " maxY:" + maxY);
 		
-	
+		int compatibleCount = isCompatible(second);
+		errorString = errorString + " " + compatibleCount + " violations.";
 		
 		BufferedImage img = new BufferedImage(newWidth, newHeight,
 				BufferedImage.TYPE_4BYTE_ABGR);
@@ -1126,6 +1324,16 @@ public void drawMeasurements(SensorData second, String errorString){
 		
 		ShowDebugImage frame = new ShowDebugImage("New intervals", img);
 		frame.refresh(img);
+		
+		String filename = "experiments/" + getCurrentTimeStamp() + "-"+ errorString + ".png";
+		
+		System.out.println("saving image to " + filename);
+		try {
+			ImageIO.write(img, "png", new File(filename));
+		} catch (IOException e) {
+			System.err.println("failed to save image " + filename);
+			e.printStackTrace();
+		}
 	}
 	
 	// tests
@@ -1138,6 +1346,53 @@ public void drawMeasurements(SensorData second, String errorString){
 	 * @param otherData
 	 * @return
 	 */
+	public int countPositiveIntersection(SensorData otherData){
+		int positiveIntersect = 0;
+
+
+		List<SensorInterval> otherPositiveIntervals = otherData
+				.getPositiveIntervals();
+		
+		for (int i = 0; i < positiveIntervals.size(); i++) {
+			SensorInterval curPositive = positiveIntervals.get(i);
+			
+			
+			// check for intersection of other positive intervals
+			// there is a intersection with other positive interval
+			for (int j = 0; j < otherPositiveIntervals.size(); j++) {
+				SensorInterval otherPositive = otherPositiveIntervals.get(j);
+				if (curPositive.intersects(otherPositive)) {
+					positiveIntersect++;
+				}
+			}
+			
+
+			//if (v) violations++;
+		}
+		return positiveIntersect;
+	}
+	
+	public double sumClosestPointError(SensorData otherData){
+		
+		double sum = 0;
+		
+		List<Point2D> thisHull = getConvexHull();
+		List<Point2D> otherHull = otherData.getConvexHull();
+		
+		for (int i=0; i<thisHull.size(); i++){
+			double min = Double.MAX_VALUE;
+			Point2D thisPoint = thisHull.get(i);
+			for (int j=0; j<otherHull.size(); j++){
+				Point2D otherPoint = otherHull.get(j);
+				double dist = thisPoint.distance(otherPoint);
+				if (dist<min) min = dist;
+			}
+			sum += min;
+		}
+				
+		return sum;
+	}
+
 	public int isCompatible(SensorData otherData) {
 
 		boolean positiveIntersect = false;
@@ -1172,6 +1427,7 @@ public void drawMeasurements(SensorData second, String errorString){
 				if (curPositive.intersects(otherNegative)) {
 					v=true;
 					break;
+					//violations++;
 				}
 			}
 			if (v) violations++;
@@ -1186,6 +1442,7 @@ public void drawMeasurements(SensorData second, String errorString){
 				if (curNegative.intersects(otherPositiveIntervals.get(j))) {
 					v=true;
 					break;
+					//violations++;
 				}
 			}
 			if (v) violations++;

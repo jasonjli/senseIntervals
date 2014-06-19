@@ -42,6 +42,7 @@ public class SensingExperiment {
 	private static final int canvasHeight = 600;
 	
 	
+	
 	// constructing the experiment
 	public SensingExperiment() {
 
@@ -73,22 +74,22 @@ public class SensingExperiment {
 			SensorData firstNormalized = firstMeasurement.normalize();
 			SensorData secondNormalized = secondMeasurement.normalize();
 			
-			firstNormalized.drawTwoConvexHulls(secondNormalized, "before");
+			// firstNormalized.drawTwoConvexHulls(secondNormalized, "before");
 			
 			// find the suitable affine transform
 			//TransformationRobustHelmert ht = firstNormalized.getHelmertInitial(secondNormalized);
 			// at = firstNormalized.matchCentroid(secondNormalized);
 			// AffineTransform at = firstNormalized.getATfromICP(secondNormalized);
 			//AffineTransform at = firstNormalized.getMatchingTransformThroughCentroid(secondNormalized);
-			AffineTransform at = firstNormalized.getATfromLongest(secondNormalized);
-			if (at!=null){
+			AffineTransform[] at = firstNormalized.getATfromLongest(secondNormalized);
+			if (at.length != 0){
 				SensorData firstMatched = firstNormalized.applyAffineTransform(at);
 				//SensorData firstMatched = firstNormalized.applyHelmertTransform(ht);
 				System.out.println("Transformation found");
-				firstMatched.drawMeasurements(secondNormalized, "FINAL IMAGE");
-				firstMatched.drawTwoConvexHulls(secondNormalized, "matched");
+				firstMatched.drawMeasurements(secondNormalized, "FINAL-IMAGE");
+				firstMatched.drawTwoConvexHulls(secondNormalized, "matchedConvexHull");
 				
-				firstNormalized.drawTwoConvexHulls(secondNormalized, "after");
+				// firstNormalized.drawTwoConvexHulls(secondNormalized, "after");
 				System.out.println("Transformation drawn");
 			}
 			else{
@@ -110,22 +111,48 @@ public class SensingExperiment {
 						
 	}
 	
+	public ComplexRegion getGroundTruth(){
+		return groundTruth;
+	}
+	
+	public LayerGraph getTopoGroundTruth(){
+		return topoGroundTruth;
+	}
 	
 	
 	public void visualizeGroundTruth(){
+		
+		System.out.println("Visualizing Ground Truth");
 		
 		// visualize the ground truth 
 		BufferedImage img = groundTruth.drawRegion(Color.LIGHT_GRAY);
 		Graphics2D g2d = (Graphics2D) img.createGraphics();
 		
+		System.out.println("Adding things to graphics.");
+		
 		ShowDebugImage groundTruthFame = null;
 		firstMeasurement.addIntervalsToGraphic(g2d, firstMeasurement.getPositiveIntervals(), false,
 				Color.BLUE);
+		
+		System.out.println("First measurement added to graphics");
+		
 		secondMeasurement.addIntervalsToGraphic(g2d, secondMeasurement.getPositiveIntervals(), false,
 				Color.RED);
 		
+		System.out.println("Second measurement added to graphics");	
+		
 		ShowDebugImage frame = new ShowDebugImage("Regions with intervals", img);
 		frame.refresh(img);
+		
+		String filename = "experiments/" + Visualization.getCurrentTimeStamp() + "-groundTruth.png";
+		
+		System.out.println("saving image to " + filename);
+		try {
+			ImageIO.write(img, "png", new File(filename));
+		} catch (IOException e) {
+			System.err.println("failed to save image " + filename);
+			e.printStackTrace();
+		}
 	}
 	
 	public static void main(String[] args) throws Exception {
