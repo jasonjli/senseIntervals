@@ -49,24 +49,24 @@ public class SensingExperiment {
 		// Generate the complex region that will be used as the ground truth
 		groundTruth = new ComplexRegion(canvasWidth, canvasHeight);
 		
+		
 		System.out.println("Ground Truth Generated");
 		
 		try {
-			// Try to identify the topological structure of the gorund truth.
-			topoGroundTruth = new LayerGraph(groundTruth);
 			
-			System.out.println("Layer Graph generated");
 			
 			// Generate candidate measurements from the ground truth
-			double firstGap = 20, firstAngle = 2* Math.PI * Math.random();
+			double firstGap = 20, firstAngle =  Math.PI * Math.random();
 			firstMeasurement = new SensorData(groundTruth, firstGap, firstAngle, canvasWidth, canvasHeight);
 			
-			double secondGap = 20, secondAngle = 2* Math.PI * Math.random();
+			double secondGap = 20, secondAngle =  Math.PI * Math.random();
 			secondMeasurement = new SensorData(groundTruth, secondGap, secondAngle, canvasWidth, canvasHeight);
 			
 			System.out.println("SensorData created");			
 			
 			visualizeGroundTruth();
+			
+			firstMeasurement.drawMeasurements(secondMeasurement, "GroundTruthMeasurements");
 			
 			System.out.println("Ground truth visualized");
 			
@@ -102,7 +102,10 @@ public class SensingExperiment {
 			System.err.println("firstCentroid: " + firstCentroid.getX() + " " + firstCentroid.getY());
 			System.err.println("secondCentroid: " + secondCentroid.getX() + " " + secondCentroid.getY());
 			System.out.println("dx = " + (secondCentroid.getX()-firstCentroid.getX()) + " dy = " + (secondCentroid.getY()-firstCentroid.getY()));
-			
+			// Try to identify the topological structure of the gorund truth.
+			topoGroundTruth = new LayerGraph(groundTruth);
+						
+			System.out.println("Layer Graph generated");
 		}
 		catch (Exception e){
 			System.err.println("ERROR: " + e.getMessage());

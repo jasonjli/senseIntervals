@@ -138,25 +138,48 @@ public class GeomUtil {
 		return intersectLines;
 	}
 
+	/**
+	 * Split intervals to jump holes
+	 * 
+	 * @param intersectLines
+	 *            segments of the line <code>l</code>
+	 * @param p
+	 *            the hole
+	 * @param l
+	 *            the line that needs to be split to jump the hole
+	 * @param lineAngle
+	 * @param height
+	 *            canvas height
+	 * @param width
+	 *            canvas width
+	 * @return
+	 * @throws Exception
+	 */
 	public static List<Line2D> lineJumpHole(List<Line2D> intersectLines,
 			Region p, Line2D l, double lineAngle, int height, int width)
 			throws Exception {
+
+		// point set for storing intersections of l with the hole
 		Set<Point2D> intersections;
+
+		// rotation operators for rotating the intersecting points to vertical
 		AffineTransform rotate = new AffineTransform();
 		rotate.rotate(Math.PI / 2 - lineAngle, width / 2, height / 2);
 		AffineTransform rotateInverse = new AffineTransform();
 		rotateInverse.rotate(lineAngle - Math.PI / 2, width / 2, height / 2);
 
+		// find intersections of l with the hole p
 		intersections = GeomUtil.getIntersections(p.getShape(), l, lineAngle,
 				width, height);
 
+		// rotate the intersecting points
 		List<Point2D> intersectionArray = new ArrayList<Point2D>();
 		for (Iterator<Point2D> it = intersections.iterator(); it.hasNext();) {
 			Point2D rotatedPt = rotate.transform(it.next(), null);
 			intersectionArray.add(rotatedPt);
 		}
 
-		// sort vertically
+		// sort the points vertically
 		for (int i = 0; i < intersectionArray.size() - 1; i++) {
 			for (int j = intersectionArray.size() - 1; j > 0; j--) {
 				if (intersectionArray.get(j).getY() < intersectionArray.get(
@@ -168,54 +191,82 @@ public class GeomUtil {
 			}
 		}
 
-		for (int i = 0; i < intersectionArray.size(); i++) {
-			Point2D rotatedPt = rotateInverse.transform(
-					intersectionArray.get(i), null);
-			intersectionArray.set(i, rotatedPt);
-		}
-
-		Point2D start = new Point2D.Double(), end = new Point2D.Double();
+		Point2D rotatedStart = new Point2D.Double(), rotatedEnd = new Point2D.Double(), start = new Point2D.Double(), end = new Point2D.Double();
 		boolean drawHole = false, hasStart = false, hasEnd = false;
 		for (Iterator<Point2D> it = intersectionArray.iterator(); it.hasNext();) {
 			Point2D point = it.next();
-			if (!hasStart) {
-				start = point;
-				hasStart = true;
-			}
 
-			else if (hasStart && !hasEnd) {
-				end = point;
+			// a whole interval interests with a hole must have even number
+			// intersecting points
+			// find each two intersections and update the segments accordingly
+			if (!hasStart) {
+				rotatedStart = point;
+				start = rotateInverse.transform(rotatedStart, null);
+				hasStart = true;
+			} else if (hasStart && !hasEnd) {
+				rotatedEnd = point;
+				end = rotateInverse.transform(rotatedEnd, null);
 				hasEnd = true;
 			}
-
 			if (hasStart && hasEnd) {
 				drawHole = true;
 				hasStart = false;
 				hasEnd = false;
 			}
 
-			// boolean addLine = false;
+			// update previous segments of the line l
 			if (drawHole) {
 				for (int i = 0; i < intersectLines.size(); i++) {
 					Line2D il = intersectLines.get(i);
-					if (il.getY1() <= start.getY()
-							&& il.getY2() >= start.getY()
-							&& il.getY2() <= end.getY()) {
+					Point2D rotatedP1 = rotate.transform(il.getP1(), null);
+					Point2D rotatedP2 = rotate.transform(il.getP2(), null);
+
+					double y1 = rotatedP1.getY();
+					double y2 = rotatedP2.getY();
+
+					// sort the two ends of a segment of vertically
+					if (y1 > y2) {
+						Point2D temP;
+						temP = rotatedP1;
+						rotatedP1 = rotatedP2;
+						rotatedP2 = temP;
+
+						double temY;
+						temY = y1;
+						y1 = y2;
+						y2 = temY;
+					}
+
+					// if the upper end of the segment is outside the hole and
+					// the other end is in, then omit the inside part
+					if (y1 < rotatedStart.getY() && y2 >= rotatedStart.getY()
+							&& y2 <= rotatedEnd.getY()) {
 						il.setLine(il.getP1(), start);
 					}
 
-					else if (il.getY1() >= start.getY()
-							&& il.getY1() <= end.getY()
-							&& il.getY2() >= end.getY()) {
+					// if the lower end of the segment is outside the hole and
+					// the other end is in, then omit the inside part
+					else if (y1 >= rotatedStart.getY()
+							&& y1 <= rotatedEnd.getY()
+							&& y2 > rotatedEnd.getY()) {
 						il.setLine(end, il.getP2());
-					} else if (il.getY1() >= start.getY()
-							&& il.getY2() <= end.getY()) {
+					}
+
+					// if the entire segment is inside the hole, then omit the
+					// segment
+					else if (y1 >= rotatedStart.getY()
+							&& y2 <= rotatedEnd.getY()) {
 						intersectLines.remove(i);
 						i--;
-					} else if (il.getY1() <= start.getY()
-							&& il.getY2() >= end.getY()) {
-						Point2D temEnd = il.getP2();
-						il.setLine(il.getP1(), start);
+					}
+
+					// if the both ends of the segment is outside the hole, then
+					// omit the middle inside part
+					else if (y1 < rotatedStart.getY() && y2 > rotatedEnd.getY()) {
+						Point2D temEnd = rotateInverse.transform(rotatedP2,
+								null);
+						il.setLine(rotateInverse.transform(rotatedP1, null),
+								start);
 						// System.out.println(intersectLines.size());
 						intersectLines.add(0, new Line2D.Double(end, temEnd));
 						// System.out.println(intersectLines.size()
@@ -225,8 +276,6 @@ public class GeomUtil {
 				}
 				drawHole = false;
 			}
-			// System.out.println("Intersection: " +
-			// point.toString());
 
 		}
 		return intersectLines;
@@ -401,7 +450,7 @@ public class GeomUtil {
 		int type;
 		List<Point2D> intersectionsTemp = new LinkedList<Point2D>();
 		while (!lineIt.isDone()) {
-			double dist;	
+			double dist;
 			type = lineIt.currentSegment(coords);
 			switch (type) {
 			case PathIterator.SEG_LINETO: {
@@ -525,7 +574,7 @@ public class GeomUtil {
 				}
 
 				intersectionsTemp.clear();
-				
+
 				// System.out.println("type: CLOSE "+ intersectPt.toString());
 				break;
 			}

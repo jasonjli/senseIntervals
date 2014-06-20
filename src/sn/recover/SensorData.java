@@ -83,9 +83,7 @@ public class SensorData {
 		sensorCount = Integer.MIN_VALUE; // initiated at min value
 		width = canvasWidth;
 		height = canvasHeight;
-		
-		System.out.println("Generating sensor data.");
-		
+
 		// generate a set of parallel lines to fill the canvas
 		List<Line2D> parallelLines = GeomUtil.generateParallelLines(sensorGap,
 				sensorAngle, canvasWidth, canvasHeight);
@@ -94,58 +92,30 @@ public class SensorData {
 		// generate a complex region
 		Region[] regions = complexRegion.getComplexRegion();
 
-		System.out.println("Regions retrieved");
-		
 		// sensor ID initialized to 1
 		int sensorId = 1;
 
 		for (Line2D l : parallelLines) {
 			List<Line2D> intersectLines = new ArrayList<Line2D>();
-			
-			List<Line2D> negativeLines = new ArrayList<Line2D>();
 
-			System.out.println("Sensor " + sensorId + " iterating " + regions.length + " regions.");
-			
 			// iterate over all sub-regions in the complex region
 			for (Region p : regions) {
 				if (!p.isHole()) {// if sub-region is not a hole, there is a
 									// positive interval
-					System.out.println("Region is not a hole " + p.toString());
 					intersectLines = GeomUtil.lineRegion(intersectLines, p, l,
 							sensorAngle, canvasHeight, canvasWidth);
-					System.out.println("Line drawn. ");
-					//negativeLines = GeomUtil.lineJumpHole(intersectLines, p,
-					//		l, sensorAngle, canvasHeight, canvasWidth);
 				} else {// otherwise negative interval
-					System.out.println("Region is a hole " + p.toString());
 					intersectLines = GeomUtil.lineJumpHole(intersectLines, p,
 							l, sensorAngle, canvasHeight, canvasWidth);
-					System.out.println("Gap recorded. ");
-					//negativeLines = GeomUtil.lineRegion(intersectLines, p, l,
-					//		sensorAngle, canvasHeight, canvasWidth);
 				}
 			}
-			
-			System.out.println("Sensor " + sensorId + " region iterated.");
-			
 			for (Line2D il : intersectLines) {
 				SensorInterval positiveInterval = new SensorInterval(sensorId,
 						il);
 				positiveIntervals.add(positiveInterval);
 			}
-			
-			for (Line2D il : negativeLines) {
-				SensorInterval negativeInterval = new SensorInterval(sensorId,
-						il);
-				positiveIntervals.add(negativeInterval);
-			}
-			
-			System.out.println("Sensor " + sensorId + " done.");
-			
 			sensorId++;
 		}
-		
-		System.out.println("Sensor data generated.");
 
 		negativeIntervals = getNegativeIntervalsFromPositive();
 
