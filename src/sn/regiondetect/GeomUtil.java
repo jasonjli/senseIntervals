@@ -195,24 +195,26 @@ public class GeomUtil {
 		boolean drawHole = false, hasStart = false, hasEnd = false;
 		for (Iterator<Point2D> it = intersectionArray.iterator(); it.hasNext();) {
 			Point2D point = it.next();
+
+			// a whole interval interests with a hole must have even number
+			// intersecting points
+			// find each two intersections and update the segments accordingly
 			if (!hasStart) {
 				rotatedStart = point;
 				start = rotateInverse.transform(rotatedStart, null);
 				hasStart = true;
-			}
-
-			else if (hasStart && !hasEnd) {
+			} else if (hasStart && !hasEnd) {
 				rotatedEnd = point;
 				end = rotateInverse.transform(rotatedEnd, null);
 				hasEnd = true;
 			}
-
 			if (hasStart && hasEnd) {
 				drawHole = true;
 				hasStart = false;
 				hasEnd = false;
 			}
 
+			// update previous segments of the line l
 			if (drawHole) {
 				for (int i = 0; i < intersectLines.size(); i++) {
 					Line2D il = intersectLines.get(i);
@@ -221,46 +223,52 @@ public class GeomUtil {
 
 					double y1 = rotatedP1.getY();
 					double y2 = rotatedP2.getY();
-					
-					if(y1 > y2){
+
+					// sort the two ends of a segment of vertically
+					if (y1 > y2) {
 						Point2D temP;
 						temP = rotatedP1;
 						rotatedP1 = rotatedP2;
 						rotatedP2 = temP;
-						
+
 						double temY;
 						temY = y1;
 						y1 = y2;
 						y2 = temY;
 					}
-						
 
-					if (y1 < rotatedStart.getY()
-							&& y2 >= rotatedStart.getY()
+					// if the upper end of the segment is outside the hole and
+					// the other end is in, then omit the inside part
+					if (y1 < rotatedStart.getY() && y2 >= rotatedStart.getY()
 							&& y2 <= rotatedEnd.getY()) {
 						il.setLine(il.getP1(), start);
 					}
 
+					// if the lower end of the segment is outside the hole and
+					// the other end is in, then omit the inside part
 					else if (y1 >= rotatedStart.getY()
 							&& y1 <= rotatedEnd.getY()
 							&& y2 > rotatedEnd.getY()) {
 						il.setLine(end, il.getP2());
-					} 
-					
+					}
+
+					// if the entire segment is inside the hole, then omit the
+					// segment
 					else if (y1 >= rotatedStart.getY()
 							&& y2 <= rotatedEnd.getY()) {
 						intersectLines.remove(i);
 						i--;
-					} 
-					
-					
-					else if (y1 < rotatedStart.getY()
-							&& y2 > rotatedEnd.getY()) {
-						Point2D temEnd = rotateInverse.transform(rotatedP2, null);
-						il.setLine(rotateInverse.transform(rotatedP1, null), start);
+					}
+
+					// if the both ends of the segment is outside the hole, then
+					// omit the middle inside part
+					else if (y1 < rotatedStart.getY() && y2 > rotatedEnd.getY()) {
+						Point2D temEnd = rotateInverse.transform(rotatedP2,
+								null);
+						il.setLine(rotateInverse.transform(rotatedP1, null),
+								start);
 						// System.out.println(intersectLines.size());
-						intersectLines.add(0, new Line2D.Double(end,
-								temEnd));
+						intersectLines.add(0, new Line2D.Double(end, temEnd));
 						// System.out.println(intersectLines.size()
 						// +" "
 						// + lineC + "\n");
