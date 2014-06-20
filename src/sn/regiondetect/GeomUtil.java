@@ -281,6 +281,7 @@ public class GeomUtil {
 		return intersectLines;
 	}
 
+
 	/**
 	 * Extend and merge intersecting lines
 	 * 
