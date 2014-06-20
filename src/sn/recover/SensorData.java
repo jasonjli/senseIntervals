@@ -540,15 +540,16 @@ public class SensorData {
 	 * 
 	 * @param filename
 	 */
-	public void drawPositiveIntervals(String filename) {
+	public void drawPositiveIntervals(String filename, BufferedImage img, boolean useOffsets) {
 
-		// Initialize image
-		BufferedImage img = new BufferedImage(1024, 800,
-				BufferedImage.TYPE_4BYTE_ABGR);
+		if (img == null) {
+			// Initialize image
+			img = new BufferedImage(1024, 800,
+					BufferedImage.TYPE_4BYTE_ABGR);
+		}
 		Graphics2D g2d = (Graphics2D) img.createGraphics();
 		g2d.setColor(Color.BLACK);
 
-		boolean useOffsets = true;
 		addIntervalsToGraphic(g2d, positiveIntervals, useOffsets);
 
 		// Write to file
@@ -559,6 +560,14 @@ public class SensorData {
 			System.err.println("failed to save image " + filename);
 			e.printStackTrace();
 		}
+	}
+	
+	public void drawPositiveIntervals(String filename, BufferedImage img) {
+		drawPositiveIntervals(filename, img, true);
+	}
+	
+	public void drawPositiveIntervals(String filename){
+		drawPositiveIntervals(filename, null); 
 	}
 
 	/**

@@ -17,7 +17,7 @@ public class GeneratorMainEntry {
 
 		Random r = new Random();
 
-		int nCases = 10;
+		int nCases = 1000;
 
 		int width = 800; // width of canvas
 		int height = 600; // height of canvas
@@ -161,7 +161,7 @@ public class GeneratorMainEntry {
 						complexRegion.getWidth(), complexRegion.getHeight());
 				fileName = String.format(
 						fileHead + "-positiveInterval[%d].png", n);
-				d.drawPositiveIntervals(fileName);
+				d.drawPositiveIntervals(fileName,complexRegion.drawRegion(),false);
 
 				String positiveFileName, negativeFileName;
 				positiveFileName = String.format(
