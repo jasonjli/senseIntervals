@@ -40,8 +40,7 @@ public class SensingExperiment {
 	
 	private static final int canvasWidth = 800;
 	private static final int canvasHeight = 600;
-	
-	
+		
 	
 	// constructing the experiment
 	public SensingExperiment() {
@@ -54,6 +53,9 @@ public class SensingExperiment {
 		
 		try {
 			
+			topoGroundTruth = new LayerGraph(groundTruth);
+			
+			System.out.println("Layer Graph generated");
 			
 			// Generate candidate measurements from the ground truth
 			double firstGap = 20, firstAngle =  Math.PI * Math.random();
@@ -69,43 +71,8 @@ public class SensingExperiment {
 			firstMeasurement.drawMeasurements(secondMeasurement, "GroundTruthMeasurements");
 			
 			System.out.println("Ground truth visualized");
-			
-			// normalize the measurements
-			SensorData firstNormalized = firstMeasurement.normalize();
-			SensorData secondNormalized = secondMeasurement.normalize();
-			
-			// firstNormalized.drawTwoConvexHulls(secondNormalized, "before");
-			
-			// find the suitable affine transform
-			//TransformationRobustHelmert ht = firstNormalized.getHelmertInitial(secondNormalized);
-			// at = firstNormalized.matchCentroid(secondNormalized);
-			// AffineTransform at = firstNormalized.getATfromICP(secondNormalized);
-			//AffineTransform at = firstNormalized.getMatchingTransformThroughCentroid(secondNormalized);
-			AffineTransform[] at = firstNormalized.getATfromLongest(secondNormalized);
-			if (at.length != 0){
-				SensorData firstMatched = firstNormalized.applyAffineTransform(at);
-				//SensorData firstMatched = firstNormalized.applyHelmertTransform(ht);
-				System.out.println("Transformation found");
-				firstMatched.drawMeasurements(secondNormalized, "FINAL-IMAGE");
-				firstMatched.drawTwoConvexHulls(secondNormalized, "matchedConvexHull");
-				
-				// firstNormalized.drawTwoConvexHulls(secondNormalized, "after");
-				System.out.println("Transformation drawn");
-			}
-			else{
-				System.out.println("Match not found.");
-			}
-			
-			Point2D firstCentroid = firstMeasurement.getConvexHullCentroid();
-			Point2D secondCentroid = secondMeasurement.getConvexHullCentroid();
-			
-			System.err.println("firstCentroid: " + firstCentroid.getX() + " " + firstCentroid.getY());
-			System.err.println("secondCentroid: " + secondCentroid.getX() + " " + secondCentroid.getY());
-			System.out.println("dx = " + (secondCentroid.getX()-firstCentroid.getX()) + " dy = " + (secondCentroid.getY()-firstCentroid.getY()));
-			// Try to identify the topological structure of the gorund truth.
-			topoGroundTruth = new LayerGraph(groundTruth);
 						
-			System.out.println("Layer Graph generated");
+			
 		}
 		catch (Exception e){
 			System.err.println("ERROR: " + e.getMessage());
@@ -120,6 +87,10 @@ public class SensingExperiment {
 	
 	public LayerGraph getTopoGroundTruth(){
 		return topoGroundTruth;
+	}
+	
+	public void visualizeMeasurements(String message){
+		firstMeasurement.drawMeasurements(secondMeasurement, message);
 	}
 	
 	
@@ -158,9 +129,49 @@ public class SensingExperiment {
 		}
 	}
 	
+	public void findMatchingMeasurements(){
+		// normalize the measurements
+					SensorData firstNormalized = firstMeasurement.normalize();
+					SensorData secondNormalized = secondMeasurement.normalize();
+					
+					AffineTransform[] at = firstNormalized.getATfromLongest(secondNormalized);
+					if (at.length != 0){
+						SensorData initialGuess;
+						try {
+							
+							int searchSteps = 100;
+							
+							initialGuess = firstNormalized.applyAffineTransform(at);
+							
+							initialGuess.drawMeasurements(secondNormalized, "InitialGuess");
+							
+							SensorData searchResult = initialGuess.rotateMatch(secondNormalized).localSearchMatch(secondNormalized, searchSteps);
+							
+							searchResult.drawMeasurements(secondNormalized, "FINAL-IMAGE-search-steps-" + searchSteps );
+							
+							//SensorData firstMatched = firstNormalized.applyHelmertTransform(ht);
+							
+							
+							//firstMatched.drawTwoConvexHulls(secondNormalized, "matchedConvexHull");
+							
+							// firstNormalized.drawTwoConvexHulls(secondNormalized, "after");
+							System.out.println("Transformation drawn");
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+					}
+					else{
+						System.out.println("Match not found.");
+					}
+					
+	}
+	
 	public static void main(String[] args) throws Exception {
 		// testDraw();
 		SensingExperiment se = new SensingExperiment();
+		se.findMatchingMeasurements();
 	}
 	
 }

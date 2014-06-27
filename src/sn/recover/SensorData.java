@@ -942,8 +942,8 @@ public class SensorData {
 		int secondError = secondTransformedData.isCompatible(otherData);
 		int firstError = firstTransformedData.isCompatible(otherData);
 		
-		double secondScore = secondTransformedData.sumClosestPointError(otherData);
-		double firstScore = firstTransformedData.sumClosestPointError(otherData);
+		double secondScore = secondTransformedData.sumClosestHullError(otherData);
+		double firstScore = firstTransformedData.sumClosestHullError(otherData);
 		
 		System.out.println("First error:" + firstError + ", Second error:" + secondError);
 		System.out.println("First score:" + firstScore + ", Second score:" + secondScore);
@@ -1232,7 +1232,7 @@ public void drawMeasurements(SensorData second, String errorString){
 			maxY =  Math.max(pt1.getY(),maxY);
 			maxY =  Math.max(pt2.getY(),maxY);
 			
-			System.err.println("("+pt1.getX()+","+pt1.getY()+"), ("+pt2.getX()+","+pt2.getY()+")");
+			// System.err.println("("+pt1.getX()+","+pt1.getY()+"), ("+pt2.getX()+","+pt2.getY()+")");
 		}
 		for (int i = 0; i<second.getPositiveIntervals().size(); i++){
 			SensorInterval interval = second.getPositiveIntervals().get(i);
@@ -1342,7 +1342,7 @@ public void drawMeasurements(SensorData second, String errorString){
 		return positiveIntersect;
 	}
 	
-	public double sumClosestPointError(SensorData otherData){
+	public double sumClosestHullError(SensorData otherData){
 		
 		double sum = 0;
 		
@@ -1362,6 +1362,223 @@ public void drawMeasurements(SensorData second, String errorString){
 				
 		return sum;
 	}
+	
+	public List<Point2D> getAllPositivePoints(){
+		List<Point2D> thisPoints = new ArrayList<Point2D>();
+		
+		for (int i=0; i<positiveIntervals.size(); i++){
+			thisPoints.add(positiveIntervals.get(i).getStart());
+			thisPoints.add(positiveIntervals.get(i).getEnd());
+		}
+		
+		return thisPoints;
+	}
+	
+	
+	// A heuristic to see how close we are to the matching solution
+	public double sumClosestPointError(SensorData otherData){
+		double sum = 0;
+		List<Point2D> thisPoints = getAllPositivePoints();
+		List<Point2D> otherPoints = otherData.getAllPositivePoints();
+		
+		for (int i=0; i<thisPoints.size(); i++){
+			double min = Double.MAX_VALUE;
+			Point2D thisPoint = thisPoints.get(i);
+			for (int j=0; j<otherPoints.size(); j++){
+				Point2D otherPoint = otherPoints.get(j);
+				double dist = thisPoint.distance(otherPoint);
+				if (dist<min) min = dist;
+			}
+			sum += min;
+		}
+		
+		return sum;
+	}
+	
+	
+	public Point2D getClosestPositivePoint(Point2D point){
+		
+		SensorInterval shortest = positiveIntervals.get(0);
+		double minDist = Double.MAX_VALUE;
+		for (SensorInterval s:positiveIntervals){
+			double dist = s.getInterval().ptSegDist(point);
+			if (dist < minDist){
+				minDist = dist;
+				shortest = s;
+			}
+		}		
+		return shortest.closestPoint(point);
+	}
+	
+	// rotate this SensorData about its centroid in order to match to otherData
+	public SensorData rotateMatch(SensorData otherData){
+		SensorData bestTransform = this;
+		double minError = Double.MAX_VALUE;
+		Point2D centroid = getConvexHullCentroid();
+		for (double i=10; i<10; i+=0.5){
+			double angle = i/360*2*Math.PI;
+			AffineTransform rotateTransform = new AffineTransform();
+			rotateTransform.rotate(angle, centroid.getX(), centroid.getY());
+			SensorData transformedData = applyAffineTransform(rotateTransform);
+			double compatibleError = transformedData.sumClosestHullError(otherData);
+			if (transformedData.isCompatible(otherData)==0){
+				return transformedData;
+			}
+			if (compatibleError < minError){
+				bestTransform = transformedData;
+				minError = compatibleError;
+			}
+		}
+		return bestTransform;
+	}
+	
+	// Local search heuristic to get next translation
+	
+	public SensorData localSearchStep(SensorData otherData){
+		// analyze all conflicts
+		List<Point2D> conflictPoints = getConflictPoints(otherData);
+		
+		double minDist = Double.MAX_VALUE;
+		double dx=0, dy=0;
+		
+		for (Point2D pt:conflictPoints){
+			Point2D closestPoint = otherData.getClosestPositivePoint(pt);
+			
+			double dist = closestPoint.distance(pt);
+			
+			if (dist < minDist){
+				minDist = dist;
+				dx = closestPoint.getX() - pt.getX();
+				dy = closestPoint.getY() - pt.getY();
+			}						
+		}
+		
+		List<Point2D> otherConflictPoints = otherData.getConflictPoints(this);
+		
+		for (Point2D pt:otherConflictPoints){
+			Point2D closestPoint = getClosestPositivePoint(pt);
+			
+			double dist = closestPoint.distance(pt);
+			
+			if (dist > minDist){
+				minDist = dist;
+				dx = pt.getX() - closestPoint.getX();
+				dy = pt.getY() - closestPoint.getY();
+			}
+		}
+		
+		System.out.println("Moving dx=" + dx + " dy=" + dy);
+		
+		AffineTransform at = new AffineTransform();
+		
+		at.translate(dx, dy);
+		
+		return applyAffineTransform(at);
+	}
+	
+	
+	// local search
+	public SensorData localSearchMatch(SensorData otherData, int stepsRemaining){
+		// base case
+				double error = isCompatible(otherData);
+				
+				if (error == 0) {		
+					System.out.println("Search ends with match found, error " + error);
+					return this;
+				}
+				
+				if (stepsRemaining == 0) {		
+					System.out.println("Search ends with mininum error = " + error);
+					return this;
+				}
+				
+				SensorData translatedData = localSearchStep(otherData);
+				
+				SensorData transformedData = translatedData.rotateMatch(otherData);
+				
+				return transformedData.localSearchMatch(otherData, stepsRemaining-1);				
+	}
+	
+	
+	// 
+	public SensorData greedySearchMatch(SensorData otherData, int stepsRemaining){
+		
+		// base case
+		double error = isCompatible(otherData);
+		
+		if (error == 0) {		
+			System.out.println("Search ends with match found, error " + error);
+			return this;
+		}
+		
+		if (stepsRemaining == 0) {		
+			System.out.println("Search ends with mininum error = " + error);
+			return this;
+		}
+		
+		
+		
+		// step:
+		SensorData bestTransform = this;
+		
+		double minError = Double.MAX_VALUE;
+		
+		double bestDx=0, bestDy=0;
+		
+		for (double dx = -1; dx <=1; dx+=0.5){
+			for (double dy=-1; dy <=1; dy+=0.5){
+				// if (dx==0 && dy == 0) continue;
+				
+				AffineTransform translateTransform = new AffineTransform();
+				translateTransform.translate(dx, dy);
+				
+				SensorData translatedData = applyAffineTransform(translateTransform);
+				
+				SensorData transformedData = translatedData.rotateMatch(otherData);
+				
+				double thisError = transformedData.sumClosestHullError(otherData);
+				
+				if (transformedData.isCompatible(otherData)==0){
+					System.out.println("Translate dx=" + bestDx + " dy=" + bestDy + ", Search MinError=" + minError + " with " + stepsRemaining + " steps remaining");
+					return transformedData;
+				}
+				
+				if (thisError < minError){
+					minError = thisError;
+					bestTransform = transformedData;
+					bestDx = dx; bestDy = dy;
+				}
+			}
+		}
+				
+		
+		System.out.println("Translate dx=" + bestDx + " dy=" + bestDy + ", Search MinError=" + minError + " with " + stepsRemaining + " steps remaining");
+		
+		if (bestDx == 0 && bestDy==0) return this;
+		
+		return bestTransform.greedySearchMatch(otherData, stepsRemaining-1);
+	}
+	
+	// return list of points where the positive intervals in this SensorData intersects
+	// negative intervals of the other SensorData
+	public List<Point2D> getConflictPoints(SensorData otherData){
+		List<Point2D> conflictList = new ArrayList<Point2D>();
+				
+		List<SensorInterval> otherNegatives = otherData.getNegativeIntervals();
+		for (int i = 0; i < positiveIntervals.size(); i++) {
+			SensorInterval curPositive = positiveIntervals.get(i);
+			for (int j = 0; j < otherNegatives.size(); j++) {
+				SensorInterval otherNegative = otherNegatives.get(j);
+				Point2D intersectionPoint = curPositive.getIntersectionPoint(otherNegative);
+				if (intersectionPoint != null) {
+					conflictList.add(intersectionPoint);
+				}
+			}
+		}
+		
+		return conflictList;
+	}
+	
 
 	public int isCompatible(SensorData otherData) {
 

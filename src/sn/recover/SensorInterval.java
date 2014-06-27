@@ -248,6 +248,65 @@ public class SensorInterval {
 		return interval.intersectsLine(newInterval.getInterval());
 	}
 	
+	
+	/*
+	 * @returns closest point on the interval to point p
+	 */
+	public Point2D closestPoint(Point2D p){
+		Line2D l = getInterval();
+		final Point2D lv = vector(l.getP1(), l.getP2());
+	    final double numerator = dot(vector(l.getP1(), p), lv);
+	    
+	    if (numerator < 0) {
+	        return l.getP1();
+	    }
+	    
+	    final double denominator = dot(lv, lv);
+	    if (numerator >= denominator) {
+	        return l.getP2();
+	    }
+	    
+	    final double r = numerator / denominator;
+	    return new Point2D.Double(l.getX1() + r * lv.getX(), l.getY1() + r * lv.getY());
+	}
+	
+	// accessory function to closestPoint
+	private static double dot(Point2D a, Point2D b) {
+        return a.getX() * b.getX() + a.getY() * b.getY();
+    }
+    
+	// accessory function to closestPoint
+    private static Point2D vector(Point2D from, Point2D to) {
+        return new Point2D.Double(to.getX() - from.getX(), to.getY() - from.getY());
+    }
+	
+	
+	// return point of intersection of another interval
+	public Point2D getIntersectionPoint(SensorInterval newInterval){
+		Line2D line1 = interval;
+		Line2D line2 = newInterval.getInterval();
+		if (! line1.intersectsLine(line2) ) return null;
+	      double px = line1.getX1(),
+	            py = line1.getY1(),
+	            rx = line1.getX2()-px,
+	            ry = line1.getY2()-py;
+	      double qx = line2.getX1(),
+	            qy = line2.getY1(),
+	            sx = line2.getX2()-qx,
+	            sy = line2.getY2()-qy;
+
+	      double det = sx*ry - sy*rx;
+	      if (det == 0) {
+	        return null;
+	      } else {
+	        double z = (sx*(qy-py)+sy*(px-qx))/det;
+	        if (z==0 ||  z==1) return null;  // intersection at end point!
+	        return new Point2D.Double(
+	          (double)(px+z*rx), (double)(py+z*ry));
+	      }
+		
+	}
+	
 	// get the IA relation between two parallel intervals
 	public IA_Relation getAllenRelation(SensorInterval otherInterval){
 		
