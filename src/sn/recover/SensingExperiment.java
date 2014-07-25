@@ -33,145 +33,78 @@ import sn.regiondetect.Region;
 
 public class SensingExperiment {
 	
-	private ComplexRegion groundTruth;
-	private LayerGraph topoGroundTruth;
-	
-	SensorData firstMeasurement, secondMeasurement;
-	
-	private static final int canvasWidth = 800;
-	private static final int canvasHeight = 600;
+	private SensorDataBenchmark benchmark;	
+	private MatchSensorData_LS search; 
 		
 	
 	// constructing the experiment
 	public SensingExperiment() {
-
-		// Generate the complex region that will be used as the ground truth
-		groundTruth = new ComplexRegion(canvasWidth, canvasHeight);
+		benchmark = new SensorDataBenchmark(10);	
+		search = new MatchSensorData_LS(100);
 		
+	}
+	
+	public SensingExperiment(SensorDataBenchmark b, MatchSensorData_LS s){
+		benchmark = b;
+		search = s;		
+	}
 		
-		System.out.println("Ground Truth Generated");
+	public void setSearchStrategy(MatchSensorData_LS s){
+		search = s;
+	}
+	
+	public void visualizeGroundTruth(){		
+		benchmark.drawAll();
+	}
+	
+	public void runLocalSearchExperiment(String outputFileName){
 		
+		search.resetPrevPositions();
+		
+		File logFile = new File(outputFileName);
+		
+		List<BenchmarkInstance> instanceList = benchmark.getInstances();
+		
+		double[] errors = new double[instanceList.size()];
+		double sumErrors = 0;
+		int i=0;
 		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(logFile));
+			writer.write(search.searchInfo + "\n");
 			
-			topoGroundTruth = new LayerGraph(groundTruth);
+			for (BenchmarkInstance bi : instanceList){
+				double error = bi.normalizeAndMatch(search);
+				errors[i++]=error;
+				sumErrors += error;
+				System.out.println("Instance " + bi.instanceID + " done, error=" + error + ".");
+				
+			}
+			sumErrors = sumErrors / instanceList.size();
+			writer.write("Average error = " + sumErrors + "\n");
 			
-			System.out.println("Layer Graph generated");
-			
-			// Generate candidate measurements from the ground truth
-			double firstGap = 20, firstAngle =  Math.PI * Math.random();
-			firstMeasurement = new SensorData(groundTruth, firstGap, firstAngle, canvasWidth, canvasHeight);
-			
-			double secondGap = 20, secondAngle =  Math.PI * Math.random();
-			secondMeasurement = new SensorData(groundTruth, secondGap, secondAngle, canvasWidth, canvasHeight);
-			
-			System.out.println("SensorData created");			
-			
-			visualizeGroundTruth();
-			
-			firstMeasurement.drawMeasurements(secondMeasurement, "GroundTruthMeasurements");
-			
-			System.out.println("Ground truth visualized");
-						
-			
-		}
-		catch (Exception e){
-			System.err.println("ERROR: " + e.getMessage());
-			System.exit(0);
-		}
-						
-	}
-	
-	public ComplexRegion getGroundTruth(){
-		return groundTruth;
-	}
-	
-	public LayerGraph getTopoGroundTruth(){
-		return topoGroundTruth;
-	}
-	
-	public void visualizeMeasurements(String message){
-		firstMeasurement.drawMeasurements(secondMeasurement, message);
-	}
-	
-	
-	public void visualizeGroundTruth(){
-		
-		System.out.println("Visualizing Ground Truth");
-		
-		// visualize the ground truth 
-		BufferedImage img = groundTruth.drawRegion(Color.LIGHT_GRAY);
-		Graphics2D g2d = (Graphics2D) img.createGraphics();
-		
-		System.out.println("Adding things to graphics.");
-		
-		ShowDebugImage groundTruthFame = null;
-		firstMeasurement.addIntervalsToGraphic(g2d, firstMeasurement.getPositiveIntervals(), false,
-				Color.BLUE);
-		
-		System.out.println("First measurement added to graphics");
-		
-		secondMeasurement.addIntervalsToGraphic(g2d, secondMeasurement.getPositiveIntervals(), false,
-				Color.RED);
-		
-		System.out.println("Second measurement added to graphics");	
-		
-		ShowDebugImage frame = new ShowDebugImage("Regions with intervals", img);
-		frame.refresh(img);
-		
-		String filename = "experiments/" + Visualization.getCurrentTimeStamp() + "-groundTruth.png";
-		
-		System.out.println("saving image to " + filename);
-		try {
-			ImageIO.write(img, "png", new File(filename));
-		} catch (IOException e) {
-			System.err.println("failed to save image " + filename);
+			writer.close();
+		}catch (Exception e){
 			e.printStackTrace();
 		}
 	}
-	
-	public void findMatchingMeasurements(){
-		// normalize the measurements
-					SensorData firstNormalized = firstMeasurement.normalize();
-					SensorData secondNormalized = secondMeasurement.normalize();
-					
-					AffineTransform[] at = firstNormalized.getATfromLongest(secondNormalized);
-					if (at.length != 0){
-						SensorData initialGuess;
-						try {
-							
-							int searchSteps = 100;
-							
-							initialGuess = firstNormalized.applyAffineTransform(at);
-							
-							initialGuess.drawMeasurements(secondNormalized, "InitialGuess");
-							
-							SensorData searchResult = initialGuess.rotateMatch(secondNormalized).localSearchMatch(secondNormalized, searchSteps);
-							
-							searchResult.drawMeasurements(secondNormalized, "FINAL-IMAGE-search-steps-" + searchSteps );
-							
-							//SensorData firstMatched = firstNormalized.applyHelmertTransform(ht);
-							
-							
-							//firstMatched.drawTwoConvexHulls(secondNormalized, "matchedConvexHull");
-							
-							// firstNormalized.drawTwoConvexHulls(secondNormalized, "after");
-							System.out.println("Transformation drawn");
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						
-					}
-					else{
-						System.out.println("Match not found.");
-					}
-					
-	}
+
 	
 	public static void main(String[] args) throws Exception {
-		// testDraw();
-		SensingExperiment se = new SensingExperiment();
-		se.findMatchingMeasurements();
+		
+		String inputFileName = "experiments/benchmarks/100-g20-aRand.ser"; 
+		String outputFileName = inputFileName + "." + Visualization.getCurrentTimeStamp() + ".log";
+		// SensorDataBenchmark benchmark = new SensorDataBenchmark(100);
+		
+		
+		//benchmark.saveBenchmark(fileName);
+				
+		SensorDataBenchmark newBenchmark = SensorDataBenchmark.readBenchmark(inputFileName);
+		MatchSensorData_LS search = new MatchSensorData_LS(100);
+		SensingExperiment se = new SensingExperiment(newBenchmark, search);
+		
+		se.runLocalSearchExperiment(outputFileName);
+				
+		
 	}
 	
 }

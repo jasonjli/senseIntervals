@@ -7,7 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 //A simple region or hole
-public class Region{
+public class Region implements java.io.Serializable{
+	
+	// serial version uid
+	private static final long serialVersionUID = 1L;
+	
 	private Region _next;
 	private Region _prev;
 	private int _layer;

@@ -17,7 +17,11 @@ import sn.regiondetect.Region;
 
 
 
-public class LayerGraph {
+public class LayerGraph implements java.io.Serializable{
+	
+	// serial version uid
+	private static final long serialVersionUID = 1L;
+	
 	private static int INSERTION_COST = 1;
 	private static int DELETION_COST = 1;
 	private static int RENAMING_COST = 1;

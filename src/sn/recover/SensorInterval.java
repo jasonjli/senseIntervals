@@ -5,7 +5,11 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 
 //sub-class for intervals, denoting positive components detected in sensor data
-public class SensorInterval {
+public class SensorInterval implements java.io.Serializable {
+	
+	// serial version uid
+	private static final long serialVersionUID = 1L;
+	
 	private int sensorID; // the id of the sensor where this interval belongs
 	private Line2D interval;
 

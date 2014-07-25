@@ -9,7 +9,10 @@ import java.util.List;
 import sn.regiondetect.GeomUtil;
 
 //A component in the region that does not connect/touch with any other components
-public class ComponentInstance implements LayerGraphNode{
+public class ComponentInstance implements LayerGraphNode, java.io.Serializable{
+	
+	// serial version uid
+	private static final long serialVersionUID = 1L;
 	
 	//Sub-components that contain in this component
 	private List<ComponentInstance> _subComponents;

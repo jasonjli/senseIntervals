@@ -20,6 +20,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.sql.Timestamp;
 
 import javax.imageio.ImageIO;
 
@@ -29,8 +30,11 @@ import sn.regiondetect.GeomUtil;
 import sn.regiondetect.Region;
 
 // The class for one set of sensor data
-public class SensorData {
+public class SensorData implements java.io.Serializable{
 
+	// serial version uid
+	private static final long serialVersionUID = 1L;
+	
 	// variables in the class
 	// list of positive intervals detected in data
 	private List<SensorInterval> positiveIntervals;
@@ -500,6 +504,46 @@ public class SensorData {
 		List<Point2D> cHull = getConvexHull();
 		return null;
 	}
+	
+	/***
+	 * Method: draw conflict points to graphics
+	 * @param g2d
+	 * @param otherData
+	 */
+	public void addConflictPointsToGraphic(Graphics2D g2d, SensorData otherData){
+		List<Point2D> conflicts = getConflictPoints(otherData);
+		conflicts.addAll(otherData.getConflictPoints(this));
+		
+		System.out.println("Drawing conflict points");
+		
+		// set color as red
+		g2d.setColor(Color.RED);
+		
+		for (Point2D conflict:conflicts){
+			// draw a cross
+			
+			Path2D path1 = new Path2D.Double();
+			path1.moveTo(conflict.getX()-5, conflict.getY()-5);
+			path1.lineTo(conflict.getX()+5, conflict.getY()+5);
+			
+			Path2D path2 = new Path2D.Double();
+			path2.moveTo(conflict.getX()-5, conflict.getY()+5);
+			path2.lineTo(conflict.getX()+5, conflict.getY()-5);
+			
+			g2d.draw(path1);
+			g2d.draw(path2);
+		}
+		
+		System.out.println("Conflict points drawn");
+	}
+	
+	/***
+	 * 
+	 * @param g2d 
+	 * @param intervals
+	 * @param useOffset
+	 * @param c
+	 */
 
 	public void addIntervalsToGraphic(Graphics2D g2d,
 			List<SensorInterval> intervals, boolean useOffset, Color c) {
@@ -830,17 +874,23 @@ public class SensorData {
 		return at;
 	}
 	
-	// return the centroid for a given list of points
+	/* Method getCentroid
+	 * return the centroid for a given list of points
+	 * with centroid defined as the average of a finite set of 2D points
+	 * @param Point2D[] pointList 
+	 * @returns Point2D the new centroid
+	 */	 
 	public Point2D getCentroid(Point2D[] pointList){
 		double centroidX=0, centroidY=0;
 		
-		for (int i=0; i<pointList.length; i++){
-			Point2D myPt = pointList[i];
-			centroidX += myPt.getX();
-			centroidY += myPt.getY();
+		for (Point2D point : pointList){			
+			centroidX +=  point.getX();
+			centroidY +=  point.getY();
 		}
 		
-		return new Point2D.Double(centroidX/pointList.length, centroidY/pointList.length);
+		double newX = centroidX/pointList.length, newY = centroidY/pointList.length;
+		
+		return new Point2D.Double(newX, newY);
 	}
 	
 	// find matching affineTransform from ICP
@@ -939,14 +989,14 @@ public class SensorData {
 		//firstTransformedData.drawMeasurements(otherData, "firstRT");
 		//secondTransformedData.drawMeasurements(otherData, "secondRT");
 		
-		int secondError = secondTransformedData.isCompatible(otherData);
-		int firstError = firstTransformedData.isCompatible(otherData);
+		int secondError = secondTransformedData.countConflicts(otherData);
+		int firstError = firstTransformedData.countConflicts(otherData);
 		
 		double secondScore = secondTransformedData.sumClosestHullError(otherData);
 		double firstScore = firstTransformedData.sumClosestHullError(otherData);
 		
-		System.out.println("First error:" + firstError + ", Second error:" + secondError);
-		System.out.println("First score:" + firstScore + ", Second score:" + secondScore);
+		//System.out.println("First error:" + firstError + ", Second error:" + secondError);
+		//System.out.println("First score:" + firstScore + ", Second score:" + secondScore);
 		
 		if (firstScore < secondScore){
 			transforms[0] = firstRotate; 
@@ -1012,7 +1062,7 @@ public class SensorData {
 			}
 			
 			
-			int thisTransformError = transformedData.isCompatible(otherData);
+			int thisTransformError = transformedData.countConflicts(otherData);
 			
 			if (thisTransformError == 0){
 				return at;
@@ -1215,6 +1265,10 @@ public class SensorData {
 	
 public void drawMeasurements(SensorData second, String errorString){
 		
+		// get current timeStamp to the output string in the graph
+	    Date date = new Date();
+	    errorString = new Timestamp(date.getTime()) + " " + errorString;
+		
 		// variables denoting the parameters of affine transformation
 		double minX=Double.MAX_VALUE, minY=Double.MAX_VALUE,maxX=Double.MIN_VALUE, maxY=Double.MIN_VALUE;
 
@@ -1269,7 +1323,7 @@ public void drawMeasurements(SensorData second, String errorString){
 		System.err.println("pos. intervals 1: " + positiveIntervals.size() + "pos. intervals 2: " + second.getPositiveIntervals().size());
 		System.err.println("minX:" + minX + " minY:" + minY + " maxX:" + maxX + " maxY:" + maxY);
 		
-		int compatibleCount = isCompatible(second);
+		int compatibleCount = countConflicts(second);
 		errorString = errorString + " " + compatibleCount + " violations.";
 		
 		BufferedImage img = new BufferedImage(newWidth, newHeight,
@@ -1290,12 +1344,14 @@ public void drawMeasurements(SensorData second, String errorString){
 		newFirst.addIntervalsToGraphic(g2d, newFirst.getPositiveIntervals(), false,
 				Color.BLUE);
 		newSecond.addIntervalsToGraphic(g2d, newSecond.getPositiveIntervals(), false,
-				Color.RED);
+				Color.GREEN);
 		
-		ShowDebugImage frame = new ShowDebugImage("New intervals", img);
-		frame.refresh(img);
+		newFirst.addConflictPointsToGraphic(g2d, newSecond);
 		
-		String filename = "experiments/" + getCurrentTimeStamp() + "-"+ errorString + ".png";
+		//ShowDebugImage frame = new ShowDebugImage("New intervals", img);
+		//frame.refresh(img);
+		
+		String filename = "experiments/images/" + getCurrentTimeStamp() + "-"+ errorString + ".png";
 		
 		System.out.println("saving image to " + filename);
 		try {
@@ -1363,6 +1419,7 @@ public void drawMeasurements(SensorData second, String errorString){
 		return sum;
 	}
 	
+	
 	public List<Point2D> getAllPositivePoints(){
 		List<Point2D> thisPoints = new ArrayList<Point2D>();
 		
@@ -1410,31 +1467,68 @@ public void drawMeasurements(SensorData second, String errorString){
 		return shortest.closestPoint(point);
 	}
 	
-	// rotate this SensorData about its centroid in order to match to otherData
 	public SensorData rotateMatch(SensorData otherData){
-		SensorData bestTransform = this;
+		return rotateMatch(otherData, -180, 180, 1);
+	}
+	
+	public SensorData limitedRotateMatch(SensorData otherData){
+		return rotateMatch(otherData, -5,5,0.1);
+	}
+	
+	
+	// rotate this SensorData about its centroid in order to match to otherData
+	public SensorData rotateMatch(SensorData otherData, double min, double max, double resolution){
+		SensorData bestTransform = null;
 		double minError = Double.MAX_VALUE;
-		Point2D centroid = getConvexHullCentroid();
-		for (double i=10; i<10; i+=0.5){
+		double bestAngle = 0;
+		Point2D centroid = getPosIntCentroid();
+		/**
+		 * 1 degree at a time, avg error 164.2 in 40 seconds for 10 instances g=5; f=0
+		 * 0.5 degree at a time, avg error 93.70 in 86 seconds
+		 * 0.25 degree at a time, avg error 40 in 154 seconds
+		 * 0.1 degree at a time, avg error 20 in 400 seconds
+		 * 
+		 */
+		for (double i=min; i<max; i+=resolution){
 			double angle = i/360*2*Math.PI;
 			AffineTransform rotateTransform = new AffineTransform();
 			rotateTransform.rotate(angle, centroid.getX(), centroid.getY());
 			SensorData transformedData = applyAffineTransform(rotateTransform);
-			double compatibleError = transformedData.sumClosestHullError(otherData);
-			if (transformedData.isCompatible(otherData)==0){
+			// double hullError = transformedData.sumClosestHullError(otherData);
+			double compatibleError = transformedData.sumClosestPointError(otherData);
+			// double compatibleError = transformedData.countConflicts(otherData);
+			
+			if (transformedData.countConflicts(otherData)==0){				
 				return transformedData;
 			}
 			if (compatibleError < minError){
+				//System.out.println(String.format("prev min error %.2f, new min error %.2f",minError, compatibleError));
+				bestAngle = angle;
 				bestTransform = transformedData;
 				minError = compatibleError;
-			}
+				//bestTransform.drawMeasurements(otherData, "bestguess-"+angle + "radians");
+			}			
+			
 		}
+		
+		int conflicts = bestTransform.countConflicts(otherData);
+		
+		// System.out.println(String.format(conflicts + " conflicts, error %.2f, recover rotate by %.2f radians about ", minError, bestAngle) + centroid);
+		
+		if (bestTransform == null){
+			System.err.println("rotateMatch found nothing.");
+			System.exit(0);
+		}
+		
 		return bestTransform;
 	}
 	
-	// Local search heuristic to get next translation
-	
+	/* Local search heuristic to get next translation
+	* @returns transformed sensor data that is the next state in the local search.
+	*/ 
 	public SensorData localSearchStep(SensorData otherData){
+		
+		// heuristic
 		// analyze all conflicts
 		List<Point2D> conflictPoints = getConflictPoints(otherData);
 		
@@ -1460,14 +1554,14 @@ public void drawMeasurements(SensorData second, String errorString){
 			
 			double dist = closestPoint.distance(pt);
 			
-			if (dist > minDist){
+			if (dist < minDist){
 				minDist = dist;
 				dx = pt.getX() - closestPoint.getX();
 				dy = pt.getY() - closestPoint.getY();
 			}
 		}
 		
-		System.out.println("Moving dx=" + dx + " dy=" + dy);
+		//System.out.println("Moving dx=" + dx + " dy=" + dy);
 		
 		AffineTransform at = new AffineTransform();
 		
@@ -1480,7 +1574,7 @@ public void drawMeasurements(SensorData second, String errorString){
 	// local search
 	public SensorData localSearchMatch(SensorData otherData, int stepsRemaining){
 		// base case
-				double error = isCompatible(otherData);
+				double error = countConflicts(otherData);
 				
 				if (error == 0) {		
 					System.out.println("Search ends with match found, error " + error);
@@ -1504,7 +1598,7 @@ public void drawMeasurements(SensorData second, String errorString){
 	public SensorData greedySearchMatch(SensorData otherData, int stepsRemaining){
 		
 		// base case
-		double error = isCompatible(otherData);
+		double error = countConflicts(otherData);
 		
 		if (error == 0) {		
 			System.out.println("Search ends with match found, error " + error);
@@ -1538,7 +1632,7 @@ public void drawMeasurements(SensorData second, String errorString){
 				
 				double thisError = transformedData.sumClosestHullError(otherData);
 				
-				if (transformedData.isCompatible(otherData)==0){
+				if (transformedData.countConflicts(otherData)==0){
 					System.out.println("Translate dx=" + bestDx + " dy=" + bestDy + ", Search MinError=" + minError + " with " + stepsRemaining + " steps remaining");
 					return transformedData;
 				}
@@ -1564,11 +1658,8 @@ public void drawMeasurements(SensorData second, String errorString){
 	public List<Point2D> getConflictPoints(SensorData otherData){
 		List<Point2D> conflictList = new ArrayList<Point2D>();
 				
-		List<SensorInterval> otherNegatives = otherData.getNegativeIntervals();
-		for (int i = 0; i < positiveIntervals.size(); i++) {
-			SensorInterval curPositive = positiveIntervals.get(i);
-			for (int j = 0; j < otherNegatives.size(); j++) {
-				SensorInterval otherNegative = otherNegatives.get(j);
+		for (SensorInterval curPositive:positiveIntervals) {			
+			for (SensorInterval otherNegative:otherData.getNegativeIntervals()) {			
 				Point2D intersectionPoint = curPositive.getIntersectionPoint(otherNegative);
 				if (intersectionPoint != null) {
 					conflictList.add(intersectionPoint);
@@ -1579,7 +1670,57 @@ public void drawMeasurements(SensorData second, String errorString){
 		return conflictList;
 	}
 	
-
+	/***
+	 * Method: positiveIntersects
+	 * @param otherData
+	 * @return true iff positive intervals of this SensorData intersects 
+	 * with positive intervals of otherData.
+	 */
+	public boolean positiveIntersects(SensorData otherData){
+		
+		// loop through positive intervals
+		for (SensorInterval curPositive:positiveIntervals) {			
+			for (SensorInterval otherPositive:otherData.getPositiveIntervals()) {	
+				// return true if we found an intersection
+				if (curPositive.getIntersectionPoint(otherPositive) != null) {
+					return true;
+				}
+			}
+		}		
+		return false;
+	}
+	
+	/***
+	 * Method: countConflicts
+	 * count conflicts, which are positive intervals intersection with 
+	 * negative intervals from another SensorData
+	 * @param otherData
+	 * @return Integer.MAX_VALUE if this SensorData doesn't positively intersects with 
+	 * positive intervals of otherData, otherwise returns the 
+	 * number of conflicts this SensorData has with otherData
+	 * 
+	 */
+	
+	public int countConflicts(SensorData otherData){
+		int conflicts = Integer.MAX_VALUE;
+		
+		// return -1 
+		if (positiveIntersects(otherData) == false){
+			return conflicts;
+		}
+		
+		conflicts = getConflictPoints(otherData).size();
+		conflicts += otherData.getConflictPoints(this).size();
+		
+		return conflicts;
+	}
+	
+	
+	/***
+	 * Depreciated
+	 * @param otherData
+	 * @return number of violations
+	 */
 	public int isCompatible(SensorData otherData) {
 
 		boolean positiveIntersect = false;

@@ -24,8 +24,11 @@ import sn.recover.ComponentInstance;
  * @author
  * 
  */
-public class ComplexRegion {
+public class ComplexRegion implements java.io.Serializable{
 
+	// serial version uid
+	private static final long serialVersionUID = 1L;
+	
 	// layer of overlapped simple regions
 	final private static int _maxLayer = 7;
 	final private static int _minLayer = 4;

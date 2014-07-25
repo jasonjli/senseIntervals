@@ -43,7 +43,7 @@ public class Visualization {
 	    return strDate;
 	}
 	
-	public void visualizeGroundTruth(SensingExperiment se){
+	public void visualizeGroundTruth(BenchmarkInstance se){
 		
 		// visualize the ground truth 
 		BufferedImage img = se.getGroundTruth().drawRegion(Color.LIGHT_GRAY);
