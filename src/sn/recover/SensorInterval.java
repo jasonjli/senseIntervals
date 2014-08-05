@@ -3,6 +3,7 @@ package sn.recover;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Line2D.Double;
 
 //sub-class for intervals, denoting positive components detected in sensor data
 public class SensorInterval implements java.io.Serializable {
@@ -79,6 +80,18 @@ public class SensorInterval implements java.io.Serializable {
 
 	public Line2D getInterval() {
 		return interval;
+	}
+	
+	public void setInterval(Line2D newInterval){
+		interval = newInterval;
+	}
+	
+	public void setStart(Point2D newStart){
+		interval = new Line2D.Double(newStart, getEnd());
+	}
+	
+	public void setEnd(Point2D newEnd){
+		interval = new Line2D.Double(getStart(), newEnd);
 	}
 
 	/**
@@ -341,6 +354,78 @@ public class SensorInterval implements java.io.Serializable {
 	public boolean isLeftBoundary(SensorInterval otherInterval){
 		int r = this.getAllenRelation(otherInterval).getRel(); 
 	    return (r==IA_Relation.d || r==IA_Relation.s || r==IA_Relation.f);
+	}
+	
+	
+	/***
+	 * 
+	 * @param extendPercentage
+	 * @return return a new interval that extends this interval by the specified length.
+	 */
+	public SensorInterval extend(double extendPercentage){
+		
+		Line2D extendedInterval = SensorInterval.extendLine(interval, extendPercentage);
+		
+		return new SensorInterval(sensorID, extendedInterval);
+	}
+	
+	/***
+	 * 
+	 * @param oldLine - a given Line2D
+	 * @param extendPercentage - the percentage for which we wish to extend
+	 * @return a new extended line
+	 */
+	public static Line2D extendLine(Line2D oldLine, double extendPercentage){
+		
+		double startX = oldLine.getX1();
+		double startY = oldLine.getY1();
+		double endX = oldLine.getX2();
+		double endY = oldLine.getY2();
+		
+		double intervalLength = Math.sqrt(Math.pow(startX-endX, 2) +  Math.pow(startY-endY, 2)); 
+		//double slope = pi.getAngle();
+		
+		System.out.println("interval length = " + intervalLength);
+		
+		double newLength = intervalLength * (extendPercentage/100/2);
+		
+		// work out the new startpoint	
+		double newStartX = startX + (startX-endX) / intervalLength * newLength;
+		double newStartY = startY + (startY-endY) / intervalLength * newLength;
+					
+		// work out the new endpoint
+		double newEndX = endX + (endX-startX) / intervalLength * newLength; 
+		double newEndY = endY + (endY-startY) / intervalLength * newLength;
+		
+		Line2D newLine = new Line2D.Double(newStartX, newStartY, newEndX, newEndY);
+		
+		double newIntervalLength = Math.sqrt(Math.pow(newStartX-newEndX, 2) +  Math.pow(newStartY-newEndY, 2));
+		
+		double increasedRatio = (newIntervalLength-intervalLength)/intervalLength * 100;
+		
+		System.out.println("new interval length = " + newIntervalLength + ", increased by " + String.format("%.0f", increasedRatio) + "%");
+		
+		return newLine;
+	}
+	
+	/***
+	 * Unit test for extend line
+	 */
+	public static void testExtendLine(){
+		
+		
+		Line2D firstLine = new Line2D.Double(0,0,1,1);		
+		
+		// extend line in 10 percent increments
+		for (int i=10; i<=100; i+=10){
+			Line2D extendedLine = extendLine(firstLine, (double)i);
+			System.out.println(extendedLine.getP1() + ", " + extendedLine.getP2());
+		}
+	}
+	
+	public static void main(String[] args) throws Exception {
+		// testDraw();
+		testExtendLine();
 	}
 	
 }

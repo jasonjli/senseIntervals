@@ -66,6 +66,37 @@ public class SensorData implements java.io.Serializable{
 		width = canvasWidth;
 		height = canvasHeight;
 	}
+	
+	/***
+	 * Complete constructor
+	 * @param pis: positive intervals
+	 * @param nis: negative intervals
+	 * @param sa: sensor angle
+	 * @param sg: sensor gap
+	 * @param sc: sensor count
+	 * @param wd: width
+	 * @param ht: height
+	 */
+	public SensorData(List<SensorInterval> pis, List<SensorInterval> nis, 
+					  double sa, double sg, int sc, int wd, int ht){
+		// initialize variables
+				positiveIntervals = pis;
+				negativeIntervals = nis;
+				sensorAngle = sa;
+				sensorGap = sg;
+				sensorCount = sc;
+				width = wd;
+				height = ht;
+	}
+	
+	/***
+	 * Copy constructor
+	 * @param old: the old sensorData to copy
+	 */
+	public SensorData(SensorData old){
+		this(old.positiveIntervals,old.negativeIntervals,old.sensorAngle,old.sensorGap,
+				old.sensorCount,old.width,old.height);
+	}
 
 	/**
 	 * Construct from a complex region and other info
@@ -1923,6 +1954,61 @@ public void drawMeasurements(SensorData second, String errorString){
 		}
 		outPositive.close();
 		outNegative.close();
+	}
+	
+
+	
+	/***
+	 * 
+	 * @param extendPercentage = the amount to extend positive intervals in terms of percentage
+	 * @return a new sensordata with positive intervals extended by the specified amount.
+	 * 
+	 * This is to be used to test quality of approximations in matching overlapping sensor intervals.
+	 */
+	public SensorData lengthen(double extendPercentage){
+		SensorData newData = new SensorData(this);
+		
+		double extendFactor = 0.01 * extendPercentage;
+		
+		for (int j=0; j<newData.positiveIntervals.size(); j++){
+			
+			SensorInterval pi = newData.positiveIntervals.get(j);
+			
+			Point2D startPt = pi.getStart();
+			Point2D endPt = pi.getEnd();
+			
+			SensorInterval newPI = pi.extend(extendPercentage);
+						
+			
+			for (int i=0; i<newData.negativeIntervals.size(); i++){
+				SensorInterval ni = newData.negativeIntervals.get(i);
+				if (ni.getStart().distance(pi.getEnd()) <0.0001){				
+					if (ni.getInterval().ptSegDist(newPI.getEnd()) < 0.0001){
+						ni.setStart(newPI.getEnd());
+						newData.negativeIntervals.set(i, ni);
+					}
+					else {
+						newData.negativeIntervals.remove(i);
+						i--;
+					}
+				}
+				if (ni.getEnd().distance(pi.getStart()) < 0.0001){
+					if (ni.getInterval().ptSegDist(newPI.getStart()) < 0.0001){
+						ni.setEnd(newPI.getStart());
+						newData.negativeIntervals.set(i, ni);
+					}
+					else {
+						newData.negativeIntervals.remove(i);
+						i--;
+					}
+				}				
+			}
+			
+			// set the line.
+			pi.setInterval(newPI.getInterval());
+		}
+		
+		return newData;
 	}
 
 	// tests
