@@ -1,0 +1,1578 @@
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:07.795 Instance-7-FinalMatch 4 violations..png
+799 595
+pos. intervals 1: 15pos. intervals 2: 15
+minX:35.48108111612578 minY:13.151213084115852 maxX:799.2419246579506 maxY:595.0
+2014-07-23 20:22:07.915 Instance-7-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:07.915 Instance-7-GroundTruth 0 violations..png
+Transformation drawn
+error 4.0
+First selected
+transformed angle:-1.1931178442367787
+ other angle:-1.1931178442367787
+this longest:Point2D.Double[11.723606934927957, 459.4026859925124] Point2D.Double[731.7236070605124, 110.9073956957725]
+other longest:Point2D.Double[279.298875485598, 792.8508668885216] Point2D.Double[599.2988754855982, -13.756578991113088]
+transformed longest:Point2D.Double[279.298875485598, 792.8508668885216] Point2D.Double[574.2749124280523, 49.320030157741144]
+884 856
+pos. intervals 1: 16pos. intervals 2: 16
+minX:164.06547993978185 minY:-13.756578991113088 maxX:884.4159034589441 maxY:792.8508668885216
+2014-07-23 20:22:07.97 Instance-8-InitialGuess 2 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:07.97 Instance-8-InitialGuess 2 violations..png
+Search ends with match found, error 0.0
+882 868
+pos. intervals 1: 16pos. intervals 2: 16
+minX:176.059574599799 minY:-13.756578991113088 maxX:882.9737563942243 maxY:804.5991593471269
+2014-07-23 20:22:08.114 Instance-8-FinalMatch 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:08.114 Instance-8-FinalMatch 0 violations..png
+793 562
+pos. intervals 1: 16pos. intervals 2: 16
+minX:24.014798208636464 minY:10.166607181358245 maxX:793.7235499947827 maxY:562.5622847645892
+2014-07-23 20:22:08.251 Instance-8-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:08.251 Instance-8-GroundTruth 0 violations..png
+Transformation drawn
+error 0.0
+Second selected
+transformed angle:0.9851103884092149
+ other angle:0.9851103884092147
+this longest:Point2D.Double[168.45870999927246, 730.7651319917073] Point2D.Double[408.4587099981053, -83.1954226254341]
+other longest:Point2D.Double[123.92309018149015, -4.794867002024539] Point2D.Double[603.923086563621, 718.8317341340199]
+transformed longest:Point2D.Double[123.92309018149015, -4.794867002024489] Point2D.Double[593.0078687573086, 702.3764382561565]
+872 790
+pos. intervals 1: 17pos. intervals 2: 22
+minX:-58.798732348758335 minY:-4.794867002024539 maxX:763.9230901814905 maxY:735.2544825707345
+2014-07-23 20:22:08.327 Instance-9-InitialGuess 5 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:08.327 Instance-9-InitialGuess 5 violations..png
+Search ends with mininum error = 7.0
+852 790
+pos. intervals 1: 17pos. intervals 2: 22
+minX:-36.07690981850975 minY:-4.794867002024539 maxX:766.3403742262398 maxY:735.2544825707345
+2014-07-23 20:22:08.87 Instance-9-FinalMatch 7 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:08.87 Instance-9-FinalMatch 7 violations..png
+751 561
+pos. intervals 1: 17pos. intervals 2: 22
+minX:11.07296681700268 minY:7.999999999999972 maxX:751.7269983649837 maxY:561.1009954571922
+2014-07-23 20:22:09.092 Instance-9-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:09.092 Instance-9-GroundTruth 0 violations..png
+Transformation drawn
+error 7.0
+experiments/benchmarks/n10-g80.0-a0.25PI.ser solved.
+First selected
+transformed angle:-0.8254883138971888
+ other angle:-0.8254883138971888
+this longest:Point2D.Double[25.642295005807966, 285.02377187622767] Point2D.Double[825.6422950108208, 487.6954103714693]
+other longest:Point2D.Double[254.72652779537407, 662.2812258467956] Point2D.Double[814.7265277953743, 55.478867095697865]
+transformed longest:Point2D.Double[254.72652779537407, 662.2812258467956] Point2D.Double[814.4252969880392, 55.80527346073262]
+836 847
+pos. intervals 1: 36pos. intervals 2: 29
+minX:213.723584970946 minY:-69.94942797341253 maxX:836.6141920079519 maxY:727.3070097818497
+2014-07-23 20:22:09.307 Instance-0-InitialGuess 23 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:09.307 Instance-0-InitialGuess 23 violations..png
+Search ends with mininum error = 12.0
+838 836
+pos. intervals 1: 36pos. intervals 2: 29
+minX:199.82314098253246 minY:-69.94942797341253 maxX:838.4809260411112 maxY:716.4399660313796
+2014-07-23 20:22:10.298 Instance-0-FinalMatch 12 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:10.298 Instance-0-FinalMatch 12 violations..png
+798 590
+pos. intervals 1: 36pos. intervals 2: 29
+minX:11.710927157335163 minY:5.088303572936098 maxX:798.7616236513182 maxY:590.451687073997
+2014-07-23 20:22:10.501 Instance-0-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:10.501 Instance-0-GroundTruth 0 violations..png
+Transformation drawn
+error 12.0
+Second selected
+transformed angle:-0.7969984853216252
+ other angle:-0.7969984853216252
+this longest:Point2D.Double[140.46121788393867, 142.55115747708442] Point2D.Double[620.461217883939, 645.2808416292169]
+other longest:Point2D.Double[192.59483627341243, 490.311219867644] Point2D.Double[672.5948362019874, -0.9563013997778285]
+transformed longest:Point2D.Double[192.59483627341243, 490.311219867644] Point2D.Double[678.3566340097791, -6.8533516654009645]
+752 698
+pos. intervals 1: 22pos. intervals 2: 26
+minX:107.14047990519339 minY:-6.853351665401078 maxX:752.5948362734129 maxY:641.480512453349
+2014-07-23 20:22:10.588 Instance-1-InitialGuess 22 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:10.588 Instance-1-InitialGuess 22 violations..png
+Search ends with mininum error = 28.0
+752 715
+pos. intervals 1: 22pos. intervals 2: 26
+minX:111.49635253828407 minY:-39.899697218833 maxX:752.5948362734129 maxY:625.9069096260035
+2014-07-23 20:22:11.263 Instance-1-FinalMatch 28 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:11.263 Instance-1-FinalMatch 28 violations..png
+793 583
+pos. intervals 1: 22pos. intervals 2: 26
+minX:101.04450074790395 minY:27.97995197956763 maxX:793.3878563047915 maxY:583.1607880266697
+2014-07-23 20:22:11.405 Instance-1-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:11.405 Instance-1-GroundTruth 0 violations..png
+Transformation drawn
+error 28.0
+Second selected
+transformed angle:-1.4807430972811675
+ other angle:-1.4807430972811673
+this longest:Point2D.Double[96.82817071867129, 581.5216626733461] Point2D.Double[816.8281707186713, 95.18286760690756]
+other longest:Point2D.Double[180.78907062310492, 814.5999972326542] Point2D.Double[260.7890708396218, -71.36076245321212]
+transformed longest:Point2D.Double[180.78907062310492, 814.5999972326542] Point2D.Double[258.92740831742816, -50.743763228495254]
+588 935
+pos. intervals 1: 17pos. intervals 2: 19
+minX:-25.24750557445924 minY:-71.36076245321212 maxX:513.6472390433398 maxY:814.5999972326542
+2014-07-23 20:22:11.513 Instance-2-InitialGuess 8 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:11.513 Instance-2-InitialGuess 8 violations..png
+Search ends with match found, error 0.0
+609 935
+pos. intervals 1: 17pos. intervals 2: 19
+minX:-31.139667363739925 minY:-71.36076245321212 maxX:528.3303957600765 maxY:814.5999972326542
+2014-07-23 20:22:11.725 Instance-2-FinalMatch 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:11.725 Instance-2-FinalMatch 0 violations..png
+791 584
+pos. intervals 1: 17pos. intervals 2: 19
+minX:1.9999995180860992 minY:79.16412832055909 maxX:791.442408520606 maxY:584.7123725054944
+2014-07-23 20:22:11.872 Instance-2-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:11.872 Instance-2-GroundTruth 0 violations..png
+Transformation drawn
+error 0.0
+Second selected
+transformed angle:1.1735410481113024
+ other angle:1.1735410481113022
+this longest:Point2D.Double[261.6095933108928, 742.2289058266235] Point2D.Double[581.609593310893, -0.15861953656991545]
+other longest:Point2D.Double[310.72479080107655, -39.859392832836534] Point2D.Double[630.7247908010767, 722.8414667464695]
+transformed longest:Point2D.Double[310.72479080107655, -39.859392832836534] Point2D.Double[623.4925775561114, 705.6039190633584]
+793 815
+pos. intervals 1: 42pos. intervals 2: 32
+minX:92.32568854463995 minY:-43.10855359018859 maxX:793.8546850943505 maxY:722.8414667464695
+2014-07-23 20:22:11.946 Instance-3-InitialGuess 12 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:11.946 Instance-3-InitialGuess 12 violations..png
+Search ends with mininum error = 10.0
+767 812
+pos. intervals 1: 42pos. intervals 2: 32
+minX:96.58090406514023 minY:-39.859392832836534 maxX:767.2021990614388 maxY:722.8414667464695
+2014-07-23 20:22:12.975 Instance-3-FinalMatch 10 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:12.975 Instance-3-FinalMatch 10 violations..png
+726 594
+pos. intervals 1: 42pos. intervals 2: 32
+minX:3.104268611357952 minY:1.5082428661430924 maxX:726.6013008236562 maxY:594.907170629819
+2014-07-23 20:22:13.176 Instance-3-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:13.176 Instance-3-GroundTruth 0 violations..png
+Transformation drawn
+error 10.0
+Second selected
+transformed angle:0.863992180087398
+ other angle:0.8639921800873982
+this longest:Point2D.Double[230.8586304801948, 788.1194759712338] Point2D.Double[310.8586304801947, -77.25797195006271]
+other longest:Point2D.Double[109.36782827719006, -0.3605719763066517] Point2D.Double[669.3678282789493, 655.3871512948417]
+transformed longest:Point2D.Double[109.36782827719006, -0.36057197630668725] Point2D.Double[673.7461294032155, 660.5140459270272]
+718 779
+pos. intervals 1: 24pos. intervals 2: 26
+minX:109.36782795093023 minY:-39.49555434359067 maxX:718.352388170553 maxY:690.1534940940038
+2014-07-23 20:22:13.262 Instance-4-InitialGuess 6 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:13.262 Instance-4-InitialGuess 6 violations..png
+Search ends with mininum error = 17.0
+669 762
+pos. intervals 1: 24pos. intervals 2: 26
+minX:38.133407532148674 minY:-57.54163708791155 maxX:669.3678282789493 maxY:655.3871512948417
+2014-07-23 20:22:13.9 Instance-4-FinalMatch 17 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:13.9 Instance-4-FinalMatch 17 violations..png
+764 597
+pos. intervals 1: 24pos. intervals 2: 26
+minX:21.782690715832203 minY:4.954767602750337 maxX:764.8433429704675 maxY:597.4430123200138
+2014-07-23 20:22:14.074 Instance-4-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:14.074 Instance-4-GroundTruth 0 violations..png
+Transformation drawn
+error 17.0
+Second selected
+transformed angle:-0.1779236570512103
+ other angle:-0.17792365705121033
+this longest:Point2D.Double[83.1196821464248, 37.12204440776056] Point2D.Double[643.1196821460172, 665.8018154175099]
+other longest:Point2D.Double[35.874975013886505, 409.8144813604541] Point2D.Double[835.8749750138866, 265.9542898139154]
+transformed longest:Point2D.Double[35.874975013886505, 409.8144813604541] Point2D.Double[864.5090771923313, 260.80515553372265]
+864 792
+pos. intervals 1: 42pos. intervals 2: 36
+minX:35.87496588445479 minY:-25.888882267998383 maxX:864.5090771923313 maxY:716.9857054401193
+2014-07-23 20:22:14.236 Instance-5-InitialGuess 35 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:14.236 Instance-5-InitialGuess 35 violations..png
+Search ends with mininum error = 32.0
+840 777
+pos. intervals 1: 42pos. intervals 2: 36
+minX:28.20634050705597 minY:-25.888882267998383 maxX:840.70022128648 maxY:701.7419966318478
+2014-07-23 20:22:15.581 Instance-5-FinalMatch 32 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:15.581 Instance-5-FinalMatch 32 violations..png
+777 589
+pos. intervals 1: 42pos. intervals 2: 36
+minX:25.61970901237055 minY:5.999999999999929 maxX:777.7497151446839 maxY:589.2256510160456
+2014-07-23 20:22:15.761 Instance-5-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:15.761 Instance-5-GroundTruth 0 violations..png
+Transformation drawn
+error 32.0
+Second selected
+transformed angle:0.6635121653335435
+ other angle:0.6635121653335433
+this longest:Point2D.Double[224.21792956101115, 688.4789472415885] Point2D.Double[704.2179295610109, 155.7558069267796]
+other longest:Point2D.Double[77.22380314159375, -30.45504780559466] Point2D.Double[637.2238031421635, 407.323830473577]
+transformed longest:Point2D.Double[77.22380314159375, -30.45504780559463] Point2D.Double[642.1584311210154, 411.18146601162107]
+760 733
+pos. intervals 1: 19pos. intervals 2: 12
+minX:-42.14248699824731 minY:-47.15796479785047 maxX:668.0162816840816 maxY:635.9054395961181
+2014-07-23 20:22:15.891 Instance-6-InitialGuess 30 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:15.891 Instance-6-InitialGuess 30 violations..png
+Search ends with mininum error = 13.0
+858 733
+pos. intervals 1: 19pos. intervals 2: 12
+minX:77.22380314159341 minY:-47.15796479785047 maxX:858.3236047412599 maxY:635.9054395961181
+2014-07-23 20:22:16.226 Instance-6-FinalMatch 13 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:16.226 Instance-6-FinalMatch 13 violations..png
+720 582
+pos. intervals 1: 19pos. intervals 2: 12
+minX:5.431458908525485 minY:22.048294211927868 maxX:720.1900937332786 maxY:582.0506423474585
+2014-07-23 20:22:16.356 Instance-6-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:16.356 Instance-6-GroundTruth 0 violations..png
+Transformation drawn
+error 13.0
+Second selected
+transformed angle:-1.3020511105481223
+ other angle:-1.3020511105481223
+this longest:Point2D.Double[69.33072514052807, 535.1905470781709] Point2D.Double[869.3307251405283, 167.2648152426254]
+other longest:Point2D.Double[155.80280722958372, 792.879081366221] Point2D.Double[395.80280792850914, -78.55621934706085]
+transformed longest:Point2D.Double[155.80280722958372, 792.879081366221] Point2D.Double[389.60827593199593, -56.0639950243974]
+561 921
+pos. intervals 1: 15pos. intervals 2: 16
+minX:38.18247485110504 minY:-78.55621934706085 maxX:561.71540240156 maxY:792.879081366221
+2014-07-23 20:22:16.427 Instance-7-InitialGuess 3 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:16.427 Instance-7-InitialGuess 3 violations..png
+Search ends with match found, error 0.0
+555 921
+pos. intervals 1: 15pos. intervals 2: 16
+minX:24.04857494538281 minY:-78.55621934706085 maxX:555.8028079502644 maxY:792.879081366221
+2014-07-23 20:22:16.564 Instance-7-FinalMatch 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:16.564 Instance-7-FinalMatch 0 violations..png
+799 595
+pos. intervals 1: 15pos. intervals 2: 162014-07-23 20:22:16.684 Instance-7-GroundTruth 0 violations.
+
+minX:33.603536557693815 minY:2.5446717111494763 maxX:799.2789033071444 maxY:595.7662230283081
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:16.684 Instance-7-GroundTruth 0 violations..png
+Transformation drawn
+error 0.0
+First selected
+transformed angle:-1.3862020762929326
+ other angle:-1.3862020762929328
+this longest:Point2D.Double[18.847603603802554, 474.16434547682223] Point2D.Double[738.8476039758152, 95.79997119936851]
+other longest:Point2D.Double[386.3024186376645, 826.1145542245828] Point2D.Double[546.3024186376643, -30.78387255852033]
+transformed longest:Point2D.Double[386.3024186376645, 826.1145542245828] Point2D.Double[535.5933464648176, 26.569796799099322]
+903 906
+pos. intervals 1: 17pos. intervals 2: 14
+minX:259.7199355577416 minY:-30.78387255852033 maxX:903.6202622923554 maxY:826.1145542245828
+2014-07-23 20:22:16.763 Instance-8-InitialGuess 6 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:16.763 Instance-8-InitialGuess 6 violations..png
+Search ends with match found, error 0.0
+898 906
+pos. intervals 1: 17pos. intervals 2: 14
+minX:276.9683390800032 minY:-30.78387255852033 maxX:898.5837250982803 maxY:826.1145542245828
+2014-07-23 20:22:16.944 Instance-8-FinalMatch 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:16.944 Instance-8-FinalMatch 0 violations..png
+792 562
+pos. intervals 1: 17pos. intervals 2: 14
+minX:33.27656952913675 minY:9.107993400219925 maxX:792.820332793656 maxY:562.6432713336287
+2014-07-23 20:22:17.124 Instance-8-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:17.124 Instance-8-GroundTruth 0 violations..png
+Transformation drawn
+error 0.0
+First selected
+transformed angle:-1.4784745497526297
+ other angle:-1.47847454975263
+this longest:Point2D.Double[452.45144150961903, -61.76685022812046] Point2D.Double[532.4514415096191, 788.5610019219366]
+other longest:Point2D.Double[211.5350598768709, 778.4806703352965] Point2D.Double[291.5350598735771, -85.5904623610437]
+transformed longest:Point2D.Double[211.5350598768709, 778.4806703352965] Point2D.Double[290.2735397574184, -71.9649234143742]
+840 914
+pos. intervals 1: 19pos. intervals 2: 19
+minX:-143.44783103534684 minY:-85.5904623610437 maxX:647.2125159671959 maxY:778.4806703352965
+2014-07-23 20:22:17.203 Instance-9-InitialGuess 5 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:17.203 Instance-9-InitialGuess 5 violations..png
+Search ends with match found, error 0.0
+965 933
+pos. intervals 1: 19pos. intervals 2: 19
+minX:-108.46494012642279 minY:-85.5904623610437 maxX:806.7000038724909 maxY:797.7339381790381
+2014-07-23 20:22:17.415 Instance-9-FinalMatch 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:17.415 Instance-9-FinalMatch 0 violations..png
+745 562
+pos. intervals 1: 19pos. intervals 2: 19
+minX:7.006234993435811 minY:7.999999999999886 maxX:745.8644861631651 maxY:562.1022164376109
+2014-07-23 20:22:17.629 Instance-9-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:17.629 Instance-9-GroundTruth 0 violations..png
+Transformation drawn
+error 0.0
+experiments/benchmarks/n10-g80.0-a0.3PI.ser solved.
+First selected
+transformed angle:-0.6402379020662744
+ other angle:-0.6402379020662746
+this longest:Point2D.Double[237.70846682407654, -56.141263610330526] Point2D.Double[397.7084667027727, 762.9653151833169]
+other longest:Point2D.Double[61.66912997696479, 477.9397631794164] Point2D.Double[701.5809530179364, 1.2606987644962615]
+transformed longest:Point2D.Double[61.6691299769648, 477.93976317941645] Point2D.Double[730.969291110045, -20.63107601141462]
+808 862
+pos. intervals 1: 33pos. intervals 2: 41
+minX:46.28484558438234 minY:-199.4511651110014 maxX:808.9421255339154 maxY:612.5607249052359
+2014-07-23 20:22:17.779 Instance-0-InitialGuess 27 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:17.779 Instance-0-InitialGuess 27 violations..png
+Search ends with mininum error = 22.0
+802 862
+pos. intervals 1: 33pos. intervals 2: 41
+minX:39.01382595078 minY:-223.2920254902898 maxX:802.1536943960572 maxY:589.6022725912009
+2014-07-23 20:22:18.871 Instance-0-FinalMatch 22 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:18.871 Instance-0-FinalMatch 22 violations..png
+796 594
+pos. intervals 1: 33pos. intervals 2: 41
+minX:11.000000001099963 minY:5.227813469225403 maxX:796.4325464528508 maxY:594.5311755221735
+2014-07-23 20:22:19.084 Instance-0-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:19.084 Instance-0-GroundTruth 0 violations..png
+Transformation drawn
+error 22.0
+First selected
+transformed angle:-0.856899290014784
+ other angle:-0.8568992900147842
+this longest:Point2D.Double[142.2275021079136, 139.28477557238665] Point2D.Double[782.2275021079136, 410.4996866095919]
+other longest:Point2D.Double[188.94415177632044, 549.5993361061496] Point2D.Double[668.9441517051507, -4.463584001705499]
+transformed longest:Point2D.Double[188.94415177632044, 549.5993361061496] Point2D.Double[644.0815808608008, 24.235225592984932]
+828 621
+pos. intervals 1: 23pos. intervals 2: 27
+minX:188.94414939580895 minY:-7.895088080210428 maxX:828.9441517763203 maxY:563.4503210572525
+2014-07-23 20:22:19.284 Instance-1-InitialGuess 13 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:19.284 Instance-1-InitialGuess 13 violations..png
+Search ends with mininum error = 11.0
+828 618
+pos. intervals 1: 23pos. intervals 2: 27
+minX:182.11105592957875 minY:-4.463584001705499 maxX:828.9441517763203 maxY:563.5940379393498
+2014-07-23 20:22:19.985 Instance-1-FinalMatch 11 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:19.985 Instance-1-FinalMatch 11 violations..png
+795 581
+pos. intervals 1: 23pos. intervals 2: 27
+minX:102.26452692431789 minY:26.614362743149258 maxX:795.924340868873 maxY:581.2621669966369
+2014-07-23 20:22:20.134 Instance-1-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:20.134 Instance-1-GroundTruth 0 violations..png
+Transformation drawn
+error 11.0
+First selected
+transformed angle:-0.5997829483959896
+ other angle:-0.5997829483959897
+this longest:Point2D.Double[64.3819903779194, 89.14817483701648] Point2D.Double[704.3819903104924, 586.6262330672384]
+other longest:Point2D.Double[100.80726404871521, 586.3072170680578] Point2D.Double[820.8072640487152, 93.95810261345241]
+transformed longest:Point2D.Double[100.80726404871521, 586.3072170680578] Point2D.Double[769.9297817301504, 128.74905173182083]
+820 710
+pos. intervals 1: 14pos. intervals 2: 15
+minX:100.80726404871521 minY:14.97522546776122 maxX:820.8072640487152 maxY:710.8875946425424
+2014-07-23 20:22:20.237 Instance-2-InitialGuess 10 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:20.237 Instance-2-InitialGuess 10 violations..png
+Search ends with mininum error = 15.0
+820 709
+pos. intervals 1: 14pos. intervals 2: 15
+minX:14.977298819682275 minY:14.97522546776122 maxX:820.8072640487152 maxY:709.6770935337444
+2014-07-23 20:22:20.582 Instance-2-FinalMatch 15 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:20.582 Instance-2-FinalMatch 15 violations..png
+789 569
+pos. intervals 1: 14pos. intervals 2: 15
+minX:2.3053890614101533 minY:78.10408753432841 maxX:789.1772943915452 maxY:569.8925250991971
+2014-07-23 20:22:20.745 Instance-2-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:20.745 Instance-2-GroundTruth 0 violations..png
+Transformation drawn
+error 15.0
+First selected
+transformed angle:-1.18449877854801
+ other angle:-1.18449877854801
+this longest:Point2D.Double[-53.65259665402766, 458.1208755909363] Point2D.Double[746.3474033454025, 342.5057478051998]
+other longest:Point2D.Double[267.4032025855042, 772.1740397745239] Point2D.Double[587.4032025855041, -14.58203966251898]
+transformed longest:Point2D.Double[267.4032025855042, 772.1740397745239] Point2D.Double[571.9436183430931, 23.427091238374487]
+769 836
+pos. intervals 1: 43pos. intervals 2: 41
+minX:27.403189828883015 minY:-14.58203966251898 maxX:769.2938936270277 maxY:772.1740397745239
+2014-07-23 20:22:20.84 Instance-3-InitialGuess 16 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:20.84 Instance-3-InitialGuess 16 violations..png
+Search ends with mininum error = 10.0
+779 836
+pos. intervals 1: 43pos. intervals 2: 41
+minX:27.403189828883015 minY:-14.58203966251898 maxX:779.3079561369868 maxY:772.1740397745239
+2014-07-23 20:22:22.093 Instance-3-FinalMatch 10 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:22.093 Instance-3-FinalMatch 10 violations..png
+727 594
+pos. intervals 1: 43pos. intervals 2: 41
+minX:2.6987579889422477 minY:1.9949947912399466 maxX:727.8717904509072 maxY:594.8556130405724
+2014-07-23 20:22:22.276 Instance-3-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:22.276 Instance-3-GroundTruth 0 violations..png
+Transformation drawn
+error 10.0
+Second selected
+transformed angle:-1.0948397230510185
+ other angle:-1.0948397230510185
+this longest:Point2D.Double[19.674598371927438, 267.2855924542211] Point2D.Double[819.6745983719273, 404.92567974657356]
+other longest:Point2D.Double[122.60630798447016, 702.9482230097921] Point2D.Double[522.606309798385, -73.02409093084809]
+transformed longest:Point2D.Double[122.60630798447016, 702.9482230097921] Point2D.Double[494.5430785211753, -18.583364900655795]
+704 862
+pos. intervals 1: 26pos. intervals 2: 25
+minX:-7.953083059145342 minY:-73.02409093084809 maxX:646.3608710217258 maxY:739.0545106221438
+2014-07-23 20:22:22.392 Instance-4-InitialGuess 21 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:22.392 Instance-4-InitialGuess 21 violations..png
+Search ends with mininum error = 13.0
+691 874
+pos. intervals 1: 26pos. intervals 2: 25
+minX:-1.7931654313460506 minY:-121.18619497867982 maxX:639.3525656543109 maxY:702.9482230097921
+2014-07-23 20:22:23.074 Instance-4-FinalMatch 13 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:23.074 Instance-4-FinalMatch 13 violations..png
+760 597
+pos. intervals 1: 26pos. intervals 2: 25
+minX:30.860356576793862 minY:10.686071602411431 maxX:760.1480390841717 maxY:597.980353527502
+2014-07-23 20:22:23.242 Instance-4-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:23.242 Instance-4-GroundTruth 0 violations..png
+Transformation drawn
+error 13.0
+Second selected
+transformed angle:1.090101946555737
+ other angle:1.090101946555737
+this longest:Point2D.Double[257.6108977319642, 669.7729573659311] Point2D.Double[737.610897731964, -20.236841408959094]
+other longest:Point2D.Double[184.7720055120576, -10.051479361393412] Point2D.Double[584.7720055150438, 756.9759364448242]
+transformed longest:Point2D.Double[184.7720055120576, -10.051479361393376] Point2D.Double[573.4351373845308, 735.2367147812785]
+844 817
+pos. intervals 1: 28pos. intervals 2: 36
+minX:-49.38158836663047 minY:-10.051479361393412 maxX:744.7720055120575 maxY:756.9759364448242
+2014-07-23 20:22:23.329 Instance-5-InitialGuess 22 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:23.329 Instance-5-InitialGuess 22 violations..png
+Search ends with mininum error = 24.0
+847 819
+pos. intervals 1: 28pos. intervals 2: 36
+minX:-52.80786593377694 minY:-12.716994706884929 maxX:744.7720055120575 maxY:756.9759364448242
+2014-07-23 20:22:24.323 Instance-5-FinalMatch 24 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:24.323 Instance-5-FinalMatch 24 violations..png
+780 588
+pos. intervals 1: 28pos. intervals 2: 36
+minX:16.53814065025969 minY:6.000000000000028 maxX:780.3909266625014 maxY:588.0150054291397
+2014-07-23 20:22:24.638 Instance-5-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:24.638 Instance-5-GroundTruth 0 violations..png
+Transformation drawn
+error 24.0
+First selected
+transformed angle:0.6594411768161765
+ other angle:0.6594411768161765
+this longest:Point2D.Double[229.64413306057617, 65.476452646918] Point2D.Double[549.6441330605765, 705.0497637262332]
+other longest:Point2D.Double[-4.606103454130334, 188.93259171291734] Point2D.Double[555.3938965497034, 623.0501227478048]
+transformed longest:Point2D.Double[-4.606103454130334, 188.93259171291734] Point2D.Double[560.6097910642834, 627.0935356920769]
+714 737
+pos. intervals 1: 15pos. intervals 2: 17
+minX:-28.99507896894528 minY:-4.809361124237171 maxX:635.3938965458697 maxY:682.788093642432
+2014-07-23 20:22:24.759 Instance-6-InitialGuess 8 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:24.759 Instance-6-InitialGuess 8 violations..png
+Search ends with mininum error = 6.0
+818 753
+pos. intervals 1: 15pos. intervals 2: 17
+minX:-4.6061034822377 minY:54.874364096110185 maxX:763.4329270567753 maxY:753.1473419293904
+2014-07-23 20:22:25.12 Instance-6-FinalMatch 6 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:25.12 Instance-6-FinalMatch 6 violations..png
+723 591
+pos. intervals 1: 15pos. intervals 2: 17
+minX:15.47590638885174 minY:23.23026435913698 maxX:723.6832907385661 maxY:591.120445548652
+2014-07-23 20:22:25.267 Instance-6-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:25.267 Instance-6-GroundTruth 0 violations..png
+Transformation drawn
+800 613
+error 6.0
+Second selected
+transformed angle:0.7500136603760504
+ other angle:0.7500136603760504
+this longest:Point2D.Double[155.84211119916523, 781.8123600522675] Point2D.Double[395.842110117996, -75.69662243637639]
+other longest:Point2D.Double[72.67343130923318, 6.675152873086127] Point2D.Double[712.6734477972132, 602.913232939082]
+transformed longest:Point2D.Double[72.67343130923318, 6.675152873086176] Point2D.Double[724.2058957891948, 613.6571149266681]
+pos. intervals 1: 14pos. intervals 2: 17
+minX:70.20341926806316 minY:6.18777553420631 maxX:800.9871223190636 maxY:613.6571149266678
+2014-07-23 20:22:25.357 Instance-7-InitialGuess 3 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:25.357 Instance-7-InitialGuess 3 violations..png
+Search ends with match found, error 0.0
+803 606
+pos. intervals 1: 14pos. intervals 2: 17
+minX:65.14356433754762 minY:6.18777553420631 maxX:803.0633559103569 maxY:606.7599534329806
+2014-07-23 20:22:25.495 Instance-7-FinalMatch 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:25.495 Instance-7-FinalMatch 0 violations..png
+798 595
+pos. intervals 1: 14pos. intervals 2: 17
+minX:59.29712507706195 minY:8.444344991464163 maxX:798.8898747610325 maxY:595.017499283449
+2014-07-23 20:22:25.641 Instance-7-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:25.641 Instance-7-GroundTruth 0 violations..png
+Transformation drawn
+error 0.0
+First selected
+transformed angle:-1.18993988251923
+ other angle:-1.1899398825192298
+this longest:Point2D.Double[-3.716291524861333, 256.01786300477573] Point2D.Double[796.2837102060669, 425.201590124262]
+other longest:Point2D.Double[278.338009261034, 786.2713907380423] Point2D.Double[598.3380092610341, -12.917163561187067]
+transformed longest:Point2D.Double[278.338009261034, 786.2713907380423] Point2D.Double[582.2876152003664, 27.168121517805957]
+838 863
+pos. intervals 1: 15pos. intervals 2: 16
+minX:198.33800926103393 minY:-12.917163561187067 maxX:838.3380092610339 maxY:800.1804710410174
+2014-07-23 20:22:25.758 Instance-8-InitialGuess 12 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:25.758 Instance-8-InitialGuess 12 violations..png
+Search ends with mininum error = 7.0
+838 905
+pos. intervals 1: 15pos. intervals 2: 16
+minX:198.33800926103393 minY:-68.76556106420233 maxX:838.3380092610339 maxY:786.2713907380423
+2014-07-23 20:22:26.121 Instance-8-FinalMatch 7 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:26.121 Instance-8-FinalMatch 7 violations..png
+790 562
+pos. intervals 1: 15pos. intervals 2: 16
+minX:23.127592017289118 minY:7.614980046367066 maxX:790.3407613253862 maxY:562.0385001428907
+2014-07-23 20:22:26.27 Instance-8-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:26.27 Instance-8-GroundTruth 0 violations..png
+Transformation drawn
+error 7.0
+Second selected
+transformed angle:-0.7127904291827039
+ other angle:-0.712790429182704
+this longest:Point2D.Double[44.29529764637592, 578.3057875584973] Point2D.Double[684.2952976463761, 18.324521370289318]
+other longest:Point2D.Double[149.37355652467443, 620.2449231231788] Point2D.Double[789.3735565246744, 67.03384337271348]
+transformed longest:Point2D.Double[149.37355652467443, 620.2449231231788] Point2D.Double[792.7346901755299, 64.12850528493958]
+792 874
+pos. intervals 1: 22pos. intervals 2: 18
+minX:71.74697793190933 minY:-58.662411327796804 maxX:792.7346901755299 maxY:766.2124412919062
+2014-07-23 20:22:26.356 Instance-9-InitialGuess 1 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:26.356 Instance-9-InitialGuess 1 violations..png
+Search ends with match found, error 0.0
+872 874
+pos. intervals 1: 22pos. intervals 2: 18
+minX:149.3735565246744 minY:-58.662411327796804 maxX:872.7332243928649 maxY:766.2124412919062
+2014-07-23 20:22:26.616 Instance-9-FinalMatch 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:26.616 Instance-9-FinalMatch 0 violations..png
+746 541
+pos. intervals 1: 22pos. intervals 2: 18
+minX:7.212252410087785 minY:8.27783525088477 maxX:746.4348365636622 maxY:541.5169228952918
+2014-07-23 20:22:26.876 Instance-9-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:26.876 Instance-9-GroundTruth 0 violations..png
+Transformation drawn
+error 0.0
+experiments/benchmarks/n10-g80.0-a0.35PI.ser solved.
+First selected
+transformed angle:-0.33855734651096375
+ other angle:-0.33855734651096375
+this longest:Point2D.Double[115.0815042774775, 16.888037828106036] Point2D.Double[515.081504279733, 739.4914538509404]
+other longest:Point2D.Double[87.03904782867879, 507.3633628660558] Point2D.Double[887.0390478286787, 225.67173692406652]
+transformed longest:Point2D.Double[87.03904782867879, 507.3633628660558] Point2D.Double[866.0822929240647, 233.0509148785021]
+887 859
+pos. intervals 1: 36pos. intervals 2: 39
+minX:76.38941102243322 minY:-87.83803816932016 maxX:887.0390478286788 maxY:722.0366457118241
+2014-07-23 20:22:27.005 Instance-0-InitialGuess 27 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:27.005 Instance-0-InitialGuess 27 violations..png
+Search ends with mininum error = 33.0
+887 869
+pos. intervals 1: 36pos. intervals 2: 39
+minX:76.35629782110728 minY:-97.80973742090993 maxX:887.0390478286788 maxY:722.0366457118241
+2014-07-23 20:22:28.077 Instance-0-FinalMatch 33 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:28.077 Instance-0-FinalMatch 33 violations..png
+798 589
+pos. intervals 1: 36pos. intervals 2: 39
+minX:11.000000000000739 minY:5.510837134237761 maxX:798.6546746485155 maxY:589.7714292128721
+2014-07-23 20:22:28.308 Instance-0-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:28.308 Instance-0-GroundTruth 0 violations..png
+Transformation drawn
+error 33.0
+Second selected
+transformed angle:1.5707963267948963
+ other angle:1.5707963267948966
+this longest:Point2D.Double[111.2527475730068, 336.8916354478297] Point2D.Double[751.2527475609197, 90.56348580525653]
+other longest:Point2D.Double[442.6045195605683, -57.38470348657381] Point2D.Double[442.6045195605683, 638.6486443733794]
+transformed longest:Point2D.Double[442.6045195605683, -57.38470348657381] Point2D.Double[442.60451956056846, 628.383156135662]
+919 746
+pos. intervals 1: 26pos. intervals 2: 17
+minX:362.6045195605682 minY:-57.38470348657381 maxX:919.917616880684 maxY:638.6486443733794
+2014-07-23 20:22:28.434 Instance-1-InitialGuess 12 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:28.434 Instance-1-InitialGuess 12 violations..png
+Search ends with mininum error = 13.0
+919 781
+pos. intervals 1: 26pos. intervals 2: 17
+minX:362.6045195605682 minY:-57.38470348657381 maxX:919.7414748078007 maxY:674.113035244437
+2014-07-23 20:22:29.135 Instance-1-FinalMatch 13 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:29.135 Instance-1-FinalMatch 13 violations..png
+796 588
+pos. intervals 1: 26pos. intervals 2: 17
+minX:112.67113479965676 minY:29.488176832195265 maxX:796.2254492730785 maxY:588.0743190244567
+2014-07-23 20:22:29.36 Instance-1-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:29.36 Instance-1-GroundTruth 0 violations..png
+Transformation drawn
+error 13.0
+Second selected
+transformed angle:-1.2953377175858818
+ other angle:-1.2953377175858818
+this longest:Point2D.Double[-3.17441764773082, 376.01741820831006] Point2D.Double[876.8255823522691, 273.84642471023903]
+other longest:Point2D.Double[130.80697991346233, 783.240526142682] Point2D.Double[370.8069857237233, -65.88479634776164]
+transformed longest:Point2D.Double[130.80697991346233, 783.240526142682] Point2D.Double[371.7644878039674, -69.27245986021734]
+505 915
+pos. intervals 1: 16pos. intervals 2: 15
+minX:16.84867006110005 minY:-82.45830487127711 maxX:505.9602650298186 maxY:783.240526142682
+2014-07-23 20:22:29.45 Instance-2-InitialGuess 5 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:29.45 Instance-2-InitialGuess 5 violations..png
+Search ends with mininum error = 8.0
+529 916
+pos. intervals 1: 16pos. intervals 2: 15
+minX:-10.38544829510851 minY:-83.51349064479511 maxX:468.7901497777887 maxY:783.240526142682
+2014-07-23 20:22:29.867 Instance-2-FinalMatch 8 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:29.867 Instance-2-FinalMatch 8 violations..png
+791 578
+pos. intervals 1: 16pos. intervals 2: 15
+minX:2.260885141613997 minY:79.14029048311903 maxX:791.095909797185 maxY:578.4739106304507
+2014-07-23 20:22:29.975 Instance-2-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:29.975 Instance-2-GroundTruth 0 violations..png
+Transformation drawn
+error 8.0
+First selected
+transformed angle:-0.6437698392450056
+ other angle:-0.6437698392450057
+this longest:Point2D.Double[99.05996872228513, 652.2381219305286] Point2D.Double[499.05997057557806, -68.38908085547777]
+other longest:Point2D.Double[44.08638573323416, 555.7066924920092] Point2D.Double[684.0863857332345, 75.43790786085597]
+transformed longest:Point2D.Double[44.08638573323416, 555.7066924920092] Point2D.Double[703.3124634199248, 61.01027510490144]
+703 791
+pos. intervals 1: 32pos. intervals 2: 42
+minX:44.08638393673503 minY:-52.852926676367495 maxX:703.3124634199248 maxY:688.5139496296417
+2014-07-23 20:22:30.054 Instance-3-InitialGuess 13 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:30.054 Instance-3-InitialGuess 13 violations..png
+Search ends with mininum error = 12.0
+709 781
+pos. intervals 1: 32pos. intervals 2: 42
+minX:44.08638393673503 minY:-83.09046412435818 maxX:709.7854359263487 maxY:648.7884002851636
+2014-07-23 20:22:31.015 Instance-3-FinalMatch 12 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:31.015 Instance-3-FinalMatch 12 violations..png
+726 595
+pos. intervals 1: 32pos. intervals 2: 42
+minX:4.667716599942466 minY:1.9999999999999716 maxX:726.5464038868641 maxY:595.0
+2014-07-23 20:22:31.148 Instance-3-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:31.148 Instance-3-GroundTruth 0 violations..png
+Transformation drawn
+error 12.0
+Second selected
+transformed angle:0.9989113220645311
+ other angle:0.9989113220645314
+this longest:Point2D.Double[209.6377331735938, 664.4120281629034] Point2D.Double[689.6377331735937, -54.74059541291001]
+other longest:Point2D.Double[129.23942364827192, -5.137961860595226] Point2D.Double[609.2394236488444, 740.6307175591643]
+transformed longest:Point2D.Double[129.23942364827192, -5.137961860595169] Point2D.Double[597.1913878408868, 721.9118680714728]
+689 795
+pos. intervals 1: 19pos. intervals 2: 28
+minX:22.358781664767662 minY:-5.137961860595226 maxX:689.2394236496777 maxY:740.6307175591643
+2014-07-23 20:22:31.278 Instance-4-InitialGuess 26 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:31.278 Instance-4-InitialGuess 26 violations..png
+Search ends with mininum error = 24.0
+689 795
+pos. intervals 1: 19pos. intervals 2: 28
+minX:23.948279616980212 minY:-5.137961860595226 maxX:689.2394236496777 maxY:740.6307175591643
+2014-07-23 20:22:31.826 Instance-4-FinalMatch 24 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:31.826 Instance-4-FinalMatch 24 violations..png
+775 596
+pos. intervals 1: 19pos. intervals 2: 28
+minX:22.146988540790403 minY:5.675595896743289 maxX:775.7713419217499 maxY:596.4797849710878
+2014-07-23 20:22:32.0 Instance-4-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:32.0 Instance-4-GroundTruth 0 violations..png
+Transformation drawn
+666 951
+pos. intervals 1: 33pos. intervals 2: 34
+error 24.0
+First selected
+transformed angle:1.5707963267948524
+ other angle:1.5707963267948524
+this longest:Point2D.Double[67.49383695166252, 523.5668690554487] Point2D.Double[867.4938369516625, 179.9372160746854]
+other longest:Point2D.Double[280.3975424327216, -72.35276646224455] Point2D.Double[280.39754243276155, 829.3373335902597]
+transformed longest:Point2D.Double[280.3975424327216, -72.35276646224452] Point2D.Double[280.3975424327602, 798.3258989520859]
+minX:-10.446629885398409 minY:-72.35276646224455 maxX:605.7416628383874 maxY:829.3373335902597
+2014-07-23 20:22:32.118 Instance-5-InitialGuess 16 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:32.118 Instance-5-InitialGuess 16 violations..png
+Search ends with mininum error = 14.0
+686 979
+pos. intervals 1: 33pos. intervals 2: 34
+minX:-36.21855858960132 minY:-100.11100753766213 maxX:600.6929598710265 maxY:829.3373335902597
+2014-07-23 20:22:33.019 Instance-5-FinalMatch 14 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:33.019 Instance-5-FinalMatch 14 violations..png
+785 586
+2014-07-23 20:22:33.218 Instance-5-GroundTruth 0 violations.
+pos. intervals 1: 33pos. intervals 2: 34
+minX:10.278261960041732 minY:7.506913674884288 maxX:785.6311455329508 maxY:586.347243530638
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:33.218 Instance-5-GroundTruth 0 violations..png
+Transformation drawn
+error 14.0
+Second selected
+transformed angle:0.9695676268693927
+ other angle:0.9695676268693929
+this longest:Point2D.Double[113.94747099756776, 623.2234762134225] Point2D.Double[513.9474709975678, 28.880135432338683]
+other longest:Point2D.Double[208.12034245688858, 94.31643724330797] Point2D.Double[608.1203424568886, 677.4560249685674]
+transformed longest:Point2D.Double[208.12034245688858, 94.31643724330797] Point2D.Double[613.3623390742808, 685.0980643343754]
+680 715
+pos. intervals 1: 18pos. intervals 2: 13
+minX:128.12034245688858 minY:25.184734663267022 maxX:680.4272460742598 maxY:715.6350025070223
+2014-07-23 20:22:33.311 Instance-6-InitialGuess 6 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:33.311 Instance-6-InitialGuess 6 violations..png
+Search ends with match found, error 0.0
+670 715
+pos. intervals 1: 18pos. intervals 2: 13
+minX:121.98950234725456 minY:25.184734663267022 maxX:670.0262904829633 maxY:715.6350025070223
+2014-07-23 20:22:33.461 Instance-6-FinalMatch 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:33.461 Instance-6-FinalMatch 0 violations..png
+700 587
+pos. intervals 1: 18pos. intervals 2: 13
+minX:5.930132888693606 minY:22.594445781209643 maxX:700.822275672992 maxY:587.5589555722407
+2014-07-23 20:22:33.594 Instance-6-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:33.594 Instance-6-GroundTruth 0 violations..png
+Transformation drawn
+error 0.0
+Second selected
+transformed angle:0.9931099552729582
+ other angle:0.9931099552729582
+this longest:Point2D.Double[132.3365175288592, 660.5390621913353] Point2D.Double[612.3365250051734, -35.26724852525969]
+other longest:Point2D.Double[152.89758444374507, -2.623852748468302] Point2D.Double[632.897581112074, 733.7230009907139]
+transformed longest:Point2D.Double[152.89758444374507, -2.6238527484682663] Point2D.Double[614.5097330717988, 705.5150131876503]
+737 786
+pos. intervals 1: 14pos. intervals 2: 16
+minX:147.5773546338679 minY:-2.623852748468302 maxX:737.8831131627135 maxY:733.7230009907139
+2014-07-23 20:22:33.671 Instance-7-InitialGuess 10 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:33.671 Instance-7-InitialGuess 10 violations..png
+Search ends with mininum error = 10.0
+745 786
+pos. intervals 1: 14pos. intervals 2: 16
+minX:119.27283812690146 minY:-2.623852748468302 maxX:745.5525080979378 maxY:733.7230009907139
+2014-07-23 20:22:34.092 Instance-7-FinalMatch 10 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:34.092 Instance-7-FinalMatch 10 violations..png
+796 594
+pos. intervals 1: 14pos. intervals 2: 16
+minX:70.941833705044 minY:6.320999291004156 maxX:796.9121584939642 maxY:594.250756685964
+2014-07-23 20:22:34.264 Instance-7-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:34.264 Instance-7-GroundTruth 0 violations..png
+Transformation drawn
+error 10.0
+Second selected
+transformed angle:0.22016285768690147
+ other angle:0.2201628576869015
+this longest:Point2D.Double[448.81846545583824, -62.15305959530701] Point2D.Double[528.8184654558382, 801.4405885363907]
+other longest:Point2D.Double[-3.869721652764156, 191.76913880172498] Point2D.Double[796.1302783466854, 370.80148219253647]
+transformed longest:Point2D.Double[-3.869721652764156, 191.76913880172498] Point2D.Double[842.4866926416208, 381.1756040455656]
+896 710
+pos. intervals 1: 14pos. intervals 2: 15
+minX:-3.869721653314798 minY:97.2201338730888 maxX:842.4866926416206 maxY:710.7537179606895
+2014-07-23 20:22:34.387 Instance-8-InitialGuess 7 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:34.387 Instance-8-InitialGuess 7 violations..png
+Search ends with match found, error 0.0
+896 713
+pos. intervals 1: 14pos. intervals 2: 15
+minX:-12.410297212437825 minY:97.2201338730888 maxX:833.9461170819469 maxY:713.1092840887692
+2014-07-23 20:22:34.57 Instance-8-FinalMatch 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:34.57 Instance-8-FinalMatch 0 violations..png
+793 560
+pos. intervals 1: 14pos. intervals 2: 15
+minX:20.70112870250864 minY:22.873439949092074 maxX:793.8326131842844 maxY:560.9672412635593
+2014-07-23 20:22:34.748 Instance-8-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:34.748 Instance-8-GroundTruth 0 violations..png
+Transformation drawn
+error 0.0
+Second selected
+transformed angle:1.3805862580716655
+ other angle:1.3805862580716655
+this longest:Point2D.Double[73.2305213151757, 24.278485011984117] Point2D.Double[713.2305213182167, 547.1657992697103]
+other longest:Point2D.Double[392.5311157612557, -61.9024696810942] Point2D.Double[552.5311157612556, 769.1036790703054]
+transformed longest:Point2D.Double[392.5311157612557, -61.9024696810942] Point2D.Double[548.7830655114815, 749.6370990491085]
+869 881
+pos. intervals 1: 21pos. intervals 2: 18
+minX:71.38372312172606 minY:-61.9024696810942 maxX:869.3297295682141 maxY:769.1036790703054
+2014-07-23 20:22:34.833 Instance-9-InitialGuess 20 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:34.833 Instance-9-InitialGuess 20 violations..png
+Search ends with mininum error = 16.0
+855 920
+pos. intervals 1: 21pos. intervals 2: 18
+minX:57.29965345061932 minY:-61.9024696810942 maxX:855.9261859408908 maxY:808.1921357071203
+2014-07-23 20:22:35.522 Instance-9-FinalMatch 16 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:35.522 Instance-9-FinalMatch 16 violations..png
+746 539
+pos. intervals 1: 21pos. intervals 2: 18
+minX:7.694543295262179 minY:8.24347185076712 maxX:746.9512057714956 maxY:539.9730953531525
+2014-07-23 20:22:35.757 Instance-9-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:35.757 Instance-9-GroundTruth 0 violations..png
+Transformation drawn
+error 16.0
+experiments/benchmarks/n10-g80.0-a0.4PI.ser solved.
+Second selected
+transformed angle:1.0643526020436043
+ other angle:1.0643526020436043
+this longest:Point2D.Double[189.41573400930093, 633.8736372928036] Point2D.Double[669.415734009301, -22.171677508068115]
+other longest:Point2D.Double[113.73445013896057, 20.421107743680324] Point2D.Double[513.7344501391078, 741.5329245650837]
+transformed longest:Point2D.Double[113.73445013896057, 20.421107743680295] Point2D.Double[508.0449477782813, 731.2760061045244]
+843 799
+pos. intervals 1: 33pos. intervals 2: 35
+minX:-39.344628785800694 minY:-7.764119233449094 maxX:753.7344501389607 maxY:741.5329245650837
+2014-07-23 20:22:35.901 Instance-0-InitialGuess 38 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:35.901 Instance-0-InitialGuess 38 violations..png
+Search ends with mininum error = 29.0
+835 853
+pos. intervals 1: 33pos. intervals 2: 35
+minX:-31.354257267689917 minY:-7.764119233449094 maxX:753.7344501389607 maxY:796.1999173969582
+2014-07-23 20:22:36.899 Instance-0-FinalMatch 29 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:36.899 Instance-0-FinalMatch 29 violations..png
+798 589
+pos. intervals 1: 33pos. intervals 2: 35
+minX:11.10922086383593 minY:5.880039282554293 maxX:798.9664745117511 maxY:589.5247930664152
+2014-07-23 20:22:37.133 Instance-0-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:37.133 Instance-0-GroundTruth 0 violations..png
+Transformation drawn
+error 29.0
+Second selected
+transformed angle:-0.3439679474484465
+ other angle:-0.3439679474484464
+this longest:Point2D.Double[540.0626238445459, 595.0431897655124] Point2D.Double[620.0626238445459, -73.45365316246125]
+other longest:Point2D.Double[174.45125398340195, 359.35456856215103] Point2D.Double[814.4512539642917, 130.10168374938596]
+transformed longest:Point2D.Double[174.45125398340195, 359.35456856215103] Point2D.Double[808.2806615449201, 132.3120370512405]
+822 637
+pos. intervals 1: 20pos. intervals 2: 27
+minX:174.45125396429154 minY:96.26137641983703 maxX:822.2560271701375 maxY:637.7825746297037
+2014-07-23 20:22:37.257 Instance-1-InitialGuess 18 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:37.257 Instance-1-InitialGuess 18 violations..png
+Search ends with mininum error = 16.0
+815 637
+pos. intervals 1: 20pos. intervals 2: 27
+minX:173.54696556369348 minY:40.48667575878193 maxX:815.7162716926132 maxY:637.7825746297037
+2014-07-23 20:22:37.783 Instance-1-FinalMatch 16 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:37.783 Instance-1-FinalMatch 16 violations..png
+795 581
+pos. intervals 1: 20pos. intervals 2: 27
+minX:122.15899719771232 minY:26.655902130669602 maxX:795.3992941436495 maxY:581.706202101825
+2014-07-23 20:22:37.937 Instance-1-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:37.937 Instance-1-GroundTruth 0 violations..png
+Transformation drawn
+error 16.0
+Second selected
+transformed angle:-1.5707963257489947
+ other angle:-1.5707963257489947
+this longest:Point2D.Double[-3.756229291860379, 386.9732722374557] Point2D.Double[876.2437707081398, 253.17447255909627]
+other longest:Point2D.Double[243.55002308837783, 821.0829740862412] Point2D.Double[243.55002401326618, -63.21449964339256]
+transformed longest:Point2D.Double[243.55002308837783, 821.0829740862412] Point2D.Double[243.55002401934922, -69.03056855614]
+641 940
+pos. intervals 1: 15pos. intervals 2: 16
+minX:-71.47882021445696 minY:-69.03056855613988 maxX:519.9492946015625 maxY:821.0829740862412
+2014-07-23 20:22:38.07 Instance-2-InitialGuess 3 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:38.07 Instance-2-InitialGuess 3 violations..png
+Search ends with match found, error 0.0
+622 939
+pos. intervals 1: 15pos. intervals 2: 16
+minX:-50.00449928484241 minY:-68.48448781120744 maxX:522.56714657927 maxY:821.0829740862412
+2014-07-23 20:22:38.214 Instance-2-FinalMatch 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:38.214 Instance-2-FinalMatch 0 violations..png
+791 562
+pos. intervals 1: 15pos. intervals 2: 16
+minX:4.794726092972283 minY:78.44483370785883 maxX:791.1664430227398 maxY:562.3200408601735
+2014-07-23 20:22:38.355 Instance-2-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:38.355 Instance-2-GroundTruth 0 violations..png
+Transformation drawn
+error 0.0
+First selected
+transformed angle:-1.4711355882814572
+ other angle:-1.471135588281457
+this longest:Point2D.Double[247.3411925855243, -10.49659436845252] Point2D.Double[407.3411925955363, 792.5333740413612]
+other longest:Point2D.Double[450.677294982889, 767.3565465507734] Point2D.Double[530.677294982889, -32.70740345021312]
+transformed longest:Point2D.Double[450.677294982889, 767.3565465507734] Point2D.Double[532.1459316420162, -47.39494403293418]
+890 864
+pos. intervals 1: 40pos. intervals 2: 35
+minX:50.67728369921119 minY:-47.39494403293418 maxX:890.9051583070894 maxY:767.3565465507734
+2014-07-23 20:22:38.441 Instance-3-InitialGuess 7 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:38.441 Instance-3-InitialGuess 7 violations..png
+Search ends with mininum error = 8.0
+932 900
+pos. intervals 1: 40pos. intervals 2: 35
+minX:50.67728369921119 minY:-32.70740345021312 maxX:932.1776257974763 maxY:817.5670283659555
+2014-07-23 20:22:39.804 Instance-3-FinalMatch 8 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:39.804 Instance-3-FinalMatch 8 violations..png
+726 594
+pos. intervals 1: 40pos. intervals 2: 35
+minX:13.862178808603062 minY:1.973629532205166 maxX:726.1083181206204 maxY:594.6662577447482
+2014-07-23 20:22:40.017 Instance-3-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:40.017 Instance-3-GroundTruth 0 violations..png
+Transformation drawn
+error 8.0
+Second selected
+transformed angle:-1.4790098857419258
+ other angle:-1.4790098857419258
+this longest:Point2D.Double[21.909567497145176, 274.6426469015289] Point2D.Double[821.9095674971453, 403.5947126065559]
+other longest:Point2D.Double[225.97737998497217, 791.9402632572067] Point2D.Double[305.97737998497234, -77.19915192094989]
+transformed longest:Point2D.Double[225.97737998497217, 791.9402632572067] Point2D.Double[300.24995220069775, -14.974986484706164]
+713 919
+pos. intervals 1: 26pos. intervals 2: 22
+minX:-37.864854562983965 minY:-77.19915192094989 maxX:625.9773799849722 maxY:791.9402632572067
+2014-07-23 20:22:40.146 Instance-4-InitialGuess 22 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:40.146 Instance-4-InitialGuess 22 violations..png
+Search ends with mininum error = 25.0
+743 919
+pos. intervals 1: 26pos. intervals 2: 22
+minX:-67.92115403688962 minY:-77.19915192094989 maxX:625.9773799849722 maxY:791.9402632572067
+2014-07-23 20:22:40.731 Instance-4-FinalMatch 25 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:40.731 Instance-4-FinalMatch 25 violations..png
+761 597
+2014-07-23 20:22:40.904 Instance-4-GroundTruth 0 violations.
+pos. intervals 1: 26pos. intervals 2: 22
+minX:20.831477929329353 minY:8.00701203543872 maxX:761.044875954147 maxY:597.6059498748627
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:40.904 Instance-4-GroundTruth 0 violations..png
+Transformation drawn
+error 25.0
+Second selected
+transformed angle:0.5545622018190172
+ other angle:0.5545622018190172
+this longest:Point2D.Double[162.87838193599555, 708.8708984838604] Point2D.Double[482.87838212850926, -67.21213046374477]
+other longest:Point2D.Double[53.76881502880974, 57.08649437751284] Point2D.Double[773.7688284900892, 503.05449444097354]
+transformed longest:Point2D.Double[53.76881502880974, 57.08649437751285] Point2D.Double[767.4257923067474, 499.12561790190773]
+783 592
+pos. intervals 1: 31pos. intervals 2: 37
+minX:45.35117653573434 minY:11.273057024015031 maxX:783.4585439650101 maxY:592.510375201857
+2014-07-23 20:22:40.997 Instance-5-InitialGuess 12 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:40.997 Instance-5-InitialGuess 12 violations..png
+Search ends with mininum error = 1.0
+780 592
+pos. intervals 1: 31pos. intervals 2: 37
+minX:42.43620745594407 minY:15.366534324108166 maxX:780.5435748852198 maxY:592.510375201857
+2014-07-23 20:22:41.857 Instance-5-FinalMatch 1 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:41.857 Instance-5-FinalMatch 1 violations..png
+782 588
+pos. intervals 1: 31pos. intervals 2: 37
+2014-07-23 20:22:41.994 Instance-5-GroundTruth 0 violations.
+minX:33.935188214668415 minY:12.101554307431002 maxX:782.8243992362054 maxY:588.7516472960872
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:41.994 Instance-5-GroundTruth 0 violations..png
+Transformation drawn
+error 1.0
+First selected
+transformed angle:0.7880319946262879
+ other angle:0.7880319946262879
+this longest:Point2D.Double[311.6402347597054, 16.841033027035223] Point2D.Double[391.64023475970555, 732.2150977829315]
+other longest:Point2D.Double[-2.6507127223869134, 162.55310750399835] Point2D.Double[477.3492872776525, 645.0882685322067]
+transformed longest:Point2D.Double[-2.6507127223869134, 162.55310750399835] Point2D.Double[505.00594925138864, 672.8910015301201]
+720 715
+pos. intervals 1: 15pos. intervals 2: 17
+minX:-32.78260811045914 minY:19.558003089222183 maxX:637.3492872776131 maxY:715.9153959842669
+2014-07-23 20:22:42.155 Instance-6-InitialGuess 11 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:42.155 Instance-6-InitialGuess 11 violations..png
+Search ends with mininum error = 4.0
+761 799
+pos. intervals 1: 15pos. intervals 2: 17
+minX:-2.65071327140123 minY:72.14236810040282 maxX:708.5200800244452 maxY:799.5815028363511
+2014-07-23 20:22:42.544 Instance-6-FinalMatch 4 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:42.544 Instance-6-FinalMatch 4 violations..png
+716 587
+pos. intervals 1: 15pos. intervals 2: 17
+minX:23.384582576247055 minY:22.866738129014976 maxX:716.8187025491108 maxY:587.4859991305378
+2014-07-23 20:22:42.685 Instance-6-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:42.685 Instance-6-GroundTruth 0 violations..png
+Transformation drawn
+error 4.0
+Second selected
+transformed angle:0.7618516218637611
+ other angle:0.7618516218637611
+this longest:Point2D.Double[151.77958148970572, 687.0981015625646] Point2D.Double[551.7795893110524, -55.16160801143228]
+other longest:Point2D.Double[69.06456895886305, -0.0026398521709101175] Point2D.Double[709.0146289864454, 610.4981837003635]
+transformed longest:Point2D.Double[69.06456895886305, -0.002639852170887025] Point2D.Double[679.1538705136477, 582.0115582928113]
+789 660
+pos. intervals 1: 16pos. intervals 2: 19
+minX:68.9655463251542 minY:-0.0026398521709154465 maxX:789.0649515539303 maxY:610.4981837003635
+2014-07-23 20:22:42.77 Instance-7-InitialGuess 11 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:42.77 Instance-7-InitialGuess 11 violations..png
+Search ends with mininum error = 8.0
+789 660
+pos. intervals 1: 16pos. intervals 2: 19
+minX:68.9655463251542 minY:-0.0026398521709101175 maxX:789.0649515539303 maxY:610.4981837003635
+2014-07-23 20:22:43.155 Instance-7-FinalMatch 8 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:43.155 Instance-7-FinalMatch 8 violations..png
+795 594
+pos. intervals 1: 16pos. intervals 2: 19
+minX:58.19945154046239 minY:8.576065815144467 maxX:795.3096261815278 maxY:594.9999948358834
+2014-07-23 20:22:43.29 Instance-7-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:43.29 Instance-7-GroundTruth 0 violations..png
+Transformation drawn
+error 8.0
+First selected
+transformed angle:0.5847969800728275
+ other angle:0.5847969800728273
+this longest:Point2D.Double[279.6148347492274, 796.4561485977116] Point2D.Double[599.6148347492275, -14.255553821475246]
+other longest:Point2D.Double[59.008434402925786, 36.11219730096636] Point2D.Double[779.0084344069696, 512.7854470338261]
+transformed longest:Point2D.Double[59.008434402925786, 36.112197300966386] Point2D.Double[785.7537556050754, 517.2511611671249]
+785 795
+pos. intervals 1: 16pos. intervals 2: 14
+minX:59.008434402925786 minY:-17.125671076523986 maxX:785.7537556050754 maxY:728.0404183184116
+2014-07-23 20:22:43.407 Instance-8-InitialGuess 6 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:43.407 Instance-8-InitialGuess 6 violations..png
+Search ends with match found, error 0.0
+781 728
+pos. intervals 1: 16pos. intervals 2: 14
+minX:33.217140082873264 minY:0.664173990661638 maxX:781.0402288033029 maxY:728.0404183184116
+2014-07-23 20:22:43.662 Instance-8-FinalMatch 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:43.662 Instance-8-FinalMatch 0 violations..png
+794 562
+pos. intervals 1: 16pos. intervals 2: 14
+minX:34.0330743967406 minY:9.182665425721325 maxX:794.0481634347359 maxY:562.6546300586156
+2014-07-23 20:22:43.795 Instance-8-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:43.795 Instance-8-GroundTruth 0 violations..png
+Transformation drawn
+error 0.0
+First selected
+transformed angle:-0.9627382412808053
+ other angle:-0.9627382412808054
+this longest:Point2D.Double[63.01526437554583, 550.8034114373513] Point2D.Double[702.9366018483548, 25.38541859754103]
+other longest:Point2D.Double[196.35568630037747, 666.3713595141596] Point2D.Double[676.3556863003772, -23.251847599990242]
+transformed longest:Point2D.Double[196.35568630037747, 666.3713595141596] Point2D.Double[669.3640218791966, -13.20681834748919]
+808 817
+pos. intervals 1: 19pos. intervals 2: 18
+minX:73.79986453244325 minY:-48.709156704991074 maxX:808.9863304531177 maxY:719.127972974506
+2014-07-23 20:22:43.869 Instance-9-InitialGuess 6 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:43.869 Instance-9-InitialGuess 6 violations..png
+Search ends with match found, error 0.0
+802 817
+pos. intervals 1: 19pos. intervals 2: 18
+minX:76.80471598794823 minY:-48.709156704991074 maxX:802.4077135294602 maxY:719.127972974506
+2014-07-23 20:22:44.103 Instance-9-FinalMatch 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:44.103 Instance-9-FinalMatch 0 violations..png
+748 555
+pos. intervals 1: 19pos. intervals 2: 18
+minX:2.0000000000001137 minY:8.655955479482646 maxX:748.6423516433006 maxY:555.9643439493885
+2014-07-23 20:22:44.351 Instance-9-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:44.351 Instance-9-GroundTruth 0 violations..png
+Transformation drawn
+error 0.0
+experiments/benchmarks/n10-g80.0-a0.45PI.ser solved.
+First selected
+transformed angle:0.8468887409432729
+ other angle:0.8468887409432726
+this longest:Point2D.Double[254.86477091479338, 662.2939395669998] Point2D.Double[814.8647709147934, 55.718489541987196]
+other longest:Point2D.Double[91.20302070611972, 6.481059707741778] Point2D.Double[651.2030176537846, 639.9614930311296]
+transformed longest:Point2D.Double[91.20302070611973, 6.481059707741792] Point2D.Double[637.9795210219727, 625.0028744203634]
+811 701
+pos. intervals 1: 29pos. intervals 2: 34
+minX:33.269438155288356 minY:-0.13547919781855455 maxX:811.7872339451933 maxY:651.1499623336009
+2014-07-23 20:22:44.52 Instance-0-InitialGuess 17 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:44.52 Instance-0-InitialGuess 17 violations..png
+Search ends with mininum error = 5.0
+802 701
+pos. intervals 1: 29pos. intervals 2: 34
+minX:32.95526251391235 minY:-0.13547919781855455 maxX:802.9169896541525 maxY:651.1499623336009
+2014-07-23 20:22:45.452 Instance-0-FinalMatch 5 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:45.452 Instance-0-FinalMatch 5 violations..png
+785 588
+pos. intervals 1: 29pos. intervals 2: 34
+minX:11.711970949146917 minY:4.964919781912485 maxX:785.8561148206546 maxY:588.5723064544377
+2014-07-23 20:22:45.625 Instance-0-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:45.625 Instance-0-GroundTruth 0 violations..png
+Transformation drawn
+error 5.0
+First selected
+transformed angle:-0.8003761878379014
+ other angle:-0.8003761878379014
+this longest:Point2D.Double[256.34035527647046, 35.692776834570225] Point2D.Double[736.3403552793029, 584.9871460576255]
+other longest:Point2D.Double[191.93458590563884, 493.5250447136499] Point2D.Double[671.9345858342301, -1.0736093841865113]
+transformed longest:Point2D.Double[191.93458590563884, 493.5250447136499] Point2D.Double[699.9632988457171, -29.954783829266376]
+862 650
+pos. intervals 1: 17pos. intervals 2: 25
+minX:191.93458588799513 minY:-29.954783829266376 maxX:862.899925699334 maxY:570.5622333627546
+2014-07-23 20:22:45.764 Instance-1-InitialGuess 11 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:45.764 Instance-1-InitialGuess 11 violations..png
+Search ends with match found, error 0.0
+827 621
+pos. intervals 1: 17pos. intervals 2: 25
+minX:148.9853688919517 minY:-1.0736093841865113 maxX:827.4588730346121 maxY:570.5622333627546
+2014-07-23 20:22:46.028 Instance-1-FinalMatch 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:46.028 Instance-1-FinalMatch 0 violations..png
+797 584
+pos. intervals 1: 17pos. intervals 2: 25
+minX:109.92032657676037 minY:27.9201340274619 maxX:797.1225251185427 maxY:584.5330910493187
+2014-07-23 20:22:46.163 Instance-1-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:46.163 Instance-1-GroundTruth 0 violations..png
+Transformation drawn
+error 0.0
+Second selected
+transformed angle:-1.570796322776489
+ other angle:-1.570796322776489
+this longest:Point2D.Double[-0.859261526215704, 284.09213733249493] Point2D.Double[879.1407389364706, 383.722316916017]
+other longest:Point2D.Double[250.81094731971467, 801.5571998018189] Point2D.Double[250.8109508118309, -67.47264715528244]
+transformed longest:Point2D.Double[250.81094731971467, 801.5571998018189] Point2D.Double[250.8109508785045, -84.0647136003804]
+663 935
+pos. intervals 1: 17pos. intervals 2: 16
+minX:-79.8915175899387 minY:-84.06471360038057 maxX:534.0172710375309 maxY:801.5571998018189
+2014-07-23 20:22:46.27 Instance-2-InitialGuess 9 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:46.27 Instance-2-InitialGuess 9 violations..png
+Search ends with mininum error = 10.0
+639 955
+pos. intervals 1: 17pos. intervals 2: 16
+minX:-15.396535243882084 minY:-67.47264715528244 maxX:574.165836659501 maxY:837.8480485658694
+2014-07-23 20:22:46.644 Instance-2-FinalMatch 10 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:46.644 Instance-2-FinalMatch 10 violations..png
+789 580
+pos. intervals 1: 17pos. intervals 2: 16
+minX:2.3269604091996143 minY:80.14511054055242 maxX:789.966045516941 maxY:580.144368404812
+2014-07-23 20:22:46.902 Instance-2-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:46.902 Instance-2-GroundTruth 0 violations..png
+Transformation drawn
+error 10.0
+Second selected
+transformed angle:0.41947504976847044
+ other angle:0.41947504976847044
+this longest:Point2D.Double[26.918591943385202, 285.42023321702743] Point2D.Double[826.9186028397405, 424.00629296636737]
+other longest:Point2D.Double[-46.17896283597969, 180.12146278016792] Point2D.Double[673.8210371664373, 501.2004618741291]
+transformed longest:Point2D.Double[-46.17896283597969, 180.12146278016792] Point2D.Double[695.3454177990793, 510.7991099152721]
+801 801
+2014-07-23 20:22:47.004 Instance-3-InitialGuess 7 violations.
+pos. intervals 1: 41pos. intervals 2: 31
+minX:-50.355380096873205 minY:-33.00663004783914 maxX:701.0113919834841 maxY:718.0096464086973
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:47.004 Instance-3-InitialGuess 7 violations..png
+Search ends with match found, error 0.0
+909 946
+pos. intervals 1: 41pos. intervals 2: 31
+minX:-46.178962835979746 minY:-178.0407282361449 maxX:813.8061710839536 maxY:718.0096464086973
+2014-07-23 20:22:47.388 Instance-3-FinalMatch 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:47.388 Instance-3-FinalMatch 0 violations..png
+734 594
+pos. intervals 1: 41pos. intervals 2: 31
+minX:2.6900780215231066 minY:2.0 maxX:734.8871764862383 maxY:594.3137508468324
+2014-07-23 20:22:47.647 Instance-3-GroundTruth 1 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:47.647 Instance-3-GroundTruth 1 violations..png
+Transformation drawn
+error -1.0
+Second selected
+transformed angle:0.2642339870938345
+ other angle:0.26423398709383433
+this longest:Point2D.Double[218.58821676550286, 810.6145112785839] Point2D.Double[298.5882184225953, -75.75944425193629]
+other longest:Point2D.Double[32.592634626695514, 255.09200924306617] Point2D.Double[832.5926346341093, 471.5402465255704]
+transformed longest:Point2D.Double[32.592634626695514, 255.09200924306617] Point2D.Double[891.6809166039633, 487.5271896209555]
+891 753
+pos. intervals 1: 22pos. intervals 2: 26
+minX:32.592634626695485 minY:-15.05831097112599 maxX:891.6809166039633 maxY:688.8219877657691
+2014-07-23 20:22:47.781 Instance-4-InitialGuess 16 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:47.781 Instance-4-InitialGuess 16 violations..png
+Search ends with mininum error = 20.0
+931 753
+pos. intervals 1: 22pos. intervals 2: 26
+minX:32.592634626695514 minY:-15.05831097112599 maxX:931.143293295619 maxY:688.8219877657691
+2014-07-23 20:22:48.505 Instance-4-FinalMatch 20 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:48.505 Instance-4-FinalMatch 20 violations..png
+763 596
+pos. intervals 1: 22pos. intervals 2: 26
+minX:21.06482950109637 minY:3.767862146088987 maxX:763.6216591581758 maxY:596.151177146967
+2014-07-23 20:22:48.788 Instance-4-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:48.788 Instance-4-GroundTruth 0 violations..png
+Transformation drawn
+error 20.0
+First selected
+transformed angle:-0.5307304498169005
+ other angle:-0.5307304498169003
+this longest:Point2D.Double[123.08727295411356, 16.181584685363987] Point2D.Double[603.0872745715317, 727.0856248400203]
+other longest:Point2D.Double[136.64282312003894, 577.0711940217557] Point2D.Double[856.642823120039, 154.5041694648612]
+transformed longest:Point2D.Double[136.64282312003894, 577.0711940217557] Point2D.Double[876.4235334052877, 142.89489739700053]
+878 824
+pos. intervals 1: 41pos. intervals 2: 32
+minX:119.37743719971971 minY:-59.43014760302822 maxX:878.8186119927935 maxY:715.2554927392555
+2014-07-23 20:22:48.963 Instance-5-InitialGuess 17 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:48.963 Instance-5-InitialGuess 17 violations..png
+Search ends with mininum error = 19.0
+859 824
+pos. intervals 1: 41pos. intervals 2: 32
+minX:105.75490303510212 minY:-59.43014760302822 maxX:859.8226421532677 maxY:715.2554927392555
+2014-07-23 20:22:50.264 Instance-5-FinalMatch 19 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:50.264 Instance-5-FinalMatch 19 violations..png
+777 593
+pos. intervals 1: 41pos. intervals 2: 32
+minX:31.08148548665025 minY:6.0 maxX:777.8953105350452 maxY:593.4949572301923
+2014-07-23 20:22:50.454 Instance-5-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:50.454 Instance-5-GroundTruth 0 violations..png
+Transformation drawn
+error 19.0
+First selected
+transformed angle:0.8229018703838741
+ other angle:0.822901870383874
+this longest:Point2D.Double[62.28037019974299, 567.3626406297988] Point2D.Double[542.2803701997431, 41.71291827679607]
+other longest:Point2D.Double[90.8687392470481, -51.919877128595786] Point2D.Double[570.8687380940363, 465.50479214071936]
+transformed longest:Point2D.Double[90.8687392470481, -51.91987712859577] Point2D.Double[574.9846499650148, 469.9416136900911]
+605 741
+pos. intervals 1: 21pos. intervals 2: 15
+minX:41.054221890952704 minY:-60.86519147746209 maxX:605.1595912537502 maxY:630.5331047648543
+2014-07-23 20:22:50.56 Instance-6-InitialGuess 8 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:50.56 Instance-6-InitialGuess 8 violations..png
+Search ends with mininum error = 7.0
+615 741
+pos. intervals 1: 21pos. intervals 2: 15
+minX:45.395370724914166 minY:-60.86519147746209 maxX:615.579396830117 maxY:630.5331047648543
+2014-07-23 20:22:50.998 Instance-6-FinalMatch 7 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:50.998 Instance-6-FinalMatch 7 violations..png
+720 590
+pos. intervals 1: 21pos. intervals 2: 15
+minX:25.613135340192507 minY:22.643685491892413 maxX:720.6430378039092 maxY:590.7789337276953
+2014-07-23 20:22:51.093 Instance-6-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:51.093 Instance-6-GroundTruth 0 violations..png
+Transformation drawn
+error 7.0
+Second selected
+transformed angle:-1.0790396254966035
+ other angle:-1.0790396254966035
+this longest:Point2D.Double[44.19470705810936, 59.21454497421622] Point2D.Double[764.1947180887607, 549.1509453592344]
+other longest:Point2D.Double[144.99945498425245, 690.1742634131506] Point2D.Double[544.9994660752884, -56.58656111401852]
+transformed longest:Point2D.Double[144.99945498425245, 690.1742634131506] Point2D.Double[556.2089053257711, -77.51348577670922]
+598 840
+pos. intervals 1: 17pos. intervals 2: 14
+minX:64.99946607528852 minY:-77.51348577670933 maxX:598.622133111766 maxY:713.0113175300052
+2014-07-23 20:22:51.186 Instance-7-InitialGuess 7 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:51.186 Instance-7-InitialGuess 7 violations..png
+Search ends with mininum error = 10.0
+609 869
+pos. intervals 1: 17pos. intervals 2: 14
+minX:64.99946607528852 minY:-106.7357741866038 maxX:609.7063010553595 maxY:713.0113175300052
+2014-07-23 20:22:51.498 Instance-7-FinalMatch 10 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:51.498 Instance-7-FinalMatch 10 violations..png
+796 595
+pos. intervals 1: 17pos. intervals 2: 14
+minX:65.64772623621333 minY:2.3593622718888128 maxX:796.87744369994 maxY:595.0
+2014-07-23 20:22:51.61 Instance-7-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:51.61 Instance-7-GroundTruth 0 violations..png
+Transformation drawn
+error 10.0
+Second selected
+transformed angle:1.4735804810173985
+ other angle:1.4735804810173985
+this longest:Point2D.Double[-3.6685980906141253, 257.42156360315914] Point2D.Double[796.3314023961111, 423.6760450434783]
+other longest:Point2D.Double[388.98591960478177, -32.718401325282514] Point2D.Double[468.985921061946, 787.5986707484365]
+transformed longest:Point2D.Double[388.98591960478177, -32.718401325282514] Point2D.Double[468.2952196585861, 780.5162439664225]
+788 870
+pos. intervals 1: 15pos. intervals 2: 13
+minX:212.44779939858938 minY:-32.71840132528257 maxX:788.9859210619458 maxY:787.5986707484365
+2014-07-23 20:22:51.678 Instance-8-InitialGuess 14 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:51.678 Instance-8-InitialGuess 14 violations..png
+Search ends with mininum error = 6.0
+788 921
+pos. intervals 1: 15pos. intervals 2: 13
+minX:274.25511955444335 minY:-83.51706450654757 maxX:788.9859210619458 maxY:787.5986707484365
+2014-07-23 20:22:51.972 Instance-8-FinalMatch 6 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:51.972 Instance-8-FinalMatch 6 violations..png
+789 561
+pos. intervals 1: 15pos. intervals 2: 13
+minX:23.410861219784394 minY:23.863212192323203 maxX:789.3069065468484 maxY:561.4712569064627
+2014-07-23 20:22:52.107 Instance-8-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:52.107 Instance-8-GroundTruth 0 violations..png
+Transformation drawn
+error 6.0
+First selected
+transformed angle:-1.0720420293629578
+ other angle:-1.0720420293629578
+this longest:Point2D.Double[276.8900237842512, -82.19898980385796] Point2D.Double[276.89002378425124, 775.7726156304133]
+other longest:Point2D.Double[198.45892651139962, 715.7207211512242] Point2D.Double[598.4589265114, -18.647187155039376]
+transformed longest:Point2D.Double[198.45892651139962, 715.7207211512241] Point2D.Double[608.8541662109084, -37.732013241214986]
+838 813
+pos. intervals 1: 22pos. intervals 2: 20
+minX:38.458926511399675 minY:-37.732013241214986 maxX:838.4589265113999 maxY:725.6126080746383
+2014-07-23 20:22:52.17 Instance-9-InitialGuess 12 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:52.17 Instance-9-InitialGuess 12 violations..png
+Search ends with mininum error = 15.0
+838 875
+pos. intervals 1: 22pos. intervals 2: 20
+minX:38.458926511399675 minY:-18.647187155039376 maxX:838.4589265113999 maxY:807.0523660231137
+2014-07-23 20:22:52.72 Instance-9-FinalMatch 15 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:52.72 Instance-9-FinalMatch 15 violations..png
+753 549
+pos. intervals 1: 22pos. intervals 2: 20
+minX:2.0000000000548255 minY:8.031575511334268 maxX:753.3862316411945 maxY:549.990205331873
+2014-07-23 20:22:52.927 Instance-9-GroundTruth 0 violations.
+Drawing conflict points
+Conflict points drawn
+saving image to experiments/images/2014-07-23-2022-2014-07-23 20:22:52.927 Instance-9-GroundTruth 0 violations..png
+Transformation drawn
+error 15.0
+experiments/benchmarks/n10-g80.0-a0.5PI.ser solved.
+500 benchmarks solved in 12300037 milliseconds
