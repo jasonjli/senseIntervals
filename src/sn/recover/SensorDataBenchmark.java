@@ -146,7 +146,7 @@ public class SensorDataBenchmark implements java.io.Serializable {
 		long startTime = System.currentTimeMillis();
 		
 		int gapCount=0, factorCount=0, searchSteps = 100;
-		MatchSensorData_LS search = new MatchSensorData_LS(searchSteps);
+		MatchSensorData_LS search = new MatchSensorData_LS(searchSteps,1);
 		
 		for (double gap = 5; gap < 100; gap = gap*2){						
 			factorCount=0;
@@ -159,7 +159,7 @@ public class SensorDataBenchmark implements java.io.Serializable {
 				double sumError = 0;
 				for (int i=0; i<benchmark.getInstances().size(); i++){
 					BenchmarkInstance bi = benchmark.getInstances().get(i);
-					MatchSensorData_LS newSearch = new MatchSensorData_LS(searchSteps);
+					MatchSensorData_LS newSearch = new MatchSensorData_LS(searchSteps,1);
 					errors[i] = bi.normalizeAndMatch(newSearch);
 					sumError += errors[i];
 					System.out.println("error " + errors[i]);

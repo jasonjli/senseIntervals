@@ -1498,6 +1498,60 @@ public void drawMeasurements(SensorData second, String errorString){
 		return shortest.closestPoint(point);
 	}
 	
+	public SensorData applyRotate(double rotateFactor){
+		double rotateAngle = rotateFactor/360*2*Math.PI;
+		Point2D centroid = getPosIntCentroid();
+		AffineTransform rotate = new AffineTransform();
+		rotate.rotate(rotateAngle, centroid.getX(), centroid.getY());
+		return applyAffineTransform(rotate);
+	}
+	
+	public double evaluateRotate(double rotateFactor, SensorData otherData){
+		SensorData rotateData = applyRotate(rotateFactor);
+		return rotateData.sumClosestPointError(otherData);
+	}
+	
+	/***
+	 * Using the golden section search to find the best rotate that minimize displacement error
+	 * @param a
+	 * @param b
+	 * @param c
+	 * @param tau
+	 * @param otherData
+	 * @return
+	 */
+	public SensorData goldenSectionSearchRotate(double a, double b, double c, double tau, SensorData otherData){
+		// a and c are the current bounds; the minimum is between them.
+		// b is a center point
+		// tau is a tolerance parameter
+		
+		double x;
+		double phi = (1+ Math.sqrt(5))/2;
+		double resphi = 2 - phi;
+		if (c-b > b - a)
+			x = b + resphi * (c - b);
+		else
+			x = b - resphi * (b - a);
+		if (Math.abs(c - a) < tau * (Math.abs(b) + Math.abs(x))){
+			return applyRotate((c+a)/2);			
+		}
+		
+		if (evaluateRotate(x,otherData) < evaluateRotate(b,otherData)){
+			if (c - b > b - a) return goldenSectionSearchRotate(b, x, c, tau,otherData);
+		    else return goldenSectionSearchRotate(a, x, b, tau,otherData);
+		}
+		else {
+			if (c - b > b - a) return goldenSectionSearchRotate(a, b, x, tau, otherData);
+		      else return goldenSectionSearchRotate(x, b, c, tau, otherData);
+		}
+
+	}
+	
+	public SensorData gsRotateMatch(SensorData otherData){
+		return goldenSectionSearchRotate(-5, 0, 5, 0.001, otherData);
+	}
+	
+	
 	public SensorData rotateMatch(SensorData otherData){
 		return rotateMatch(otherData, -180, 180, 1);
 	}
@@ -1965,7 +2019,7 @@ public void drawMeasurements(SensorData second, String errorString){
 	 * 
 	 * This is to be used to test quality of approximations in matching overlapping sensor intervals.
 	 */
-	public SensorData lengthen(double extendPercentage){
+	public SensorData lengthenBuffer(double extendPercentage){
 		SensorData newData = new SensorData(this);
 		
 		double extendFactor = 0.01 * extendPercentage;
@@ -2006,6 +2060,7 @@ public void drawMeasurements(SensorData second, String errorString){
 			
 			// set the line.
 			pi.setInterval(newPI.getInterval());
+			newData.positiveIntervals.set(j, pi);
 		}
 		
 		return newData;
@@ -2019,6 +2074,23 @@ public void drawMeasurements(SensorData second, String errorString){
 	 * @return true if no constraint is violated
 	 */
 	
+	public int testExtendMatch(SensorData otherData){
+		
+		if (this.countConflicts(otherData)== 0) return 0;
+		
+		int extend = 0;
+		
+		for (extend = 1; extend <= 1000; extend *= 2){
+			SensorData thisExtend = lengthenBuffer(extend);
+			SensorData otherExtend = otherData.lengthenBuffer(extend);
+			
+			if (thisExtend.countConflicts(otherExtend)==0){
+				return extend;
+			}
+		}
+		
+		return -1;
+	}
 
 	
 

@@ -40,7 +40,7 @@ public class SensingExperiment {
 	// constructing the experiment
 	public SensingExperiment() {
 		benchmark = new SensorDataBenchmark(10);	
-		search = new MatchSensorData_LS(100);
+		search = new MatchSensorData_LS(100, 1);
 		
 	}
 	
@@ -99,7 +99,7 @@ public class SensingExperiment {
 		//benchmark.saveBenchmark(fileName);
 				
 		SensorDataBenchmark newBenchmark = SensorDataBenchmark.readBenchmark(inputFileName);
-		MatchSensorData_LS search = new MatchSensorData_LS(100);
+		MatchSensorData_LS search = new MatchSensorData_LS(100, 1);
 		SensingExperiment se = new SensingExperiment(newBenchmark, search);
 		
 		se.runLocalSearchExperiment(outputFileName);

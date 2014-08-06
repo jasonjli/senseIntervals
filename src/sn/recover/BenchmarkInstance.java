@@ -128,7 +128,13 @@ public class BenchmarkInstance implements java.io.Serializable {
 					
 					SensorData searchResult = search.initSearch();
 					
-					searchResult.drawMeasurements(secondNormalized, "Instance-" + instanceID + "-FinalMatch" );
+					int bufferRequired = searchResult.testExtendMatch(secondNormalized);
+					
+					System.out.println("Required " + bufferRequired + "% buffer for resolving all conflicts" );															
+					
+					// draw the results
+					searchResult.drawMeasurements(secondNormalized, "Instance-" + instanceID + "-FinalMatch, required " + bufferRequired + "% buffer for resolving all conflicts" );					
+										
 					
 					firstMeasurement.drawMeasurements(secondMeasurement, "Instance-" + instanceID + "-GroundTruth");
 					

@@ -17,19 +17,26 @@ public class MatchSensorData_LS extends MatchSearchingStrategy {
 	// the maximum number of steps in the local search
 	private final int searchSteps;
 	
+	
+	private final int searchHeuristic;
+	private final int randomHeuristic = 0, minDistHeuristic = 1, maxDistHeuristic = 2, avgDisHeuristic = 3;
+	
+	
 	// a list of previous positions identified by their centroids
 	private HashSet<Point2D> prevPositions;
 	
 	// constructor
-	public MatchSensorData_LS(int steps){
+	public MatchSensorData_LS(int steps, int heuristic){
+		searchHeuristic = heuristic;
 		searchSteps = steps; 		
-		searchInfo = "Local Search, "+ steps + " steps, minHeuristic.";		
+		searchInfo = "Local Search, "+ steps + " steps";		
 		prevPositions = new HashSet<Point2D>(); // empty set of previous positions
 	}
 		
 	
 	// constructor, given two sensordata to match eachother
-	public MatchSensorData_LS(SensorData a, SensorData b, int steps){
+	public MatchSensorData_LS(SensorData a, SensorData b, int steps, int heuristic){
+		searchHeuristic = heuristic;
 		firstData = a;
 		secondData = b;
 		searchSteps = steps;
@@ -56,8 +63,8 @@ public class MatchSensorData_LS extends MatchSearchingStrategy {
 		public SensorData localSearch(SensorData currentState, int stepsRemaining){
 			
 					// first, we rotate the current state on its centroid to see if we have a solution
-						
-					SensorData transformedData = currentState.limitedRotateMatch(secondData);
+					SensorData transformedData = currentState.gsRotateMatch(secondData);	
+					// SensorData transformedData = currentState.limitedRotateMatch(secondData);
 			
 					double error = transformedData.countConflicts(secondData);
 					matchingError = error;
@@ -72,7 +79,18 @@ public class MatchSensorData_LS extends MatchSearchingStrategy {
 						return transformedData;
 					}
 					
-					SensorData translatedData = minDistHeuristic(currentState);
+					
+					SensorData translatedData = null;
+					
+					switch (searchHeuristic){
+					case randomHeuristic:
+						translatedData = randomHeuristic(currentState);
+						break;
+					case minDistHeuristic: 
+						translatedData = minDistHeuristic(currentState);
+						break;
+					}
+					
 					if (translatedData==null){ 
 						System.out.println("Search ends with mininum error = " + error);
 						return transformedData;
@@ -96,6 +114,33 @@ public class MatchSensorData_LS extends MatchSearchingStrategy {
 		
 		return isPrev;
 	}
+	
+	
+	public SensorData randomHeuristic(SensorData currentState){
+		
+		searchInfo = "Local Search, "+ searchSteps + " steps, random heuristic";
+		
+		SensorData rotatedData = currentState.gsRotateMatch(secondData);
+		//SensorData rotatedData = currentState.limitedRotateMatch(secondData);
+		
+		int currentConflicts = rotatedData.countConflicts(secondData);
+						
+		for (int i=0; i<100; i++){
+			AffineTransform at = new AffineTransform();
+			
+			double dx = Math.random();
+			double dy = Math.random();
+			at.translate(dx, dy);
+			
+			SensorData transformedData = currentState.applyAffineTransform(at).gsRotateMatch(secondData);
+			
+			if (currentConflicts > transformedData.countConflicts(secondData) ){
+				return transformedData;
+			}
+		}
+		
+		return null;
+	}
 		
 	/*
 	 * Minimum distance heuristic in local search
@@ -103,6 +148,7 @@ public class MatchSensorData_LS extends MatchSearchingStrategy {
 	 */
 	public SensorData minDistHeuristic(SensorData currentState){
 		// heuristic
+		searchInfo = "Local Search, "+ searchSteps + " steps, minDist heuristic";
 				// analyze all conflicts
 				List<Point2D> conflictPoints = currentState.getConflictPoints(secondData);
 				
