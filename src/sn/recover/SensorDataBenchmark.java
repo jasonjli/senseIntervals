@@ -152,7 +152,11 @@ public class SensorDataBenchmark implements java.io.Serializable {
 			factorCount=0;
 			for (int factor = 5; factor<=50; factor+=5){
 				String inputFile = "experiments/benchmarks/n"+ n + "-g"+gap+"-a"+(double)factor/100+"PI.ser";
-				String outputFile = "experiments/500Instances_g5-80_f5-50/data/n"+ n + "-g"+gap+"-a"+(double)factor/100+"PI.lsMin.log";
+				String outputFile = "experiments/500Instances_g5-80_f5-50/data/n"+ n + "-g"+gap+"-a"+(double)factor/100+"PI.lsMinGS.log";
+				File logFile = new File(outputFile);
+				
+				if (logFile.exists() && !logFile.isDirectory()) continue;
+				
 				SensorDataBenchmark benchmark = readBenchmark(inputFile);
 
 				double errors[] = new double[benchmark.getInstances().size()];
@@ -167,23 +171,24 @@ public class SensorDataBenchmark implements java.io.Serializable {
 					 //break;
 				}
 				
-				File logFile = new File(outputFile);
+				
 				try {
 					BufferedWriter writer = new BufferedWriter(new FileWriter(logFile));
 					writer.write(search.searchInfo + "\n");
 					double avg = sumError / benchmark.getInstances().size();
 					writer.write("Average error = " + avg + "\n");
+					System.out.println("Average error = " + avg);
 					writer.close();
 				}catch (Exception e){
 					e.printStackTrace();
 				}
 				System.out.println(inputFile + " solved.");
 				factorCount++;
-				//break;
+				break;
 			}			
 			
 			gapCount++;
-			//break;
+			break;
 		}
 		
 		
@@ -304,8 +309,8 @@ public class SensorDataBenchmark implements java.io.Serializable {
 	public static void main(String[] args) throws Exception {
 		
 		//generateFixedBenchmarks(10);
-		// solveFixedBenchmarks(10); 
+		 solveFixedBenchmarks(10); 
 		//testRotateFixedBenchmarks(10);
-		readSolvedFixedBenchmarks(10);
+		//readSolvedFixedBenchmarks(10);
 	}
 }

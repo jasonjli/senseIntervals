@@ -384,7 +384,7 @@ public class SensorInterval implements java.io.Serializable {
 		double intervalLength = Math.sqrt(Math.pow(startX-endX, 2) +  Math.pow(startY-endY, 2)); 
 		//double slope = pi.getAngle();
 		
-		System.out.println("interval length = " + intervalLength);
+		//System.out.println("interval length = " + intervalLength);
 		
 		double newLength = intervalLength * (extendPercentage/100/2);
 		
@@ -402,7 +402,7 @@ public class SensorInterval implements java.io.Serializable {
 		
 		double increasedRatio = (newIntervalLength-intervalLength)/intervalLength * 100;
 		
-		System.out.println("new interval length = " + newIntervalLength + ", increased by " + String.format("%.0f", increasedRatio) + "%");
+		// System.out.println("new interval length = " + newIntervalLength + ", increased by " + String.format("%.0f", increasedRatio) + "%");
 		
 		return newLine;
 	}

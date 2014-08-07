@@ -1548,7 +1548,7 @@ public void drawMeasurements(SensorData second, String errorString){
 	}
 	
 	public SensorData gsRotateMatch(SensorData otherData){
-		return goldenSectionSearchRotate(-5, 0, 5, 0.001, otherData);
+		return goldenSectionSearchRotate(-5, 0, 5, 0.01, otherData);
 	}
 	
 	
