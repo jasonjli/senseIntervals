@@ -73,7 +73,8 @@ public class SensingExperiment {
 			writer.write(search.searchInfo + "\n");
 			
 			for (BenchmarkInstance bi : instanceList){
-				double error = bi.normalizeAndMatch(search);
+				SearchResult s = bi.normalizeAndMatch(search);
+				double error = s.getSearchError();
 				errors[i++]=error;
 				sumErrors += error;
 				System.out.println("Instance " + bi.instanceID + " done, error=" + error + ".");

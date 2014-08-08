@@ -54,6 +54,9 @@ public class SensorDataBenchmark implements java.io.Serializable {
 		return benchmarkInstances;
 	}
 
+	public void addInstance(BenchmarkInstance bi){
+		benchmarkInstances.add(bi);
+	}
 	
 	// save to serialized form
 	public void saveBenchmark(String fileName){
@@ -72,12 +75,12 @@ public class SensorDataBenchmark implements java.io.Serializable {
 	}
 	
 	public void drawGivenInstance(int id){
-		benchmarkInstances.get(id).drawInstance();
+		benchmarkInstances.get(id).drawInstance("Instance-" + id);
 	}
 	
 	public void drawAll(){
 		for (BenchmarkInstance bi : benchmarkInstances){
-			bi.drawInstance();
+			bi.drawInstance("Instance-" + bi.instanceID);
 		}
 	}
 	
@@ -135,24 +138,41 @@ public class SensorDataBenchmark implements java.io.Serializable {
 		System.out.println(n*gapCount*factorCount + " benchmarks generated in " + (endTime - startTime) + " milliseconds");
 	}
 	
+	public static void drawGroundTruth(int n){
+		for (double gap = 5; gap < 100; gap = gap*2){
+			for (int factor = 5; factor<=50; factor+=5){
+				String inputFile = "experiments/benchmarks/n"+ n + "-g"+gap+"-a"+ (double)factor/100+"PI.ser";
+				SensorDataBenchmark benchmark = readBenchmark(inputFile);
+				for (int i=0; i<benchmark.getInstances().size(); i++){
+					BenchmarkInstance bi = benchmark.getInstances().get(i);
+					if (bi.getConflictCount()==0){
+						bi.drawInstance("G" + gap + "-A"+(double)factor/100 + "PI-i"+i);
+						break;
+					}
+				}
+			}
+		}
+	}
+	
 	
 	/**
 	 * Given  generated instances in experiments/benchmarks/ folder
 	 * sovle them 
-	 * @param n = umber of instances to be generated for each gap / angle pair
+	 * @param n = number of instances to be generated for each gap / angle pair
 	 */
 	
-	public static void solveFixedBenchmarks(int n){
+	public static void solveFixedBenchmarks(int n, int searchStrategy){
 		long startTime = System.currentTimeMillis();
 		
 		int gapCount=0, factorCount=0, searchSteps = 100;
-		MatchSensorData_LS search = new MatchSensorData_LS(searchSteps,1);
+		MatchSensorData_LS search = new MatchSensorData_LS(searchSteps,searchStrategy);
+		int benchmarkCount = 0;
 		
 		for (double gap = 5; gap < 100; gap = gap*2){						
 			factorCount=0;
 			for (int factor = 5; factor<=50; factor+=5){
 				String inputFile = "experiments/benchmarks/n"+ n + "-g"+gap+"-a"+(double)factor/100+"PI.ser";
-				String outputFile = "experiments/500Instances_g5-80_f5-50/data/n"+ n + "-g"+gap+"-a"+(double)factor/100+"PI.lsMinGS.log";
+				String outputFile = "experiments/500Instances_g5-80_f5-50/data/n"+ n + "-g"+gap+"-a"+(double)factor/100+"PI.strategy"+searchStrategy+".log";
 				File logFile = new File(outputFile);
 				
 				if (logFile.exists() && !logFile.isDirectory()) continue;
@@ -161,14 +181,17 @@ public class SensorDataBenchmark implements java.io.Serializable {
 
 				double errors[] = new double[benchmark.getInstances().size()];
 				double sumError = 0;
-				for (int i=0; i<benchmark.getInstances().size(); i++){
+				for (int i=0; i<benchmark.getInstances().size(); i++){					
 					BenchmarkInstance bi = benchmark.getInstances().get(i);
-					MatchSensorData_LS newSearch = new MatchSensorData_LS(searchSteps,1);
-					errors[i] = bi.normalizeAndMatch(newSearch);
+					bi.drawInstance("G" + gap + "-A"+(double)factor/100 + "PI-i"+i);
+					MatchSensorData_LS newSearch = new MatchSensorData_LS(searchSteps,searchStrategy);
+					SearchResult result = bi.normalizeAndMatch(newSearch);
+					errors[i] = result.getSearchError();
 					sumError += errors[i];
 					System.out.println("error " + errors[i]);
+					benchmarkCount++;
 					
-					 //break;
+					 break;
 				}
 				
 				
@@ -188,13 +211,13 @@ public class SensorDataBenchmark implements java.io.Serializable {
 			}			
 			
 			gapCount++;
-			break;
+			//break;
 		}
 		
 		
 		
 		long endTime = System.currentTimeMillis();
-		System.out.println(n*gapCount*factorCount + " benchmarks solved in " + (endTime - startTime) + " milliseconds");
+		System.out.println(benchmarkCount + " benchmarks solved in " + (endTime - startTime) + " milliseconds");
 
 	}
 	
@@ -309,8 +332,9 @@ public class SensorDataBenchmark implements java.io.Serializable {
 	public static void main(String[] args) throws Exception {
 		
 		//generateFixedBenchmarks(10);
-		 solveFixedBenchmarks(10); 
+	    solveFixedBenchmarks(10,3); 
 		//testRotateFixedBenchmarks(10);
 		//readSolvedFixedBenchmarks(10);
+		//drawGroundTruth(10);
 	}
 }

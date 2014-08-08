@@ -1520,7 +1520,7 @@ public void drawMeasurements(SensorData second, String errorString){
 	 * @param otherData
 	 * @return
 	 */
-	public SensorData goldenSectionSearchRotate(double a, double b, double c, double tau, SensorData otherData){
+	public SensorData goldenSectionSearchRotate(double a, double b, double c, double tau, SensorData otherData, int stepsRemaining){
 		// a and c are the current bounds; the minimum is between them.
 		// b is a center point
 		// tau is a tolerance parameter
@@ -1532,23 +1532,23 @@ public void drawMeasurements(SensorData second, String errorString){
 			x = b + resphi * (c - b);
 		else
 			x = b - resphi * (b - a);
-		if (Math.abs(c - a) < tau * (Math.abs(b) + Math.abs(x))){
+		if (Math.abs(c - a) < tau * (Math.abs(b) + Math.abs(x)) || stepsRemaining==0){
 			return applyRotate((c+a)/2);			
 		}
 		
 		if (evaluateRotate(x,otherData) < evaluateRotate(b,otherData)){
-			if (c - b > b - a) return goldenSectionSearchRotate(b, x, c, tau,otherData);
-		    else return goldenSectionSearchRotate(a, x, b, tau,otherData);
+			if (c - b > b - a) return goldenSectionSearchRotate(b, x, c, tau,otherData,stepsRemaining-1);
+		    else return goldenSectionSearchRotate(a, x, b, tau,otherData,stepsRemaining-1);
 		}
 		else {
-			if (c - b > b - a) return goldenSectionSearchRotate(a, b, x, tau, otherData);
-		      else return goldenSectionSearchRotate(x, b, c, tau, otherData);
+			if (c - b > b - a) return goldenSectionSearchRotate(a, b, x, tau, otherData,stepsRemaining-1);
+		      else return goldenSectionSearchRotate(x, b, c, tau, otherData, stepsRemaining-1);
 		}
 
 	}
 	
 	public SensorData gsRotateMatch(SensorData otherData){
-		return goldenSectionSearchRotate(-5, 0, 5, 0.01, otherData);
+		return goldenSectionSearchRotate(-180, 0, 180, 0.01, otherData, 100);
 	}
 	
 	
@@ -1755,6 +1755,23 @@ public void drawMeasurements(SensorData second, String errorString){
 		return conflictList;
 	}
 	
+	public List<Point2D> getConflictPointsWithBuffer(SensorData otherData, double bufferSize){
+		List<Point2D> conflictList = new ArrayList<Point2D>();
+				
+		for (SensorInterval curPositive:positiveIntervals) {			
+			for (SensorInterval otherNegative:otherData.getNegativeIntervals()) {			
+				Point2D intersectionPoint = curPositive.getIntersectionPoint(otherNegative);
+				if (intersectionPoint != null) {
+					Point2D closestPostivePoint = otherData.getClosestPositivePoint(intersectionPoint);
+					if (intersectionPoint.distance(closestPostivePoint) > bufferSize)
+						conflictList.add(intersectionPoint);
+				}
+			}
+		}
+		
+		return conflictList;
+	}
+	
 	/***
 	 * Method: positiveIntersects
 	 * @param otherData
@@ -1787,6 +1804,10 @@ public void drawMeasurements(SensorData second, String errorString){
 	 */
 	
 	public int countConflicts(SensorData otherData){
+		return countConflictsWithBuffer(otherData, 0.001);
+	}
+	
+	public int countConflictsWithBuffer(SensorData otherData, double bufferSize){
 		int conflicts = Integer.MAX_VALUE;
 		
 		// return -1 
@@ -1794,8 +1815,8 @@ public void drawMeasurements(SensorData second, String errorString){
 			return conflicts;
 		}
 		
-		conflicts = getConflictPoints(otherData).size();
-		conflicts += otherData.getConflictPoints(this).size();
+		conflicts = getConflictPointsWithBuffer(otherData, bufferSize).size();
+		conflicts += otherData.getConflictPointsWithBuffer(this, bufferSize).size();
 		
 		return conflicts;
 	}
@@ -2074,19 +2095,18 @@ public void drawMeasurements(SensorData second, String errorString){
 	 * @return true if no constraint is violated
 	 */
 	
-	public int testExtendMatch(SensorData otherData){
+	public int testBufferMatch(SensorData otherData){
 		
 		if (this.countConflicts(otherData)== 0) return 0;
 		
-		int extend = 0;
+		double extend = 0;
 		
-		for (extend = 1; extend <= 1000; extend *= 2){
-			SensorData thisExtend = lengthenBuffer(extend);
-			SensorData otherExtend = otherData.lengthenBuffer(extend);
+		for (extend = 0.1; extend <= 100; extend *= 2){
 			
-			if (thisExtend.countConflicts(otherExtend)==0){
-				return extend;
-			}
+			int conflicts = countConflictsWithBuffer(otherData, extend);
+			
+			System.out.println("extend by " + extend + "%, " + conflicts + " conflicts");
+			if (conflicts == 0) return (int)extend;
 		}
 		
 		return -1;

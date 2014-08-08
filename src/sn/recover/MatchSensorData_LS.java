@@ -335,7 +335,7 @@ public class MatchSensorData_LS extends MatchSearchingStrategy {
 			return null;
 		}
 
-		System.out.println("Moving dx=" + dx + " dy=" + dy);
+		//System.out.println("Moving dx=" + dx + " dy=" + dy);
 
 		AffineTransform at = new AffineTransform();
 

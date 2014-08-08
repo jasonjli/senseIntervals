@@ -25,9 +25,9 @@ public class BenchmarkInstance implements java.io.Serializable {
 		
 		public final int instanceID;
 		
-		private final double gapSize, diffAngle;
+		protected final double gapSize, diffAngle;
 		
-		private ComplexRegion groundTruth;
+		protected ComplexRegion groundTruth;
 		public SensorData firstMeasurement, secondMeasurement;
 		
 		private static final int canvasWidth = 800;
@@ -40,6 +40,19 @@ public class BenchmarkInstance implements java.io.Serializable {
 		
 		public BenchmarkInstance(int id, double gap, double angleDifference){
 			this(id, gap, angleDifference, new ComplexRegion(canvasWidth, canvasHeight));
+		}
+		
+		public BenchmarkInstance(BenchmarkInstance bi){
+			this(bi.instanceID,bi.gapSize,bi.diffAngle,bi.groundTruth,bi.firstMeasurement,bi.secondMeasurement);
+		}
+		
+		public BenchmarkInstance(int id, double gap, double angleDifference, ComplexRegion gt, SensorData matchedFirst, SensorData matchedSecond){
+			instanceID = id;			
+			groundTruth = gt;					
+			gapSize=gap; 
+			diffAngle = angleDifference;
+			firstMeasurement = matchedFirst;
+			secondMeasurement = matchedSecond;
 		}
 		
 		public BenchmarkInstance(int id, double gap, double angleDifference, ComplexRegion gt){
@@ -70,6 +83,14 @@ public class BenchmarkInstance implements java.io.Serializable {
 			return groundTruth;
 		}
 		
+		public void setFirstMeasurement(SensorData fm){
+			firstMeasurement = fm;
+		}
+		
+		public void setSecondMeasurement(SensorData sm){
+			secondMeasurement = sm;
+		}
+		
 		public SensorData getFirstMeasurement(){
 			return firstMeasurement;
 		}
@@ -78,7 +99,7 @@ public class BenchmarkInstance implements java.io.Serializable {
 			return secondMeasurement;
 		}
 		
-		public void drawInstance(){
+		public void drawInstance(String message){
 			// visualize the ground truth 
 			BufferedImage img = groundTruth.drawRegion(Color.LIGHT_GRAY);
 			Graphics2D g2d = (Graphics2D) img.createGraphics();
@@ -89,10 +110,10 @@ public class BenchmarkInstance implements java.io.Serializable {
 			secondMeasurement.addIntervalsToGraphic(g2d, secondMeasurement.getPositiveIntervals(), false,
 					Color.RED);
 						
-			ShowDebugImage frame = new ShowDebugImage("Instance " + instanceID + " Ground Truth", img);
+			ShowDebugImage frame = new ShowDebugImage(message + " Ground Truth", img);
 			frame.refresh(img);
 			
-			String filename = "experiments/images/instance-" + instanceID + "-groundTruth.png";
+			String filename = "experiments/images/" + message + "-groundTruth.png";
 		
 			System.out.println("saving image to " + filename);
 			try {
@@ -103,11 +124,17 @@ public class BenchmarkInstance implements java.io.Serializable {
 			}
 		}
 		
-		public double normalizeAndMatch(MatchSearchingStrategy search){
+		public int getConflictCount(){
+			return firstMeasurement.countConflicts(secondMeasurement);
+		}
+		
+		public SearchResult normalizeAndMatch(MatchSearchingStrategy search){
 			double error = 0;
 			
 			SensorData firstNormalized = firstMeasurement.normalize();
 			SensorData secondNormalized = secondMeasurement.normalize();
+			
+			firstNormalized.drawMeasurements(secondNormalized, "Instance-"+ instanceID + "-SearchStart");
 			
 			AffineTransform[] at = firstNormalized.getATfromLongest(secondNormalized);
 			if (at.length != 0){
@@ -130,11 +157,11 @@ public class BenchmarkInstance implements java.io.Serializable {
 					
 					SensorData resultCopy = new SensorData(searchResult);
 					
-					/*int bufferRequired = resultCopy.testExtendMatch(secondNormalized);
+					int bufferRequired = resultCopy.testBufferMatch(secondNormalized);
 					
-					if (bufferRequired != -1){
-						System.out.println("Required " + bufferRequired + "% buffer for resolving all conflicts" );															
-					}*/
+					if (bufferRequired == -1){
+						System.out.println("Cannot resolve all conflicts with extending buffer. " );															
+					}
 					
 					// draw the results
 					searchResult.drawMeasurements(secondNormalized, "Instance-" + instanceID + "-FinalMatch" );					
@@ -143,6 +170,8 @@ public class BenchmarkInstance implements java.io.Serializable {
 					// firstMeasurement.drawMeasurements(secondMeasurement, "Instance-" + instanceID + "-GroundTruth");
 					
 					System.out.println("Transformation drawn");
+					
+					return new SearchResult(this, searchResult, secondNormalized);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -153,10 +182,9 @@ public class BenchmarkInstance implements java.io.Serializable {
 				System.out.println("Match not found.");
 			}
 			
-			error = search.matchingError - firstMeasurement.countConflicts(secondMeasurement);
-			
-			return error;
+			return null;
 		}
+				
 		
 		/***
 		 * Unit testing for SensorData.rotateMatch
