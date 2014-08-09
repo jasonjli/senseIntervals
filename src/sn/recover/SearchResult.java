@@ -22,7 +22,7 @@ public class SearchResult implements java.io.Serializable {
 		return matchedFirstData.countConflicts(matchedSecondData) - originalInstance.firstMeasurement.countConflicts(originalInstance.secondMeasurement);		
 	}
 	
-	public void saveBenchmark(String fileName){
+	public void saveResult(String fileName){
 		try {
 			FileOutputStream fileOut = new FileOutputStream(fileName);
 			ObjectOutputStream out = new ObjectOutputStream(fileOut);

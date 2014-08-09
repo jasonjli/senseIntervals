@@ -186,6 +186,10 @@ public class SensorDataBenchmark implements java.io.Serializable {
 					bi.drawInstance("G" + gap + "-A"+(double)factor/100 + "PI-i"+i);
 					MatchSensorData_LS newSearch = new MatchSensorData_LS(searchSteps,searchStrategy);
 					SearchResult result = bi.normalizeAndMatch(newSearch);
+					
+					String resultFile = "experiments/500Instances_g5-80_f5-50/data/n"+ n + "-g"+gap+"-a"+(double)factor/100+"PI-i"+ i +".strategy"+searchStrategy+".ser";
+					result.saveResult(resultFile);
+					
 					errors[i] = result.getSearchError();
 					sumError += errors[i];
 					System.out.println("error " + errors[i]);
