@@ -1429,6 +1429,21 @@ public void drawMeasurements(SensorData second, String errorString){
 		return positiveIntersect;
 	}
 	
+	public static double sumClosestDistance(List<Point2D> ptsA, List<Point2D> ptsB){
+		double sum = 0;
+		for (int i=0; i<ptsA.size(); i++){
+			double min = Double.MAX_VALUE;
+			Point2D thisPoint = ptsA.get(i);
+			for (int j=0; j<ptsB.size(); j++){
+				Point2D otherPoint = ptsB.get(j);
+				double dist = thisPoint.distance(otherPoint);
+				if (dist<min) min = dist;
+			}
+			sum += min;
+		}
+		return sum;
+	}
+	
 	public double sumClosestHullError(SensorData otherData){
 		
 		double sum = 0;
@@ -1436,16 +1451,7 @@ public void drawMeasurements(SensorData second, String errorString){
 		List<Point2D> thisHull = getConvexHull();
 		List<Point2D> otherHull = otherData.getConvexHull();
 		
-		for (int i=0; i<thisHull.size(); i++){
-			double min = Double.MAX_VALUE;
-			Point2D thisPoint = thisHull.get(i);
-			for (int j=0; j<otherHull.size(); j++){
-				Point2D otherPoint = otherHull.get(j);
-				double dist = thisPoint.distance(otherPoint);
-				if (dist<min) min = dist;
-			}
-			sum += min;
-		}
+		sum= sumClosestDistance(thisHull,otherHull);
 				
 		return sum;
 	}

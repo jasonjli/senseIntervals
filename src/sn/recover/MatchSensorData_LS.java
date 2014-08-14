@@ -92,8 +92,13 @@ public class MatchSensorData_LS extends MatchSearchingStrategy {
 			break;
 		case maxDistHeuristic:
 			translatedData = maxDistHeuristic(currentState);
+			break;
 		case avgDistHeuristic:
 			translatedData = avgDistHeuristic(currentState);
+			break;
+		default:
+			System.err.println("ERROR: Unknown search heuristic " + searchHeuristic + "in MatchSensorData_LS.java");
+			System.exit(0);
 		}
 
 		if (translatedData==null){ 

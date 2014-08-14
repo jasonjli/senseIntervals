@@ -102,7 +102,8 @@ public class SensorDataBenchmark implements java.io.Serializable {
 	
 	
 	/***
-	 * 
+	 * method generateFixedBenchmarks
+	 * generate fixed benchmark for specified 
 	 * @param n = number of instances to be generated for each gap / angle pair.
 	 */
 	public static void generateFixedBenchmarks(int n){
@@ -124,6 +125,10 @@ public class SensorDataBenchmark implements java.io.Serializable {
 			for (int factor = 5; factor<=50; factor+=5){
 				double angleDiff = (double)factor / 100 * Math.PI;
 				String outputFile = "experiments/benchmarks/n"+ n + "-g"+gap+"-a"+(double)factor/100+"PI.ser";
+				
+				// check if we have already created the file before
+				File sourceFile = new File(outputFile); 
+				if (sourceFile.exists() && !sourceFile.isDirectory()) continue;
 				
 				SensorDataBenchmark b = new SensorDataBenchmark(regionList, gap, angleDiff);
 				b.saveBenchmark(outputFile);
@@ -226,7 +231,7 @@ public class SensorDataBenchmark implements java.io.Serializable {
 	}
 	
 	
-	public static void readSolvedFixedBenchmarks(int n){
+	public static void readSolvedFixedBenchmarks(int n, int strategy){
 		long startTime = System.currentTimeMillis();
 		
 		int gapCount=0, factorCount=0;
@@ -242,7 +247,7 @@ public class SensorDataBenchmark implements java.io.Serializable {
 				
 				if (gap==5) factorMean.put(factor,0.0);
 				
-				String inputFile = "experiments/500Instances_g5-80_f5-50/data/n"+ n + "-g"+gap+".0-a"+(double)factor/100+"PI.lsMin.log";
+				String inputFile = "experiments/500Instances_g5-80_f5-50/data/n"+ n + "-g"+gap+"-a"+(double)factor/100+"PI.strategy"+strategy+".log";;
 				
 				try (BufferedReader br = new BufferedReader(new FileReader(inputFile))){
 					String line = br.readLine();
@@ -335,10 +340,17 @@ public class SensorDataBenchmark implements java.io.Serializable {
 	
 	public static void main(String[] args) throws Exception {
 		
-		//generateFixedBenchmarks(10);
-	    solveFixedBenchmarks(10,3); 
-		//testRotateFixedBenchmarks(10);
-		//readSolvedFixedBenchmarks(10);
+		generateFixedBenchmarks(10);
+		
+		// solve for all strategies. 
+		for (int i=0; i<4; i++){
+	      solveFixedBenchmarks(10,i);
+		}
+		
+		// read output of solved strategies
+		for (int i=0; i<4; i++){
+			readSolvedFixedBenchmarks(10,i);
+		}
 		//drawGroundTruth(10);
 	}
 }
